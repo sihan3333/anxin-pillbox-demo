@@ -1,4 +1,5 @@
-const $ = s => document.querySelector(s);
+const BROWSER = typeof document !== 'undefined';
+const $ = s => BROWSER ? document.querySelector(s) : null;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmt = m => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
@@ -20,7 +21,7 @@ const CN = '一二三四五六七八';
 // 过去 6 天的示例记录（演示 AI 分析用）
 const WEEK = [
   { d: '10/3', w: '六', am: 'call', pm: 'ok' }, { d: '10/4', w: '日', am: 'late', pm: 'ok' },
-  { d: '10/5', w: '一', am: 'ok', pm: 'ok' }, { d: '10/6', w: '二', am: 'ok', pm: 'help' },
+  { d: '10/5', w: '一', am: 'ok', pm: 'ok' }, { d: '10/6', w: '二', am: 'ok', pm: 'help', pmWhy: '记不清吃没吃' },
   { d: '10/7', w: '三', am: 'ok', pm: 'ok' }, { d: '10/8', w: '四', am: 'ok', pm: 'ok' }
 ];
 const MARK = { ok: ['✅', '按时'], late: ['🟠', '第2次提醒后'], call: ['📞', '打电话后'], help: ['🙋', '求助'], miss: ['⚠️', '没确认'], wait: ['·', '未到/等待'] };
@@ -55,7 +56,7 @@ function buildDoses() {
 const medsOf = d => d.medIds.map(id => S.meds.find(m => m.id === id)).sort((a, b) => mealStep(a).rank - mealStep(b).rank);
 const dose = id => S.doses.find(d => d.id === id);
 const names = d => medsOf(d).map(m => `${short(m.name)} ${m.dose}`).join('、');
-const slots = d => medsOf(d).map(m => m.slot).join('、');
+const slots = d => medsOf(d).map(m => m.slot).sort((a, b) => a - b).join('、');
 
 // ---------- 声音 ----------
 let AC, ringTimer, bannerTimer;
@@ -69,9 +70,10 @@ function tone(f, dur, when = 0, vol = 0.08) {
 // 浏览器朗读长句会中途停、cancel 后立刻 speak 会被吞，所以按句拆开排队并稍等再读
 let speakTimer, utterQ = [];
 const zhVoice = () => { const vs = speechSynthesis.getVoices().filter(v => /^zh[-_]CN/i.test(v.lang)); return vs.find(v => /Xiaoxiao|Natural/i.test(v.name)) || vs[0]; };
-if ('speechSynthesis' in window) { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); }
+const TTS = typeof speechSynthesis !== 'undefined';
+if (TTS) { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); }
 function speak(t) {
-  if (!sound || !('speechSynthesis' in window) || !t) return;
+  if (!sound || !TTS || !t) return;
   try {
     clearTimeout(speakTimer); speechSynthesis.cancel();
     const v = zhVoice();
@@ -81,7 +83,7 @@ function speak(t) {
 }
 function say(t) { S.lastSpeech = t; speak(t); }
 function startRing(prompt) {
-  stopRing(); let n = 0;
+  stopRing(); if (!BROWSER) return; let n = 0;
   const p = () => { n++; if (n === 3) say(prompt); else if (n < 3 || n > 6) { tone(880, 0.25); tone(660, 0.25, 0.3); } if (n > 12) stopRing(); };
   p(); ringTimer = setInterval(p, 1500);
 }
@@ -97,6 +99,7 @@ const VOICE = {
   confirm: '您都吃好了吗？吃好了，请按绿色的“是的，都吃了”。还没吃，请按下面灰色的“还没有，返回”。',
   help: '遇到什么问题了？请按对应的按钮。一，找不到药。二，不知道怎么吃。三，记不清吃没吃。四，让孩子给我打电话。',
   helpSent: '好的，已经告诉女儿了。她会马上给您打电话，请稍等。',
+  unsureSent: '好的，已经告诉女儿了。先不要再吃这一次的药，等女儿给您打电话，一起确认。',
   later: '好的，等一会儿再提醒您。'
 };
 
@@ -143,7 +146,7 @@ function ring(d, type) {
 function notify(m, quiet) {
   m.time = fmt(S.min); m.id = Math.random().toString(36).slice(2); m.read = !!quiet;
   S.msgs.unshift(m);
-  if (quiet) return;
+  if (quiet || !BROWSER) return;
   S.banner = m; ding();
   const p = $('#childPhone'); p.classList.remove('buzz'); void p.offsetWidth; p.classList.add('buzz');
   clearTimeout(bannerTimer); bannerTimer = setTimeout(() => { S.banner = null; render(); }, 5000);
@@ -153,6 +156,13 @@ function confirm(d, by) {
   d.status = 'done'; d.by = by; d.at = S.min; d.follow = d.recheck = null;
   if (by === 'self') notify({ type: 'ok', dose: d.id, title: '✅ 妈妈已经吃药了', text: `${period(d.time)} ${d.time} 的药：${names(d)}。妈妈在 ${fmt(S.min)} 自己确认吃好了（药箱第 ${slots(d)} 格已打开）。` });
   else notify({ type: 'ok', dose: d.id, title: '✅ 已电话确认：妈妈吃了药', text: `${period(d.time)} ${d.time} 的药：${names(d)}。你在 ${fmt(S.min)} 通过电话确认。` });
+}
+
+const UNSURE = '记不清吃没吃';
+function askHelp(d, reason) {
+  d.status = 'help'; d.reason = reason; S.parent = 'helpSent';
+  say(reason === UNSURE ? VOICE.unsureSent : VOICE.helpSent);
+  notify({ type: 'help', dose: d.id, title: '🙋 妈妈需要帮忙', text: `${period(d.time)} ${d.time} 的药：妈妈说“${reason}”。` + (reason === UNSURE ? `已提醒妈妈先别再吃。打电话时先请她看看药箱第 ${slots(d)} 格里的药还在不在，再决定要不要补吃，避免重复吃药。` : '建议现在打个电话。') });
 }
 
 function sendSms(d) {
@@ -169,6 +179,29 @@ function todayMark(d) {
   if (d.status === 'done') return d.by === 'call' ? 'call' : d.at - toMin(d.time) >= S.repeatMin ? 'late' : 'ok';
   return d.escalated ? 'miss' : 'wait';
 }
+// 规则 Mock：从 7 天记录里统计规律，文字和建议都由统计结果决定
+const LATE = ['late', 'call', 'miss'];
+const isWeekend = x => x.w === '六' || x.w === '日';
+function weekStats() {
+  const today = { w: '五', am: todayMark(dose('08:00')), pm: todayMark(dose('20:00')), amWhy: dose('08:00')?.reason, pmWhy: dose('20:00')?.reason };
+  const days = [...WEEK, today], out = {};
+  for (const k of ['am', 'pm']) {
+    const had = days.filter(x => x[k] !== 'wait'), we = had.filter(isWeekend), wd = had.filter(x => !isWeekend(x));
+    const late = list => list.filter(x => LATE.includes(x[k])).length;
+    const s = { n: had.length, ok: had.filter(x => x[k] === 'ok').length, we: we.length, weLate: late(we), wd: wd.length, wdLate: late(wd), help: had.filter(x => x[k] === 'help').map(x => ({ w: x.w, why: x[k + 'Why'] })) };
+    s.weekendPattern = s.we > 0 && s.weLate / s.we >= 0.5 && (s.wd === 0 || s.wdLate / s.wd <= 0.25);
+    out[k] = s;
+  }
+  return out;
+}
+function patternText(label, s) {
+  if (!s.n) return `${label}：还没有记录。`;
+  let t = `${label}：${s.n} 天里 ${s.ok} 天一次提醒就按时确认`;
+  if (s.weekendPattern) t += `；<b>周末 ${s.weLate}/${s.we} 天</b>要第 2 次提醒或打电话才确认，工作日只有 ${s.wdLate}/${s.wd} 天。可能是周末作息不同，这个时间妈妈不在手机旁边`;
+  else if (s.weLate + s.wdLate) t += `；${s.weLate + s.wdLate} 天要第 2 次提醒或打电话，没看出固定规律`;
+  if (s.help.length) t += `；${s.help.map(h => `周${h.w}求助过${h.why ? `“${h.why}”` : ''}`).join('、')}`;
+  return t + '。';
+}
 function aiHTML() {
   const today = [];
   for (const d of S.doses) {
@@ -182,14 +215,22 @@ function aiHTML() {
   const openNow = S.doses.find(open);
   const acts = [];
   if (openNow) acts.push(`<li><b>现在先联系妈妈</b>：${esc(openNow.status === 'help' ? `她说“${openNow.reason}”，打电话最快。` : '先发短信，不回再打电话。')}<div class="ai-btns"><button data-act="call" data-dose="${openNow.id}" class="callbtn sm">📞 打电话</button><button data-act="sms" data-dose="${openNow.id}" class="smsbtn sm">💬 发短信</button></div></li>`);
-  acts.push(`<li><b>把周六、周日早上的提醒改到 9:00</b>：避开妈妈周末出门、起得晚的时间。<div class="ai-btns">${S.weekend ? '<span class="okchip">✅ 已改好，从明天（周六）开始</span>' : '<button data-act="weekend" class="aibtn sm">一键修改</button>'}</div></li>`);
-  acts.push('<li><b>周末打电话时可以这样问</b>：“妈，周末早上药箱响的时候你一般在干嘛呀？要不要换个时间提醒？”</li>');
-  acts.push('<li><b>晚上的药</b>：周二妈妈“记不清吃没吃”过一次。提醒她吃完立刻按确认，记不清时可以在药箱记录里查药格打开时间。</li>');
+  const ws = weekStats();
+  for (const [k, label] of [['am', '早上'], ['pm', '晚上']]) {
+    const s = ws[k];
+    if (s.weekendPattern && k === 'am') {
+      acts.push(`<li><b>把周六、周日早上的提醒改到 9:00</b>：避开妈妈周末出门、起得晚的时间。<div class="ai-btns">${S.weekend ? '<span class="okchip">✅ 已改好，从明天（周六）开始</span>' : '<button data-act="weekend" class="aibtn sm">一键修改</button>'}</div></li>`);
+      acts.push('<li><b>周末打电话时可以这样问</b>：“妈，周末早上药箱响的时候你一般在干嘛呀？要不要换个时间提醒？”</li>');
+    } else if (s.weekendPattern) acts.push(`<li><b>${label}的药周末经常要再提醒</b>：周末打电话时问问妈妈这个时间一般在做什么，看要不要换个提醒时间。</li>`);
+  }
+  const unsure = [['am', '早上'], ['pm', '晚上']].filter(([k]) => ws[k].help.some(h => h.why === UNSURE)).map(([, l]) => l);
+  if (unsure.length) acts.push(`<li><b>${unsure.join('和')}的药出现过“记不清吃没吃”</b>：提醒妈妈吃完立刻按确认；记不清时先别补吃，先看药格里的药还在不在。</li>`);
+  if (acts.length === (openNow ? 1 : 0)) acts.push('<li><b>保持现在的提醒时间</b>：这一周没有看出需要调整的规律。</li>');
   return `<div class="ai-card"><div class="ai-h">✨ AI 帮你看了看</div>
     <div class="ai-sec"><b>📋 今天</b><p>${today.length ? today.join('；') + '。' : '到目前为止都按时确认了，不用专门打电话问吃药。'}</p></div>
-    <div class="ai-sec"><b>📈 这一周的规律</b><p>早上 8 点的药：<b>周六、周日</b>都要第 2 次提醒或打电话后才确认，工作日都按时。可能是周末作息不同，8 点时妈妈不在手机旁边。</p></div>
+    <div class="ai-sec"><b>📈 这一周的规律</b><p>${patternText('早上 8 点的药', ws.am)}</p><p>${patternText('晚上 8 点的药', ws.pm)}</p></div>
     <div class="ai-sec"><b>💡 建议你这样做</b><ol>${acts.join('')}</ol></div>
-    <div class="ai-foot">依据：最近 7 天的确认记录（过去 6 天为示例数据）。AI 只给建议，不改药、不判断是否真的吃了。</div></div>`;
+    <div class="ai-foot">依据：最近 7 天的确认记录（过去 6 天为示例数据），按规则统计（AI Mock）。AI 只给建议，不改药、不判断是否真的吃了。</div></div>`;
 }
 
 // 把口语/医嘱文字整理成表单（规则 Mock）
@@ -289,7 +330,7 @@ function start(key) {
     const now = 20 * 60 + 50;
     for (const d of S.doses) { Object.assign(d, { rang: true, reminded: true, escalated: true }); S.min = toMin(d.time) + 4; confirm(d, 'self'); }
     S.min = now; S.banner = null; S.msgs.forEach(m => m.read = true); clearTimeout(bannerTimer);
-    $('#childPhone').classList.remove('buzz');
+    $('#childPhone')?.classList.remove('buzz');
   }
   render();
 }
@@ -325,7 +366,7 @@ function parentHTML() {
     }
     case 'confirm': return sbar() + `<div class="p-body center"><h2>都吃好了吗？</h2>${medsOf(d).map(m => `<div class="cfm">${art(m, .8)}<span>${esc(short(m.name))} ${esc(m.dose)}</span></div>`).join('')}${replay}</div><div class="p-actions col"><button data-act="yes" class="p-ok">✅ 是的，都吃了</button><button data-act="no" class="p-sec">还没有，返回</button></div>`;
     case 'help': return sbar() + `<div class="p-body"><h2>遇到什么问题？</h2>${REASONS.map((r, i) => `<button data-reason="${r}" class="p-reason"><span class="num">${i + 1}</span>${r}</button>`).join('')}${replay}<button data-act="back" class="p-sec">返回</button></div>`;
-    case 'helpSent': return sbar() + `<div class="p-body center"><div class="big-emoji">📨</div><h2>已经告诉女儿了</h2><p class="p-text">她会马上给您打电话，<br>请稍等。</p>${replay}</div>`;
+    case 'helpSent': return sbar() + `<div class="p-body center"><div class="big-emoji">📨</div><h2>已经告诉女儿了</h2>${d.reason === UNSURE ? '<p class="p-warn">先不要再吃<br>这一次的药</p>' : ''}<p class="p-text">她会马上给您打电话，<br>请稍等。</p>${replay}</div>`;
     case 'done': {
       const nx = S.doses.find(x => x.status === 'pending' && !x.skip && toMin(x.time) > S.min);
       return sbar() + `<div class="p-body center"><div class="big-emoji">👍</div><h2>吃好了！</h2><p class="p-text">${d?.by === 'call' ? '女儿已经帮您记录好了' : '已经告诉女儿了'}</p>${nx ? `<p class="p-text small">下一次：${period(nx.time)} ${nx.time}</p>` : ''}${replay}<button data-act="home" class="p-sec">返回</button></div>`;
@@ -413,6 +454,7 @@ function guideHTML() {
 }
 
 function render() {
+  if (!BROWSER) return;
   $('#guide').innerHTML = guideHTML();
   $('#parent').innerHTML = parentHTML();
   const cs = $('#child').querySelector('.c-body')?.scrollTop || 0;
@@ -422,6 +464,8 @@ function render() {
   const st = SC[S.sc]?.steps[S.step];
   if (st?.target) { const el = document.querySelector(st.target); if (el) { el.classList.add('pulse'); el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } }
 }
+if (!BROWSER) module.exports = { fresh, start, tick, check, confirm, ring, nextEvent, medsOf, instruction, aiParse, weekStats, askHelp, dose, WEEK, get S() { return S; } };
+else {
 
 // ---------- 交互 ----------
 function toGuide(d) { S.parent = 'guide'; S.active = d.id; say(instruction(d)); }
@@ -432,11 +476,7 @@ document.addEventListener('click', e => {
   const d = dose(S.active);
   if (el.dataset.sc) return start(el.dataset.sc);
   if (el.dataset.tab) { S.tab = el.dataset.tab; S.banner = null; S.note = ''; if (S.tab === 'msgs') S.msgs.forEach(m => m.read = true); emit('tab:' + S.tab); return render(); }
-  if (el.dataset.reason) {
-    d.status = 'help'; d.reason = el.dataset.reason; S.parent = 'helpSent'; say(VOICE.helpSent);
-    notify({ type: 'help', dose: d.id, title: '🙋 妈妈需要帮忙', text: `${period(d.time)} ${d.time} 的药：妈妈说“${d.reason}”。建议现在打个电话。` });
-    emit('help'); return render();
-  }
+  if (el.dataset.reason) { askHelp(d, el.dataset.reason); emit('help'); return render(); }
   switch (el.dataset.act) {
     case 'ff': return tick(toMin(el.dataset.to));
     case 'next': { const n = nextEvent(); return n == null ? alert('今天没有待提醒的事了。可以在你手机的【药品】页添加新药。') : tick(n); }
@@ -508,3 +548,4 @@ document.addEventListener('change', async e => {
 });
 
 start('normal');
+}
