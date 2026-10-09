@@ -1,0 +1,1 @@
+{"name":"family-pillbox-b-demo","version":"1.0.0","private":true,"scripts":{"start":"node server.js","test":"node tests/check.js && node tests/family-check.js"},"engines":{"node":">=18"}}
