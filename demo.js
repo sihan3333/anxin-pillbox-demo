@@ -66,7 +66,19 @@ function tone(f, dur, when = 0, vol = 0.08) {
   o.frequency.value = f; o.connect(g); g.connect(c.destination);
   g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur); o.start(t); o.stop(t + dur);
 }
-function speak(t) { if (!sound || !('speechSynthesis' in window)) return; try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'zh-CN'; u.rate = 0.85; speechSynthesis.speak(u); } catch { } }
+// 浏览器朗读长句会中途停、cancel 后立刻 speak 会被吞，所以按句拆开排队并稍等再读
+let speakTimer, utterQ = [];
+const zhVoice = () => { const vs = speechSynthesis.getVoices().filter(v => /^zh[-_]CN/i.test(v.lang)); return vs.find(v => /Xiaoxiao|Natural/i.test(v.name)) || vs[0]; };
+if ('speechSynthesis' in window) { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); }
+function speak(t) {
+  if (!sound || !('speechSynthesis' in window) || !t) return;
+  try {
+    clearTimeout(speakTimer); speechSynthesis.cancel();
+    const v = zhVoice();
+    utterQ = (t.match(/[^。！？]+[。！？]?/g) || [t]).map(p => { const u = new SpeechSynthesisUtterance(p); u.lang = 'zh-CN'; u.rate = 0.85; if (v) u.voice = v; return u; });
+    speakTimer = setTimeout(() => { speechSynthesis.resume(); utterQ.forEach(u => speechSynthesis.speak(u)); }, 150);
+  } catch { }
+}
 function say(t) { S.lastSpeech = t; speak(t); }
 function startRing(prompt) {
   stopRing(); let n = 0;
@@ -75,7 +87,7 @@ function startRing(prompt) {
 }
 function stopRing() { clearInterval(ringTimer); ringTimer = null; }
 function ding() { tone(1046, 0.15); tone(1318, 0.25, 0.15); }
-function hush() { stopRing(); try { speechSynthesis.cancel(); } catch { } }
+function hush() { stopRing(); clearTimeout(speakTimer); try { speechSynthesis.cancel(); } catch { } }
 
 const stepName = (m, i) => `第${CN[i]}种${mealStep(m).label ? `，${mealStep(m).label}吃` : ''}`;
 const instruction = d => { const ms = medsOf(d), seq = ms.length > 1; return `该吃${spokenTime(d.time)}的药了。` + (seq ? `一共${ms.length}种，请按顺序吃。` : '') + ms.map((m, i) =>
