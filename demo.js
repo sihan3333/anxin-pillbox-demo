@@ -226,11 +226,11 @@ function aiHTML() {
   const unsure = [['am', '早上'], ['pm', '晚上']].filter(([k]) => ws[k].help.some(h => h.why === UNSURE)).map(([, l]) => l);
   if (unsure.length) acts.push(`<li><b>${unsure.join('和')}的药出现过“记不清吃没吃”</b>：提醒妈妈吃完立刻按确认；记不清时先别补吃，先看药格里的药还在不在。</li>`);
   if (acts.length === (openNow ? 1 : 0)) acts.push('<li><b>保持现在的提醒时间</b>：这一周没有看出需要调整的规律。</li>');
-  return `<div class="ai-card"><div class="ai-h">✨ AI 帮你看了看</div>
+  return `<div class="ai-card"><div class="ai-h">📊 这一周的情况</div>
     <div class="ai-sec"><b>📋 今天</b><p>${today.length ? today.join('；') + '。' : '到目前为止都按时确认了，不用专门打电话问吃药。'}</p></div>
     <div class="ai-sec"><b>📈 这一周的规律</b><p>${patternText('早上 8 点的药', ws.am)}</p><p>${patternText('晚上 8 点的药', ws.pm)}</p></div>
     <div class="ai-sec"><b>💡 建议你这样做</b><ol>${acts.join('')}</ol></div>
-    <div class="ai-foot">依据：最近 7 天的确认记录（过去 6 天为示例数据），按规则统计（AI Mock）。AI 只给建议，不改药、不判断是否真的吃了。</div></div>`;
+    <div class="ai-foot">这里是<b>规则统计</b>，不是大模型：从最近 7 天的确认记录（过去 6 天为示例数据）算出规律，再按规则给建议。真实产品中可以让大模型把记录写成更好懂的话、起草打电话的开场白；什么时候提醒、什么时候通知你仍由固定规则决定，模型不判断妈妈吃没吃，也不改药。</div></div>`;
 }
 
 // 把口语/医嘱文字整理成表单（规则 Mock）
@@ -287,8 +287,8 @@ const SC = {
     { text: '8 点到了！妈妈的手机像来电一样<b>响铃</b>，还会<b>语音</b>说“该吃药了，请按绿色的接听键”。点绿色的【接听】。', target: '[data-act=answer]', wait: 'answer' },
     { text: '妈妈能看到<b>药盒和药片长什么样、药箱第几格亮灯、吃几片、怎么吃</b>，手机会全部读出来，并告诉她遇到问题可以按橙色的【我需要帮忙】。假设妈妈吃完了，点【我吃好了】。', target: '[data-act=done]', wait: 'doneClick' },
     { text: '手机会语音问妈妈“都吃好了吗？”，防止误按。点绿色的【是的，都吃了】。', target: '[data-act=yes]', wait: 'confirmed' },
-    { text: '看右边！你的手机<b>马上收到通知</b>，几点吃的、吃了什么都写清楚了，不用再打电话问。点【✨ AI 帮我分析】，看看 AI 根据这一周的情况给你什么建议。', target: '[data-act=summary]', wait: 'summary' },
-    { text: '🎉 完成！AI 发现妈妈<b>周末早上</b>经常要提醒两次，建议把周末的提醒改到 9 点，可以一键修改。接着试试「② 妈妈忘了吃药」。', end: true }
+    { text: '看右边！你的手机<b>马上收到通知</b>，几点吃的、吃了什么都写清楚了，不用再打电话问。点【📊 看看这一周】，看看按最近 7 天记录统计出的规律和建议。', target: '[data-act=summary]', wait: 'summary' },
+    { text: '🎉 完成！统计发现妈妈<b>周末早上</b>经常要提醒两次，建议把周末的提醒改到 9 点。接着试试「② 妈妈忘了吃药」。', end: true }
   ] },
   forgot: { title: '② 妈妈忘了吃药', steps: [
     { text: '现在是早上 7:58。点【快进到 08:00】。', ff: '08:00', target: '#g-ff', wait: 'ring' },
@@ -302,36 +302,20 @@ const SC = {
     { text: '点【是的，都吃了】。', target: '[data-act=yes]', wait: 'confirmed' },
     { text: '🎉 完成！你的手机收到“妈妈已经吃药了”。只有真的没确认时你才需要介入，而且一个电话就能安排好后续提醒。', end: true }
   ] },
-  help: { title: '③ 妈妈找不到药', steps: [
+  unsure: { title: '③ 妈妈记不清吃没吃', steps: [
     { text: '现在是早上 7:58。点【快进到 08:00】。', ff: '08:00', target: '#g-ff', wait: 'ring' },
     { text: '妈妈的手机响了，点绿色的【接听】。', target: '[data-act=answer]', wait: 'answer' },
-    { text: '这次假设妈妈<b>找不到药</b>。点橙色的【我需要帮忙】。', target: '[data-act=help]', wait: 'helpClick' },
-    { text: '手机会<b>按序号读出</b>四个选项，妈妈不识字也能按。点【1 找不到药】。', target: '[data-reason="找不到药"]', wait: 'help' },
-    { text: '你的手机<b>立刻收到求助</b>，不用等 30 分钟。点【📞 打给妈妈】。', target: '[data-act=call]', wait: 'call' },
-    { text: '电话里告诉妈妈：“药箱第 1 格，正在亮灯的蓝盒子。”妈妈找到并吃了，点【妈妈已经吃了】。', target: '[data-act=callok]', wait: 'callResult' },
-    { text: '🎉 完成！妈妈遇到困难时一键求助，你能马上知道是什么问题。', end: true }
+    { text: '这次假设妈妈<b>记不清刚才有没有吃过</b>。点橙色的【我需要帮忙】。', target: '[data-act=help]', wait: 'helpClick' },
+    { text: '手机会<b>按序号读出</b>四个选项，妈妈看不清字也能按。点【3 记不清吃没吃】。', target: '[data-reason="记不清吃没吃"]', wait: 'help' },
+    { text: '妈妈的手机用大字和语音提醒她<b>先不要再吃</b>：重复吃药有风险，比如降糖药。你的手机<b>立刻收到求助</b>，并提示先看药格。点【📞 打给妈妈】。', target: '[data-act=call]', wait: 'call' },
+    { text: '电话里请妈妈看看药箱第 1、2 格：药已经不在了，说明刚才吃过。点【妈妈已经吃了】。', target: '[data-act=callok]', wait: 'callResult' },
+    { text: '🎉 完成！记不清时不催着补吃，而是先停下、一起核对，避免重复吃药。', end: true }
   ] },
-  setup: { title: '④ 帮妈妈录入新药', steps: [
-    { text: '现在是晚上 8:50，今天的药妈妈都吃了。医生新开了一种药，你来帮妈妈录入。点右边手机底部的【💊 药品】。', target: '[data-tab=meds]', wait: 'tab:meds' },
-    { text: '点【＋ 添加新药】。', target: '[data-act=add]', wait: 'add' },
-    { text: '可以打字，也可以<b>直接说</b>。点【🎤 语音说】，说一句：“这是降脂药，每次一片，晚上九点吃，睡前用温水送服”。（浏览器不支持语音时，会自动用这句示例代替）', target: '[data-act=voice]', wait: 'voice' },
-    { text: '点【✨ AI 帮我填】，AI 会把这句话整理成药名、剂量、时间和吃法。', target: '[data-act=ai]', wait: 'ai' },
-    { text: 'AI 填好了，请核对。为了不吃错，最好点【📷 拍照/上传药盒照片】放一张实物照片（可跳过，跳过会用颜色和形状示意）。然后点【保存】。', target: '[data-act=save]', wait: 'setup' },
-    { text: '保存好了，妈妈的手机会按时提醒。点【快进到 21:00】。', ff: '21:00', target: '#g-ff', wait: 'ring' },
-    { text: '妈妈的手机响了，点【接听】，看看妈妈看到的是不是你刚才录入的样子。', target: '[data-act=answer]', wait: 'answer' },
-    { text: '🎉 完成！你只需要录入一次，之后每天到点都会这样提醒妈妈。', end: true }
-  ] },
-  free: { title: '自由体验', steps: [] }
+  free: { title: '自由体验（录入新药等）', steps: [] }
 };
 
 function start(key) {
   hush(); clearTimeout(bannerTimer); fresh(); S.sc = key; S.step = 0;
-  if (key === 'setup') {
-    const now = 20 * 60 + 50;
-    for (const d of S.doses) { Object.assign(d, { rang: true, reminded: true, escalated: true }); S.min = toMin(d.time) + 4; confirm(d, 'self'); }
-    S.min = now; S.banner = null; S.msgs.forEach(m => m.read = true); clearTimeout(bannerTimer);
-    $('#childPhone')?.classList.remove('buzz');
-  }
   render();
 }
 function emit(ev) { const st = SC[S.sc]?.steps[S.step]; if (st && st.wait === ev) S.step++; }
@@ -414,7 +398,7 @@ function childHTML() {
       ${todo.map(d => `<div class="alert ${d.status}"><b>${d.status === 'help' ? '🙋 妈妈需要帮忙' : '⚠️ 妈妈还没确认吃药'}</b><p>${d.status === 'help' ? `${d.time} 的药：妈妈说“${esc(d.reason)}”` : `${d.time} 的药提醒了 2 次，${S.waitMin} 分钟没确认`}${d.follow != null ? `<br>⏰ ${fmt(d.follow)} 会再响铃提醒妈妈` : ''}</p>${contactBtns(d)}</div>`).join('')}
       <div class="c-doses">${S.doses.map(d => `<div class="c-dose ${d.status} ${open(d) && d.status === 'pending' ? 'late' : ''}"><div class="c-time">${d.time}<small>${period(d.time)}</small></div><div><div class="c-meds">${esc(names(d))}</div><div class="c-st">${statusText(d)}</div></div></div>`).join('')}</div>
       ${weekHTML()}
-      ${S.showAI ? aiHTML() : '<button data-act="summary" class="aibtn">✨ AI 帮我分析：接下来怎么做</button>'}`;
+      ${S.showAI ? aiHTML() : '<button data-act="summary" class="aibtn">📊 看看这一周：接下来怎么做</button>'}`;
   } else if (S.tab === 'msgs') {
     body = `<div class="c-head"><div class="c-hi">消息</div><div class="c-sub">来自 安心药箱</div></div>` + (S.msgs.map(m => `<div class="sms ${m.type}"><div class="sms-t">${esc(m.title)}</div><div>${esc(m.text)}</div><small>${m.time}</small>${open(dose(m.dose)) && (m.type === 'alert' || m.type === 'help') ? contactBtns(dose(m.dose)) : ''}</div>`).join('') || '<p class="empty">还没有消息。妈妈吃完药、或者需要你帮忙时，这里会收到通知。</p>');
   } else {
@@ -447,7 +431,7 @@ function guideHTML() {
   const sc = SC[S.sc], st = sc.steps[S.step];
   const tabs = Object.entries(SC).map(([k, v]) => `<button data-sc="${k}" class="sc ${k === S.sc ? 'on' : ''}">${v.title}</button>`).join('');
   let box;
-  if (S.sc === 'free') box = '<p>随意操作两部手机：左边是妈妈的，右边是你的。用下面的按钮让时间往前走。</p>';
+  if (S.sc === 'free') box = '<p>随意操作两部手机：左边是妈妈的，右边是你的。用下面的按钮让时间往前走。想试试录入新药，点右边手机底部的【💊 药品】→【＋ 添加新药】，可以打字或语音说出用法。</p>';
   else box = `<div class="stepno">第 ${S.step + 1} 步 / 共 ${sc.steps.length} 步</div><p>${st.text}</p>${st.ff ? `<button id="g-ff" data-act="ff" data-to="${st.ff}" class="primary">⏩ 快进到 ${st.ff}</button>` : ''}${st.end ? '<button data-act="restart" class="primary">↺ 再来一遍</button>' : ''}`;
   const free = S.sc === 'free' ? '<button data-act="next">⏩ 快进到下一次提醒</button><button data-act="plus15">+15 分钟</button>' : '';
   return `<div class="sc-row"><span class="pick">选一个情景体验：</span>${tabs}</div><div class="stepbox">${box}</div><div class="timebar"><span>🕗 现在 <b>${fmt(S.min)}</b></span>${free}<button data-act="sound">${sound ? '🔊 声音：开' : '🔇 声音：关'}</button><button data-act="restart">↺ 重新开始</button></div>`;
@@ -517,7 +501,7 @@ document.addEventListener('click', e => {
       const r = aiParse(text);
       Object.assign(f, { name: r.name || f.name, dose: r.dose || f.dose, times: r.times.join(', ') || f.times, method: r.method || f.method });
       const miss = [!r.name && '药名', !r.dose && '每次吃多少', !r.times.length && '具体几点', !r.method && '怎么吃'].filter(Boolean);
-      f.aiNote = '✨ AI 已整理出能确定的内容。' + (miss.length ? `原话里没说清楚的（${miss.join('、')}）请你补上，AI 不会瞎猜。` : '请核对一遍。');
+      f.aiNote = '✨ 已整理出能确定的内容（演示版用规则模拟 AI）。' + (miss.length ? `原话里没说清楚的（${miss.join('、')}）请你补上，AI 不会瞎猜。` : '请核对一遍。');
       emit('ai'); break;
     }
     case 'cancel': S.draft = null; break;

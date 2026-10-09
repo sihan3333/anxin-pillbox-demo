@@ -76,5 +76,5 @@ test('AI 录入不猜没说清的剂量和时刻', () => {
   assert.equal(r.dose, ''); assert.deepEqual(r.times, []);
 });
 
-fs.writeFileSync(path.join(__dirname, 'demo-results.json'), JSON.stringify({ testedAt: new Date().toISOString(), scope: 'v3 双手机 Demo（demo.js）的提醒、通知、求助、服药顺序与规则 Mock；不代表实际服药或用户效果', passed: results.length, results }, null, 2));
+fs.writeFileSync(path.join(__dirname, 'demo-results.json'), JSON.stringify({ testedAt: new Date().toISOString(), scope: '双手机 Demo（demo.js）的提醒、通知、求助、服药顺序与规则统计；不代表实际服药或用户效果', passed: results.length, results }, null, 2));
 console.log(`${results.length}/${results.length} passed`);
