@@ -7,7 +7,7 @@ const port = Number(process.env.PORT || 8776);
 const model = process.env.AI_MODEL;
 const key = process.env.AI_API_KEY;
 const base = process.env.AI_BASE_URL;
-const files = { '/': 'index.html', '/index.html': 'index.html', '/app.js': 'app.js', '/style.css': 'style.css', '/core.js': 'src/core.js', '/family.js': 'src/family.js', '/src/family.js': 'src/family.js', '/src/extract.js': 'src/extract.js', '/product.html': 'product.html', '/review.html': 'review.html' };
+const files = { '/': 'index.html', '/index.html': 'index.html', '/app.js': 'app.js', '/style.css': 'style.css', '/core.js': 'src/core.js', '/family.js': 'src/family.js', '/src/family.js': 'src/family.js', '/src/extract.js': 'src/extract.js', '/product.html': 'product.html', '/v1.html': 'v1.html', '/demo.js': 'demo.js', '/demo.css': 'demo.css', '/review.html': 'review.html' };
 const server = http.createServer(async (req, res) => {
   const send = (status, obj) => { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(obj)); };
   if (req.method === 'GET' && req.url === '/api/status') return send(200, { mode: base && key && model ? 'live' : 'mock', model: base && key && model ? model : null });

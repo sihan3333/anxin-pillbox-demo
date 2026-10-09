@@ -1,6 +1,36 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>安心药箱 · 按时用药与家庭确认</title><link rel="stylesheet" href="style.css"></head><body><main><header><div><span class="eyebrow">场景 B · 异地子女 × 父母药箱</span><h1>安心药箱</h1><p>到点知道怎么吃，吃完让孩子知道。</p></div><nav><a href="product.html" target="_blank">产品说明 ↗</a><a href="review.html" target="_blank">验证复盘 ↗</a></nav></header>
-<div class="notice">本机双端模拟 · 虚构药品 · 药箱亮灯、短信与电话均为 Mock。已确认的安排才启用；不判断实际吞服。</div><div id="message" role="status"></div><div class="actions"><button id="parentView">父母端</button><button id="childView" class="secondary">子女端</button><button id="demo" class="secondary">载入新版家庭样例</button><button id="export" class="secondary">导出记录</button></div>
-<section class="simulator"><strong>演示时钟：<span id="clock">尚无任务</span></strong><div class="actions"><button id="minute" class="secondary">推进1分钟（到点）</button><button id="quarter" class="secondary">推进15分钟</button><button id="hour" class="secondary">推进30分钟</button><button id="offline" class="secondary">模拟离线</button><button id="sync" class="secondary">恢复同步</button></div><p class="muted">时间由按钮推进，无须实际等待。提醒和升级使用这个演示时钟；页面关闭后不发送消息。</p></section>
-<section id="parent"><h2>父母端 · 今天怎么吃</h2><label class="check"><input id="consent" type="checkbox">允许向子女分享确认、求助与未确认消息（可撤回）</label><div id="parentSettings"><label for="wait">到点后多久仍未确认，通知子女？</label><select id="wait"><option value="30">30分钟</option><option value="60">60分钟</option></select><p class="muted">到点先提醒父母，15分钟再次提醒。上述时间是家庭沟通参数，不代表医学安全延迟。</p></div><div id="reminder" class="notice" hidden></div><div id="tasks"></div>
-<details><summary>提前准备：核对药品、位置与吃法</summary><p>按已有方案填写。可上传实物照片供父母对照；照片不会自动识别或确认药品。</p><label for="input">已有安排文本</label><textarea id="input" rows="2" placeholder="示例药A，每次1片，连续1天，08:00、20:00"></textarea><div class="actions"><button id="extract">AI提取已有安排</button><button id="manual" class="secondary">手动填写一项</button></div><p id="mode" class="muted"></p><div id="draft"></div><div id="confirmArea" hidden><label for="checkedBy">安排核对人</label><input id="checkedBy" placeholder="例如：父母与子女共同核对"><label class="check"><input id="confirmed" type="checkbox">已对照现有方案和实物核对药品、剂量、时刻、位置与吃法</label><button id="create">启用已核对的今日安排</button></div></details></section>
-<section id="child" hidden><h2>子女端 · 父母用药确认</h2><div id="childContent"></div><div id="aiArea" hidden><button id="summarize">AI整理家庭状态（Mock）</button><div id="summary" class="notice" hidden></div></div></section><footer>Codex辅助设计和编码。AI提取默认规则Mock；指引与摘要为规则Mock；不接真实药箱、短信或电话服务。仅演示今日任务。</footer><script src="src/family.js"></script><script src="src/extract.js"></script><script src="app.js"></script></main></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>安心药箱 · 让异地的你知道爸妈吃药了</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>💊 安心药箱</h1>
+    <p>到点提醒爸妈吃什么、在哪、怎么吃；吃完自动告诉你。没吃，才需要你打电话。</p>
+  </div>
+  <nav><a href="product.html" target="_blank">产品说明</a><a href="review.html" target="_blank">验证复盘</a><a href="v1.html" target="_blank">旧版</a></nav>
+</header>
+
+<section id="guide" class="guide" aria-live="polite"></section>
+
+<section class="stage">
+  <div class="phone-col">
+    <div class="phone-label">👵 妈妈的手机</div>
+    <div class="phone" id="parentPhone"><div class="screen" id="parent"></div></div>
+  </div>
+  <div class="phone-col">
+    <div class="phone-label">👩 你的手机（女儿）</div>
+    <div class="phone" id="childPhone"><div class="screen" id="child"></div></div>
+  </div>
+</section>
+
+<footer>演示说明：药品均为虚构示例；响铃、短信、电话都是在网页里模拟的，不会真的发送。“已吃”是妈妈本人或电话确认的记录，不能证明药真的吞下。</footer>
+
+<script src="src/extract.js"></script>
+<script src="demo.js"></script>
+</body>
+</html>
