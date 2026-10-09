@@ -65,6 +65,7 @@ button{font:inherit;cursor:pointer;border:0}
 .cell.lit{background:#fde047;color:#713f12;box-shadow:0 0 12px #facc15;animation:glow 1s infinite alternate}
 @keyframes glow{to{box-shadow:0 0 22px #facc15}}
 .med{background:#fff;border:2px solid var(--line);border-radius:18px;padding:12px 14px;margin-bottom:12px;text-align:center}
+.mstep{font-size:20px;font-weight:800;color:#15803d;margin-bottom:6px}
 .slotno{display:inline-block;background:#fde047;font-weight:800;font-size:18px;padding:2px 12px;border-radius:8px}
 .art{display:block;margin:6px auto}
 .mname{font-size:24px;font-weight:800}

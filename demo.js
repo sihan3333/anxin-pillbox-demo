@@ -12,6 +12,10 @@ const SHAPE = { round: '圆形', oval: '椭圆形', capsule: '胶囊' };
 const REASONS = ['找不到药', '不知道怎么吃', '记不清吃没吃', '让孩子给我打电话'];
 const SAMPLE_VOICE = '这是降脂药，每次一片，晚上九点吃，睡前用温水送服';
 const look = m => `${BOX[m.box][0]}盒子，${PILL[m.pill][0]}${SHAPE[m.shape]}${m.shape === 'capsule' ? '' : '药片'}`;
+// 同一时刻多种药时，按吃法里的饭点关系排先后；没写饭点关系的排在“吃饭时”一档，保持录入顺序
+const MEAL = [[/空腹|饭前|餐前/, '饭前'], [/和饭|随餐|吃饭时|进餐时|餐中|与食物同服/, '吃饭时'], [/饭后|餐后/, '饭后'], [/睡前/, '睡前']];
+const mealStep = m => { const i = MEAL.findIndex(([r]) => r.test(m.method)); return i < 0 ? { rank: 1, label: '' } : { rank: i, label: MEAL[i][1] }; };
+const CN = '一二三四五六七八';
 
 // 过去 6 天的示例记录（演示 AI 分析用）
 const WEEK = [
@@ -48,7 +52,7 @@ function buildDoses() {
     return { id: time, time, medIds, status: 'pending', rang: past, reminded: past, escalated: past, skip: past, follow: null, recheck: null };
   });
 }
-const medsOf = d => d.medIds.map(id => S.meds.find(m => m.id === id));
+const medsOf = d => d.medIds.map(id => S.meds.find(m => m.id === id)).sort((a, b) => mealStep(a).rank - mealStep(b).rank);
 const dose = id => S.doses.find(d => d.id === id);
 const names = d => medsOf(d).map(m => `${short(m.name)} ${m.dose}`).join('、');
 const slots = d => medsOf(d).map(m => m.slot).join('、');
@@ -73,9 +77,10 @@ function stopRing() { clearInterval(ringTimer); ringTimer = null; }
 function ding() { tone(1046, 0.15); tone(1318, 0.25, 0.15); }
 function hush() { stopRing(); try { speechSynthesis.cancel(); } catch { } }
 
-const instruction = d => `该吃${spokenTime(d.time)}的药了。` + medsOf(d).map(m =>
-  `打开药箱第${m.slot}格，拿${BOX[m.box][0]}盒子的${short(m.name)}，是${PILL[m.pill][0]}${SHAPE[m.shape]}的，吃${m.dose}。${m.method}。`).join('') +
-  '吃好以后，请按左边绿色的“我吃好了”。如果遇到问题，比如找不到药、不知道怎么吃，请按右边橙色的“我需要帮忙”。';
+const stepName = (m, i) => `第${CN[i]}种${mealStep(m).label ? `，${mealStep(m).label}吃` : ''}`;
+const instruction = d => { const ms = medsOf(d), seq = ms.length > 1; return `该吃${spokenTime(d.time)}的药了。` + (seq ? `一共${ms.length}种，请按顺序吃。` : '') + ms.map((m, i) =>
+  `${seq ? stepName(m, i) + '：' : ''}打开药箱第${m.slot}格，拿${BOX[m.box][0]}盒子的${short(m.name)}，是${PILL[m.pill][0]}${SHAPE[m.shape]}的，吃${m.dose}。${m.method}。`).join('') +
+  `${seq ? '都' : ''}吃好以后，请按左边绿色的“我吃好了”。如果遇到问题，比如找不到药、不知道怎么吃，请按右边橙色的“我需要帮忙”。`; };
 const VOICE = {
   confirm: '您都吃好了吗？吃好了，请按绿色的“是的，都吃了”。还没吃，请按下面灰色的“还没有，返回”。',
   help: '遇到什么问题了？请按对应的按钮。一，找不到药。二，不知道怎么吃。三，记不清吃没吃。四，让孩子给我打电话。',
@@ -197,7 +202,7 @@ function aiParse(text) {
     if (m[1] === '中午' && h < 6) h += 12;
     times.add(`${String(h).padStart(2, '0')}:${String(mi).padStart(2, '0')}`);
   }
-  const how = t.match(/(饭前|饭后|空腹|睡前|随餐|和饭|吃饭时|用温水|温水)[^，,。；;\n]*/);
+  const how = t.match(/(饭前|饭后|餐前|餐后|空腹|睡前|随餐|和饭|吃饭时|进餐时|用温水|温水)[^，,。；;\n]*/);
   const dose = doseM ? `${cnNum(doseM[1]) === 0.5 ? '半' : cnNum(doseM[1])}${doseM[2]}` : '';
   return { name: nameM ? nameM[1] : '', dose, times: [...times].sort(), method: how ? how[0] : '' };
 }
@@ -299,9 +304,10 @@ function parentHTML() {
     case 'sms': return sbar() + `<div class="p-body"><h2>💬 女儿发来消息</h2><div class="p-sms">${esc(S.psms.text)}</div>${replay}</div><div class="p-actions one"><button data-act="gotake" class="p-ok">💊 好的，去吃药</button></div>`;
     case 'guide': {
       const ms = medsOf(d);
-      return sbar() + `<div class="p-body"><h2>${period(d.time)} ${d.time}<br>要吃 ${ms.length} 种药</h2>
+      const seq = ms.length > 1;
+      return sbar() + `<div class="p-body"><h2>${period(d.time)} ${d.time}<br>要吃 ${ms.length} 种药${seq ? '<br><small>请按顺序吃</small>' : ''}</h2>
         <div class="pb-wrap"><div class="pb-title">💡 药箱这几格在亮灯</div>${pillbox(ms.map(m => m.slot))}</div>
-        ${ms.map(m => `<div class="med"><div class="slotno">第 ${m.slot} 格</div>${art(m, 1.3)}<div class="mname">${esc(short(m.name))}</div><div class="mlook">${esc(look(m))}</div><div class="mdose">吃 <b>${esc(m.dose)}</b></div><div class="mhow">${esc(m.method)}</div></div>`).join('')}
+        ${ms.map((m, i) => `<div class="med">${seq ? `<div class="mstep">${stepName(m, i)}</div>` : ''}<div class="slotno">第 ${m.slot} 格</div>${art(m, 1.3)}<div class="mname">${esc(short(m.name))}</div><div class="mlook">${esc(look(m))}</div><div class="mdose">吃 <b>${esc(m.dose)}</b></div><div class="mhow">${esc(m.method)}</div></div>`).join('')}
         ${replay}</div>
         <div class="p-actions"><button data-act="done" class="p-ok">✅ 我吃好了</button><button data-act="help" class="p-help">🙋 我需要帮忙</button></div>`;
     }
