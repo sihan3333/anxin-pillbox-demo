@@ -4,7 +4,11 @@
 
 交付：product.html 产品说明；网页Demo与源码；review.html 验证复盘。
 
-## 运行
+## 在线访问
+
+https://sihan3333.github.io/anxin-pillbox-demo/ （静态版，无需安装；安排提取在浏览器内用规则 Mock 完成）
+
+## 本地运行
 
 Node.js 18+，无需安装依赖。双击启动Demo.bat，或执行 node server.js（默认8776）。本次已运行的新版地址：http://127.0.0.1:8788/ 。运行其他端口可在PowerShell设置 `$env:PORT='8788'` 后执行 `node server.js`；已有服务时直接打开。
 
