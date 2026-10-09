@@ -36,8 +36,9 @@ const server = http.createServer(async (req, res) => {
       return send(502, { error: '提取未成功或输出校验失败。尚未创建任务；可重试或改用手动录入。' });
     }
   }
-  if (req.method !== 'GET' || !files[req.url]) { res.writeHead(404); return res.end('Not found'); }
-  const file = files[req.url];
+  const urlPath = req.url.split('?')[0];
+  if (req.method !== 'GET' || !files[urlPath]) { res.writeHead(404); return res.end('Not found'); }
+  const file = files[urlPath];
   const type = file.endsWith('.js') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : 'text/html';
   res.writeHead(200, { 'Content-Type': type + '; charset=utf-8', 'Cache-Control': 'no-store' });
   fs.createReadStream(path.join(__dirname, file)).pipe(res);
