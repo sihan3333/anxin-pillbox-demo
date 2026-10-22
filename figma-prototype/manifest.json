@@ -1,0 +1,9 @@
+{
+  "name": "安心药箱原型",
+  "id": "anxin-pillbox-prototype-local",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": { "allowedDomains": ["none"] }
+}
