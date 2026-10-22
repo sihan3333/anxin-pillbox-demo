@@ -505,25 +505,29 @@ function buildParent() {
   // 响铃中的波纹：三圈由浅到深，中间是接听键
   const pulse = figma.createFrame();
   pulse.name = '响铃波纹';
-  pulse.resize(152, 152);
+  pulse.resize(140, 140);
   pulse.fills = [];
   pulse.clipsContent = false;
-  for (const [d, a] of [[152, 0.08], [124, 0.14], [104, 0.22]]) {
+  for (const [d, a] of [[140, 0.08], [118, 0.14], [100, 0.22]]) {
     const e = figma.createEllipse();
     e.name = '波纹';
     e.resize(d, d);
-    e.x = (152 - d) / 2; e.y = (152 - d) / 2;
+    e.x = (140 - d) / 2; e.y = (140 - d) / 2;
     e.fills = [{ type: 'SOLID', color: rgb(C.green), opacity: a }];
     pulse.appendChild(e);
   }
   const ac = circ('接听键', 88, C.green, ico('phone', C.white, 40));
   ac.effects = [{ type: 'DROP_SHADOW', color: { r: 0, g: 0.53, b: 0.35, a: 0.3 }, offset: { x: 0, y: 8 }, radius: 20, spread: 0, visible: true, blendMode: 'NORMAL' }];
   pulse.appendChild(ac);
-  ac.x = 32; ac.y = 32;
+  ac.x = 26; ac.y = 26;
   put(answer, pulse, null);
   link(ac, 'Guide');
   put(answer, txt('接听', 'P_h2', C.text, 'CENTER'), 'HUG');
-  put(answer, txt('第 1 次提醒 · 没接的话 15 分钟后再响', 'P_small', C.text2, 'CENTER'), 'HUG');
+  const later = box('现在不方便吃', { dir: 'HORIZONTAL', gap: 4, pad: [4, 8, 4, 8], cross: 'CENTER' });
+  put(answer, later, 'HUG');
+  put(later, txt('现在不方便吃？', 'P_bodyB', C.brand), 'HUG');
+  put(later, ico('right', C.brand, 22), null);
+  link(later, 'Later');
   link(put(sheet, btn('我需要帮忙', 'warnLine', 'P_btn', 60)), 'Help');
 
   // ② 吃药指引
@@ -684,6 +688,42 @@ function buildParent() {
   spacer(body);
   put(body, btn('放好了，下一格', 'success', 'P_btn', 64, 'check'));
   link(put(body, btn('全部装好，拍照给女儿', 'line', 'P_btn', 60, 'camera')), 'RefillCheck');
+
+  // ⑨ 现在不方便吃：随餐药还没开饭 / 人不在家
+  ({ s, body, nav } = screen('Later', '父母 ⑨ 现在不方便吃', 8, Y, { parent: true, nav: '待会再吃', back: true,
+    note: '来自模拟推演：随餐药接听时常常还没开饭，或者人不在家。给一个“待会再吃”的出口，延后期间不算“没确认”，避免误报；子女端只显示“妈妈说待会再吃”。' }));
+  link(nav.left, 'Main');
+  put(body, txt('什么时候再提醒您？', 'P_h1'));
+  const opts = card('延后选项', { gap: 0, pad: 0 });
+  put(body, opts);
+  const o1 = box('还没开饭', { dir: 'HORIZONTAL', gap: 14, pad: [16, 16, 16, 16], cross: 'CENTER' });
+  bottomLine(o1);
+  put(opts, o1);
+  put(o1, circ('图标', 44, C.greenLight, txt('饭', 'P_bodyB', C.green, 'CENTER')), null);
+  const o1t = col(o1, '文字', 2);
+  put(o1t, txt('还没开饭', 'P_bodyB'));
+  put(o1t, txt('开饭了再提醒我 · 20 分钟后', 'P_small', C.text2));
+  put(o1, ico('right', C.text2, 24), null);
+  const o2 = box('我不在家', { gap: 12, pad: [16, 16, 16, 16] });
+  put(opts, o2);
+  const o2h = row(o2, '标题', 14);
+  put(o2h, circ('图标', 44, C.brandLight, ico('home', C.brand, 24)), null);
+  const o2t = col(o2h, '文字', 2);
+  put(o2t, txt('我不在家', 'P_bodyB'));
+  put(o2t, txt('回去再吃，多久后提醒？', 'P_small', C.text2));
+  const choices = row(o2, '时间选项', 8);
+  for (const c of ['30 分钟', '1 小时', '2 小时']) {
+    const b = btn(c, c === '1 小时' ? 'primary' : 'light', 'P_small', 48);
+    put(choices, b);
+  }
+  const tell = card('女儿会看到', { fill: C.brandLight, gap: 6, pad: 16 });
+  put(body, tell);
+  put(tell, txt('女儿那边只会看到：', 'P_small', C.text2));
+  put(tell, txt('“妈妈说不在家，10:00 再提醒”', 'P_bodyB'));
+  put(tell, txt('不会说您没吃药。', 'P_small', C.text2));
+  put(body, voice('正在朗读：“还没开饭，按第 1 个；不在家，按第 2 个”'));
+  spacer(body);
+  link(put(body, btn('现在就吃', 'success', 'P_btn', 64)), 'Guide');
 }
 
 // ---------- 子女端 9 屏 ----------
@@ -1059,12 +1099,13 @@ function board(name, x, y, w, title, sub) {
 function buildSpecs() {
   const Y = ROW_SPEC;
   const st = board('规范：服药状态体系', 0, Y, 1640, '服药状态体系：只写看到的事实，不写推断',
-    '子女端所有页面统一用这 5 种状态。“打开过药格”只是参考信号，不能当作“已吃”；系统故障单独成一种状态，不和“没确认”混在一起。');
+    '子女端所有页面统一用这 6 种状态。“打开过药格”只是参考信号，不能当作“已吃”；系统故障单独成一种状态，不和“没确认”混在一起。');
   table(st, [200, 150, 420, 300, 370],
     ['子女端显示', '状态', '什么时候出现', '子女该做什么', '会不会通知子女'],
     [
       [tag('自己确认 08:03', 'success', false, 'check'), '本人确认', '妈妈按了“吃好了”，或合上药格后说了“吃好了”', '不用做什么', '默认并入每晚汇总，可改为实时'],
       [tag('电话确认', 'brand', false, 'phone'), '电话确认', '子女打电话后，选择“妈妈说吃过了”', '不用做什么', '不通知（是子女自己记的）'],
+      [tag('待会再吃 · 10:00', 'brand'), '父母主动延后', '父母选了“还没开饭”或“我不在家”', '不用做什么', '不通知；到延后时间仍没确认，按“还没确认”处理'],
       [tag('打开过药格', 'gray'), '有开合、未确认', '药格被打开过，但到约定时间还没有确认', '可以先等等，或打电话问一句', '到约定时间通知，并写明“药格打开过”'],
       [tag('还没确认', 'warning', false, 'alert'), '未确认', '到约定时间，既没有确认，药格也没打开过', '打电话；之后可设 15 分钟再响铃', '通知，按设置的顺序升级给家人'],
       [tag('药箱离线', 'gray', false, 'offline'), '设备离线', '超过 30 分钟联系不上药箱', '打电话，请妈妈检查电源和网络', '通知，并自动改用妈妈手机响铃兜底']
@@ -1103,7 +1144,7 @@ async function main() {
   setupVars();
   setupStyles();
 
-  rowTitle('父母端 · 8 屏', '适老化：大字、语音、一页只做一个决定。①–⑤ 主流程，⑥ 降低误报，⑦ 首次同意，⑧ 每周装药', ROW_P - 180);
+  rowTitle('父母端 · 9 屏', '适老化：大字、语音、一页只做一个决定。①–⑤ 主流程，⑥ 降低误报，⑦ 首次同意，⑧ 每周装药，⑨ 现在不方便吃', ROW_P - 180);
   buildParent();
   rowTitle('子女端 · 9 屏', '一眼看清吃没吃，只在需要时介入。①–⑤ 主流程，⑥ 设备离线，⑦ 装药核对与余量，⑧ 通知分级，⑨ 第一次使用', ROW_K - 180);
   buildChild();
@@ -1132,7 +1173,7 @@ async function main() {
   } catch (e) { console.warn(e); }
 
   figma.viewport.scrollAndZoomIntoView(page.children);
-  figma.closePlugin('安心药箱原型 ' + V + ' 已生成：17 屏 + 2 张规范板' + (linkFails ? `（${linkFails} 个跳转没设上，可在 Prototype 面板手动连）` : ''));
+  figma.closePlugin('安心药箱原型 ' + V + ' 已生成：18 屏 + 2 张规范板' + (linkFails ? `（${linkFails} 个跳转没设上，可在 Prototype 面板手动连）` : ''));
 }
 
 main().catch(e => figma.closePlugin('生成失败：' + (e && e.message ? e.message : e)));
