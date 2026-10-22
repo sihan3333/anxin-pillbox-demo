@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>安心药箱 · 吃药</title>
+<link rel="stylesheet" href="mvp.css">
+</head>
+<body class="mom">
+<main id="app"></main>
+<script src="mvp.js"></script>
+<script>
+const { esc, fmt, nowMin, period, spokenTime, fromHash, doses, currentDose, stepName, instruction, speak, smsLink, store, today } = MVP;
+const cfg = fromHash();
+const REASONS = ['找不到药', '不知道怎么吃', '记不清吃没吃', '让孩子给我打电话'];
+const UNSURE = '记不清吃没吃';
+let list = [], dose, screen = 'guide', reason = '';
+
+function log(type, extra = {}) {
+  const all = store.get('anxin.momlog', []);
+  all.push({ date: today(), dose: dose.time, type, at: fmt(nowMin()), ...extra });
+  store.set('anxin.momlog', all);
+}
+const names = d => d.meds.map(m => `${m.name}${m.dose}`).join('、');
+const slots = () => dose.meds.map(m => m.slot).filter(Boolean).sort((a, b) => a - b).join('、');
+const tel = () => `<a class="btn ghost" href="tel:${esc(cfg.phone)}">📞 直接给${esc(cfg.child)}打电话</a>`;
+
+const VOICE = {
+  confirm: '您都吃好了吗？吃好了，请按绿色的“是的，都吃了”。还没吃，请按灰色的“还没有，返回”。',
+  sent: `好的，吃好了。请在短信里按“发送”，告诉${cfg?.child || '女儿'}。如果短信没有打开，请按绿色的“再打开一次短信”。`,
+  help: '遇到什么问题了？请按对应的按钮。一，找不到药。二，不知道怎么吃。三，记不清吃没吃。四，让孩子给我打电话。',
+  unsure: `先不要再吃这一次的药。请按“发短信”，告诉${cfg?.child || '女儿'}，等她给您打电话，一起确认。`,
+  other: `请按“发短信”告诉${cfg?.child || '女儿'}，或者直接给她打电话。`
+};
+
+function render() {
+  const app = document.getElementById('app');
+  if (!cfg || !cfg.meds?.length) { app.innerHTML = '<h1>链接不完整</h1><p>请让孩子重新发一次链接。</p>'; return; }
+  const d = dose, seq = d.meds.length > 1;
+  const others = list.filter(x => x !== d).map(x => `<button data-dose="${x.time}">${period(x.time)} ${x.time}</button>`).join('');
+  if (screen === 'guide') app.innerHTML = `
+    <h1>${period(d.time)} ${d.time} 的药</h1>
+    <p class="when">要吃 ${d.meds.length} 种${seq ? '，请按顺序吃' : ''}</p>
+    <button data-act="read" class="ghost">🔊 读给我听</button>
+    ${d.meds.map((m, i) => `<div class="med">${seq ? `<div class="step">${esc(stepName(m, i))}</div>` : ''}${m.slot ? `<div class="slot">第 ${esc(m.slot)} 格</div>` : ''}
+      <div class="name">${esc(m.name)}</div>${m.look ? `<div>${esc(m.look)}</div>` : ''}<div>吃 <b>${esc(m.dose)}</b></div>${m.method ? `<div class="how">${esc(m.method)}</div>` : ''}</div>`).join('')}
+    <div class="stack"><button data-act="done" class="done">✅ 我吃好了</button><button data-act="help" class="help">🙋 我需要帮忙</button></div>
+    ${others ? `<div class="other"><span class="muted" style="width:100%;text-align:center">看其他时间的药：</span>${others}</div>` : ''}`;
+  else if (screen === 'confirm') app.innerHTML = `
+    <h1>都吃好了吗？</h1>
+    ${d.meds.map(m => `<div class="med"><div class="name">${esc(m.name)}</div><div>吃 ${esc(m.dose)}</div></div>`).join('')}
+    <div class="stack"><button data-act="yes" class="done">✅ 是的，都吃了</button><button data-act="back" class="ghost">还没有，返回</button></div>`;
+  else if (screen === 'sent') app.innerHTML = `
+    <h1>👍 吃好了！</h1>
+    <p class="when">请在短信里按“发送”，<br>告诉${esc(cfg.child)}。</p>
+    <div class="stack"><a class="btn done" href="${esc(smsLink(cfg.phone, okText()))}">📩 再打开一次短信</a><button data-act="read" class="ghost">🔊 再听一遍</button><button data-act="back" class="ghost">返回</button></div>`;
+  else if (screen === 'help') app.innerHTML = `
+    <h1>遇到什么问题？</h1>
+    <div class="stack">${REASONS.map((r, i) => `<button class="reason" data-reason="${r}"><b>${i + 1}</b>${r}</button>`).join('')}
+    <button data-act="read" class="ghost">🔊 再听一遍</button><button data-act="back" class="ghost">返回</button></div>`;
+  else if (screen === 'reason') app.innerHTML = `
+    <h1>告诉${esc(cfg.child)}</h1>
+    ${reason === UNSURE ? '<div class="warn">先不要再吃<br>这一次的药</div>' : ''}
+    <p class="when">您选的是：${esc(reason)}</p>
+    <div class="stack"><a class="btn help" href="${esc(smsLink(cfg.phone, helpText()))}" data-act="sms">📩 发短信告诉${esc(cfg.child)}</a>${tel()}<button data-act="read" class="ghost">🔊 再听一遍</button><button data-act="back" class="ghost">返回</button></div>`;
+}
+const okText = () => `【安心药箱】${cfg.mom}${dose.time}的药吃好了：${names(dose)}。确认时间${fmt(nowMin())}。`;
+const helpText = () => `【安心药箱】${cfg.mom}${dose.time}的药需要帮忙：${reason}。` + (reason === UNSURE ? `已提醒先不要再吃，请打电话一起确认${slots() ? `（可先请她看看药盒第${slots()}格里的药还在不在）` : ''}。` : '请给我打个电话。');
+const say = () => speak(screen === 'guide' ? instruction(dose) : VOICE[screen === 'reason' ? (reason === UNSURE ? 'unsure' : 'other') : screen]);
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act],[data-reason],[data-dose]'); if (!el) return;
+  if (el.dataset.dose) { dose = list.find(x => x.time === el.dataset.dose); screen = 'guide'; render(); return say(); }
+  if (el.dataset.reason) { reason = el.dataset.reason; screen = 'reason'; log('help', { reason }); render(); return say(); }
+  switch (el.dataset.act) {
+    case 'read': return say();
+    case 'done': screen = 'confirm'; break;
+    case 'back': screen = 'guide'; break;
+    case 'help': screen = 'help'; break;
+    case 'yes': screen = 'sent'; log('done'); render(); location.href = smsLink(cfg.phone, okText()); return;
+    case 'sms': return;
+  }
+  render(); say();
+});
+
+if (cfg?.meds?.length) { list = doses(cfg); dose = currentDose(list); document.title = `${cfg.mom}的药 · 安心药箱`; }
+render();
+</script>
+</body>
+</html>

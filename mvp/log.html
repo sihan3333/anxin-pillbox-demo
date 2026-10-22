@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>安心药箱 MVP · 我的记录</title>
+<link rel="stylesheet" href="mvp.css">
+</head>
+<body>
+<main>
+<h1>我的记录</h1>
+<p class="muted">每顿药结束后花 10 秒记一下。记录只保存在这台手机的浏览器里，换手机或清缓存会丢失，记得每天导出一次。</p>
+<div id="app"></div>
+<p class="muted" style="margin-top:24px"><a href="setup.html">修改药品设置</a> · <a href="guide.html">3 天测试指南</a></p>
+</main>
+<script src="mvp.js"></script>
+<script>
+const { esc, fromHash, store, doses, period, today } = MVP;
+const RESULT = {
+  '': '还没填',
+  self: '第 1 个闹钟后，妈妈自己发来确认',
+  self2: '第 2 个闹钟后，妈妈自己发来确认',
+  forgot: '吃了，但没发确认（打电话才知道）',
+  missed: '还没吃 / 漏吃了',
+  unsure: '妈妈求助：记不清吃没吃',
+  help: '妈妈求助：其他问题'
+};
+const CALL = { none: '没打电话', noConfirm: '打了：因为没收到确认', help: '打了：因为她求助', routine: '打了：就是不放心，想问问' };
+let cfg = fromHash() || store.get('anxin.cfg', null);
+if (cfg) store.set('anxin.cfg', cfg);
+let day = today();
+const data = () => store.get('anxin.log', {});
+
+function summary() {
+  const all = Object.entries(data()).filter(([, v]) => v.result);
+  const n = all.length, c = k => all.filter(([, v]) => v.result === k).length, calls = k => all.filter(([, v]) => v.call === k).length;
+  const days = new Set(all.map(([k]) => k.split('|')[0])).size;
+  const selfRate = n ? (c('self') + c('self2')) / n : 0;
+  const crit = [
+    ['父母本人确认率 ≥ 80%', `${Math.round(selfRate * 100)}%`, n > 0 && selfRate >= 0.8],
+    ['“吃了但没发确认” ≤ 2 次', `${c('forgot')} 次`, c('forgot') <= 2],
+    ['“不放心”的例行电话 ≤ 1 次', `${calls('routine')} 次`, calls('routine') <= 1]
+  ];
+  return `<h2>汇总（${days} 天，${n} 顿）</h2>
+    <div class="kpi"><div>本人确认<b>${c('self') + c('self2')}</b></div><div>其中要第 2 个闹钟<b>${c('self2')}</b></div><div>吃了没确认<b>${c('forgot')}</b></div><div>漏吃<b>${c('missed')}</b></div><div>求助<b>${c('unsure') + c('help')}</b></div><div>你打的电话<b>${all.filter(([, v]) => v.call && v.call !== 'none').length}</b></div></div>
+    <h2>对照事先定好的成功标准</h2>
+    <table><tr><th>标准</th><th>结果</th><th></th></tr>${crit.map(([a, b, ok]) => `<tr><td>${a}</td><td>${b}</td><td class="${n ? (ok ? 'pass' : 'fail') : 'muted'}">${n ? (ok ? '达到' : '未达到') : '—'}</td></tr>`).join('')}</table>
+    <p class="muted">数字只说明这几天的情况，还要结合第 3 天的访谈一起看。</p>
+    <div class="stack" style="margin-top:10px"><button id="csv" class="ghost">导出表格（CSV，可用 Excel 打开）</button></div>`;
+}
+
+function render() {
+  const app = document.getElementById('app');
+  if (!cfg) { app.innerHTML = '<div class="card">还没有设置药品。请先去 <a href="setup.html">子女设置</a>。</div>'; return; }
+  const d = data();
+  app.innerHTML = `<label for="day">日期</label><input id="day" type="date" value="${day}">
+    ${doses(cfg).map(x => { const k = `${day}|${x.time}`, v = d[k] || {}; return `<div class="card"><b>${period(x.time)} ${x.time}</b> <span class="muted">${esc(x.meds.map(m => m.name).join('、'))}</span>
+      <label>结果</label><select data-k="${k}" data-f="result">${Object.entries(RESULT).map(([a, b]) => `<option value="${a}" ${v.result === a ? 'selected' : ''}>${b}</option>`).join('')}</select>
+      <div class="row"><div><label>收到确认的时间</label><input data-k="${k}" data-f="at" type="time" value="${esc(v.at || '')}"></div>
+      <div><label>你打电话了吗</label><select data-k="${k}" data-f="call"><option value=""></option>${Object.entries(CALL).map(([a, b]) => `<option value="${a}" ${v.call === a ? 'selected' : ''}>${b}</option>`).join('')}</select></div></div>
+      <label>备注（妈妈怎么说、哪里卡住了）</label><input data-k="${k}" data-f="note" value="${esc(v.note || '')}"></div>`; }).join('')}
+    ${summary()}`;
+}
+document.addEventListener('change', e => {
+  if (e.target.id === 'day') { day = e.target.value || today(); return render(); }
+  const { k, f } = e.target.dataset; if (!k) return;
+  const d = data(); d[k] = { ...(d[k] || {}), [f]: e.target.value }; store.set('anxin.log', d); render();
+});
+document.addEventListener('click', e => {
+  if (e.target.id !== 'csv') return;
+  const rows = [['日期', '时间', '结果', '收到确认时间', '是否打电话', '备注']].concat(Object.entries(data()).sort().map(([k, v]) => [...k.split('|'), RESULT[v.result || ''], v.at || '', CALL[v.call] || '', v.note || '']));
+  const csv = '\uFEFF' + rows.map(r => r.map(x => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = `安心药箱记录_${today()}.csv`; a.click();
+});
+render();
+</script>
+</body>
+</html>

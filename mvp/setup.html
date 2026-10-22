@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>安心药箱 MVP · 子女设置</title>
+<link rel="stylesheet" href="mvp.css">
+</head>
+<body>
+<main>
+<h1>安心药箱 · 子女设置</h1>
+<p class="muted">按医生开的原方案填写，不要改药。填好后生成一个给爸妈专用的链接。所有信息只保存在链接和你自己的手机里，不会上传。</p>
+<div id="fileWarn"></div>
+
+<div class="card">
+  <div class="row">
+    <div><label for="mom">怎么称呼长辈</label><input id="mom" value="妈妈"></div>
+    <div><label for="child">长辈怎么称呼你</label><input id="child" value="女儿"></div>
+  </div>
+  <label for="phone">你的手机号（长辈确认后会发短信到这里）</label>
+  <input id="phone" inputmode="tel" placeholder="例如 13800000000">
+</div>
+
+<h2>药品</h2>
+<div id="meds"></div>
+<button id="add" class="ghost">＋ 再加一种药</button>
+
+<div id="err"></div>
+<div class="stack" style="margin-top:16px"><button id="gen" class="primary">生成给长辈的链接</button></div>
+
+<div id="out"></div>
+<p class="muted" style="margin-top:24px"><a href="guide.html">3 天测试指南</a> · <a href="log.html">我的记录</a></p>
+</main>
+<script src="mvp.js"></script>
+<script>
+const { esc, encode, fromHash, store, doses, fmt, toMin, period } = MVP;
+const blank = () => ({ name: '', dose: '', times: '', method: '', slot: '', look: '' });
+let cfg = fromHash() || store.get('anxin.cfg', null);
+let meds = cfg ? cfg.meds.map(m => ({ ...m, times: m.times.join(', ') })) : [blank()];
+if (cfg) { mom.value = cfg.mom; child.value = cfg.child; phone.value = cfg.phone; }
+if (location.protocol === 'file:') fileWarn.innerHTML = '<p class="warn" style="font-size:16px">你是在电脑上直接打开的本地文件，生成的链接在长辈手机上打不开。请改用在线版：<br><a href="https://sihan3333.github.io/anxin-pillbox-demo/mvp/setup.html">sihan3333.github.io/anxin-pillbox-demo/mvp/setup.html</a></p>';
+
+const FIELDS = [['name', '药名', '例如：二甲双胍'], ['dose', '每次吃多少', '例如：1片'], ['times', '几点吃（可多个，用逗号隔开）', '例如：08:00, 20:00'], ['method', '怎么吃（照医嘱或说明书原文）', '例如：和饭一起吃，用温水送服'], ['slot', '放在药盒第几格（没有分格药盒可不填）', '例如：2'], ['look', '长什么样（帮长辈认药）', '例如：橙色盒子、黄色椭圆药片']];
+function renderMeds() {
+  document.getElementById('meds').innerHTML = meds.map((m, i) => `<div class="card"><b>第 ${i + 1} 种药</b>${meds.length > 1 ? ` <button class="sm danger" data-del="${i}">删除</button>` : ''}
+    ${FIELDS.map(([k, l, p]) => `<label>${l}<input data-i="${i}" data-k="${k}" value="${esc(m[k])}" placeholder="${p}"></label>`).join('')}</div>`).join('');
+}
+renderMeds();
+document.addEventListener('input', e => { const { i, k } = e.target.dataset; if (k) meds[i][k] = e.target.value; });
+document.addEventListener('click', e => { if (e.target.dataset.del) { meds.splice(+e.target.dataset.del, 1); renderMeds(); } });
+add.onclick = () => { meds.push(blank()); renderMeds(); };
+
+gen.onclick = () => {
+  const errs = [];
+  const clean = meds.map((m, i) => {
+    const times = m.times.split(/[,，、\s]+/).filter(Boolean).map(t => t.replace('：', ':').padStart(5, '0'));
+    if (!m.name.trim() || !m.dose.trim()) errs.push(`第 ${i + 1} 种药：请填药名和每次吃多少`);
+    if (!times.length || times.some(t => !/^([01]\d|2[0-3]):[0-5]\d$/.test(t))) errs.push(`第 ${i + 1} 种药：时间请写成 08:00 这样的格式`);
+    return { name: m.name.trim(), dose: m.dose.trim(), times: [...new Set(times)].sort(), method: m.method.trim(), slot: m.slot.trim(), look: m.look.trim() };
+  });
+  if (!/^1\d{10}$/.test(phone.value.trim())) errs.push('请填写 11 位手机号，长辈确认后的短信会发到这里');
+  if (errs.length) { err.innerHTML = `<div class="warn" style="font-size:16px">${errs.map(esc).join('<br>')}</div>`; return; }
+  err.innerHTML = '';
+  cfg = { v: 1, mom: mom.value.trim() || '妈妈', child: child.value.trim() || '女儿', phone: phone.value.trim(), meds: clean };
+  store.set('anxin.cfg', cfg);
+  const base = location.href.split('#')[0].replace(/setup\.html.*$/, '');
+  const momLink = `${base}mom.html#${encode(cfg)}`;
+  const alarms = doses(cfg).map(d => `<tr><td>${fmt(toMin(d.time))}</td><td>闹钟名“${period(d.time)}吃药，点开安心药箱”</td></tr><tr><td>${fmt(toMin(d.time) + 15)}</td><td>闹钟名“还没吃药的话，现在吃”</td></tr>`).join('');
+  out.innerHTML = `<div class="card stack">
+    <div class="ok">✅ 已生成。下面三步做完就可以开始测试。</div>
+    <b>① 把这个链接发给${esc(cfg.mom)}，并帮她加到手机桌面或微信收藏</b>
+    <span class="link" id="ml">${esc(momLink)}</span>
+    <button id="copy" class="primary">复制链接</button>
+    <a class="btn ghost" href="${esc(momLink)}" target="_blank">先自己打开看看</a>
+    <b>② 在${esc(cfg.mom)}手机上设这些闹钟（每天重复）</b>
+    <table>${alarms}</table>
+    <b>③ 你自己的规则</b>
+    <p>每顿药到点后 30 分钟还没收到短信，就给${esc(cfg.mom)}打电话。每顿的结果记在 <a href="log.html">我的记录</a> 里。</p>
+  </div>`;
+  document.getElementById('copy').onclick = async () => { try { await navigator.clipboard.writeText(momLink); copy.textContent = '已复制 ✓'; } catch { prompt('长按复制这个链接', momLink); } };
+  out.scrollIntoView({ behavior: 'smooth' });
+};
+</script>
+</body>
+</html>
