@@ -3,7 +3,7 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const port = Number(process.env.PORT || 8776);
-const files = { '/': 'index.html', '/index.html': 'index.html', '/demo.js': 'demo.js', '/demo.css': 'demo.css', '/product.html': 'product.html', '/review.html': 'review.html', '/style.css': 'style.css' };
+const files = { '/': 'index.html', '/index.html': 'index.html', '/demo.js': 'demo.js', '/demo.css': 'demo.css', '/product.html': 'product.html', '/review.html': 'review.html', '/strategy.html': 'strategy.html', '/research.html': 'research.html', '/style.css': 'style.css' };
 const server = http.createServer((req, res) => {
   const urlPath = req.url.split('?')[0];
   if (req.method !== 'GET' || !files[urlPath]) { res.writeHead(404); return res.end('Not found'); }
