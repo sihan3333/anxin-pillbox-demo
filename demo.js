@@ -259,6 +259,60 @@ function aiParse(text) {
   const dose = doseM ? `${cnNum(doseM[1]) === 0.5 ? '半' : cnNum(doseM[1])}${doseM[2]}` : '';
   return { name: nameM ? nameM[1] : '', dose, times: [...times].sort(), method: how ? how[0] : '' };
 }
+
+// ---------- 大模型整理医嘱（DeepSeek，经 Cloudflare Worker 中转保管密钥）----------
+// 分工：模型只抽取原话里明确写了的内容，并给出每一项依据的原文片段；
+// 规则层逐项核对依据（groundCheck），对不上原文的一律去掉，留给子女补充——宁可空着，也不编。
+const AI_ENDPOINT = 'https://sansan-ai.sihanzheng68.workers.dev';
+function rxPrompt(text) {
+  return '你在帮子女把医嘱、药盒说明或口头交代整理成用药表单。只抽取原话里明确写了的内容，没写的字段一律留空，不要根据常识或药名推测。\n\n' +
+    '字段：\n' +
+    '- name：药名（原话里的叫法）\n' +
+    '- dose：每次吃多少，数字+单位，如 "1片" "2粒" "半片" "5mg"；只写了一天总量、没写每次多少时留空\n' +
+    '- times：具体几点吃，24 小时制 "HH:MM" 数组；只说了"一日三次""早晚各一次""饭后"而没说几点时，留空数组，不要自己定时间\n' +
+    '- method：怎么吃，如 "饭后" "睡前用温水送服" "空腹"；没写就留空\n' +
+    '- evidence：每个非空字段对应的原文片段，必须一字不差地从原话里复制，如 {"name":"降脂药","dose":"每次一片","times":["晚上九点"],"method":"睡前用温水送服"}\n\n' +
+    '只输出 JSON：{"name":"","dose":"","times":[],"method":"","evidence":{}}\n\n原话：' + text;
+}
+async function llmParse(text) {
+  const r = await fetch(AI_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: rxPrompt(text) }) });
+  if (!r.ok) throw new Error('http_' + r.status);
+  const j = await r.json();
+  return j.result || {};
+}
+// 规则层核对：每一项都要能在原话里找到依据，数字也要对得上
+function groundCheck(text, raw) {
+  const norm = s => String(s ?? '').replace(/[\s，,。；;：:]/g, '').toLowerCase();
+  const src = norm(text), ev = raw && typeof raw.evidence === 'object' && raw.evidence || {};
+  const inText = s => !!norm(s) && src.includes(norm(s));
+  const nums = s => {
+    const out = new Set(), t = String(s ?? '');
+    for (const m of t.matchAll(/\d+(?:\.\d+)?/g)) out.add(+m[0]);
+    for (const m of t.matchAll(/[一二两三四五六七八九十〇零]+/g)) { const v = cnNum(m[0]); if (!isNaN(v)) out.add(v); }
+    if (/半/.test(t)) out.add(0.5);
+    return out;
+  };
+  const out = { name: '', dose: '', times: [], method: '' }, dropped = [];
+  const str = v => typeof v === 'string' ? v.trim() : '';
+  const name = str(raw && raw.name), dose = str(raw && raw.dose), method = str(raw && raw.method);
+  if (name) { if (inText(ev.name) && norm(ev.name).includes(norm(name).slice(0, 2))) out.name = name; else dropped.push('药名'); }
+  if (dose) {
+    // the model may write the dose as "1片" or "一片" — read the number either way, then it must match the quoted text
+    const said = nums(ev.dose), mine = [...nums(dose)];
+    if (inText(ev.dose) && mine.length && mine.every(v => said.has(v))) out.dose = dose; else dropped.push('每次吃多少');
+  }
+  const times = Array.isArray(raw && raw.times) ? raw.times.filter(t => /^([01]?\d|2[0-3]):[0-5]\d$/.test(t)) : [];
+  if (times.length) {
+    const evT = [].concat(ev.times || []).filter(inText).join(' ');
+    // a clock time needs an hour actually said ("九点" "21:00"), not one made up from "一日三次" or "早晚"
+    const said = nums(evT), hasClock = /点|:|：/.test(evT);
+    const ok = times.filter(t => { const h = +t.split(':')[0]; return hasClock && (said.has(h) || said.has(h - 12) || (h === 0 && said.has(12))); });
+    out.times = [...new Set(ok.map(t => t.padStart(5, '0')))].sort();
+    if (ok.length < times.length) dropped.push('具体几点');
+  }
+  if (method) { if (inText(ev.method)) out.method = method; else dropped.push('怎么吃'); }
+  return { ...out, dropped };
+}
 function voiceInput() {
   const f = S.draft, R = window.SpeechRecognition || window.webkitSpeechRecognition;
   const fallback = why => { f.text = SAMPLE_VOICE; f.aiNote = `（${why}，已用一段示例语音代替）`; S.listening = false; emit('voice'); render(); };
@@ -448,7 +502,7 @@ function render() {
   const st = SC[S.sc]?.steps[S.step];
   if (st?.target) { const el = document.querySelector(st.target); if (el) { el.classList.add('pulse'); el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } }
 }
-if (!BROWSER) module.exports = { fresh, start, tick, check, confirm, ring, nextEvent, medsOf, instruction, aiParse, weekStats, askHelp, dose, WEEK, get S() { return S; } };
+if (!BROWSER) module.exports = { fresh, start, tick, check, confirm, ring, nextEvent, medsOf, instruction, aiParse, groundCheck, rxPrompt, weekStats, askHelp, dose, WEEK, get S() { return S; } };
 else {
 
 // ---------- 交互 ----------
@@ -498,11 +552,18 @@ document.addEventListener('click', e => {
     case 'ai': {
       const f = S.draft, text = f.text.trim();
       if (!text) { f.aiNote = '请先说一句或贴一段用法。'; break; }
-      const r = aiParse(text);
-      Object.assign(f, { name: r.name || f.name, dose: r.dose || f.dose, times: r.times.join(', ') || f.times, method: r.method || f.method });
-      const miss = [!r.name && '药名', !r.dose && '每次吃多少', !r.times.length && '具体几点', !r.method && '怎么吃'].filter(Boolean);
-      f.aiNote = '✨ 已整理出能确定的内容（演示版用规则模拟 AI）。' + (miss.length ? `原话里没说清楚的（${miss.join('、')}）请你补上，AI 不会瞎猜。` : '请核对一遍。');
-      emit('ai'); break;
+      const fill = (r, how) => {
+        Object.assign(f, { name: r.name || f.name, dose: r.dose || f.dose, times: r.times.join(', ') || f.times, method: r.method || f.method });
+        const miss = [!r.name && '药名', !r.dose && '每次吃多少', !r.times.length && '具体几点', !r.method && '怎么吃'].filter(Boolean);
+        f.aiNote = `✨ ${how}，已整理出能确定的内容。` +
+          (r.dropped && r.dropped.length ? `AI 给出的「${r.dropped.join('、')}」在原话里找不到依据，已去掉。` : '') +
+          (miss.length ? `原话里没说清楚的（${miss.join('、')}）请你补上，AI 不会瞎猜。` : '请核对一遍。');
+      };
+      f.aiNote = '正在整理…'; render();
+      llmParse(text).then(raw => { fill(groundCheck(text, raw), '由 DeepSeek 整理并逐项核对原文'); })
+        .catch(() => { fill(aiParse(text), '大模型暂时没连上，已用规则整理'); })
+        .then(() => { emit('ai'); render(); });
+      break;
     }
     case 'cancel': S.draft = null; break;
     case 'save': {

@@ -75,6 +75,29 @@ test('AI 录入不猜没说清的剂量和时刻', () => {
   const r = D.aiParse('降压药每天两次');
   assert.equal(r.dose, ''); assert.deepEqual(r.times, []);
 });
+test('大模型结果逐项核对原文：依据都对得上时原样保留', () => {
+  const text = '这是降脂药，每次一片，晚上九点吃，睡前用温水送服';
+  const r = D.groundCheck(text, { name: '降脂药', dose: '1片', times: ['21:00'], method: '睡前用温水送服',
+    evidence: { name: '降脂药', dose: '每次一片', times: ['晚上九点'], method: '睡前用温水送服' } });
+  assert.deepEqual([r.name, r.dose, r.times, r.method, r.dropped], ['降脂药', '1片', ['21:00'], '睡前用温水送服', []]);
+});
+test('大模型把「一日三次」编成具体时刻、把剂量写错时，规则层去掉', () => {
+  const r = D.groundCheck('阿莫西林胶囊，一次2粒，一日3次', { name: '阿莫西林胶囊', dose: '3粒', times: ['08:00', '12:00', '18:00'], method: '饭后',
+    evidence: { name: '阿莫西林胶囊', dose: '一次2粒', times: ['一日3次'], method: '饭后' } });
+  assert.equal(r.name, '阿莫西林胶囊'); assert.equal(r.dose, ''); assert.deepEqual(r.times, []); assert.equal(r.method, '');
+  assert.deepEqual(r.dropped, ['每次吃多少', '具体几点', '怎么吃']);
+});
+test('剂量写成中文数字（一片、半片）时同样能核对通过', () => {
+  const r = D.groundCheck('降压药每天早上八点吃一片，饭后吃', { name: '降压药', dose: '一片', times: ['08:00'], method: '饭后',
+    evidence: { name: '降压药', dose: '一片', times: ['早上八点'], method: '饭后' } });
+  assert.deepEqual([r.dose, r.times, r.dropped], ['一片', ['08:00'], []]);
+  assert.equal(D.groundCheck('安眠药睡前吃半片', { dose: '0.5片', evidence: { dose: '半片' } }).dose, '0.5片');
+});
+test('依据不是原文里的话（模型自己编的）时，规则层去掉', () => {
+  const r = D.groundCheck('降压药早晚各一次', { name: '降压药', dose: '1片', times: ['08:00', '20:00'], method: '',
+    evidence: { name: '降压药', dose: '每次1片', times: ['早上8点', '晚上8点'] } });
+  assert.equal(r.dose, ''); assert.deepEqual(r.times, []); assert.deepEqual(r.dropped, ['每次吃多少', '具体几点']);
+});
 
 fs.writeFileSync(path.join(__dirname, 'demo-results.json'), JSON.stringify({ testedAt: new Date().toISOString(), scope: '双手机 Demo（demo.js）的提醒、通知、求助、服药顺序与规则统计；不代表实际服药或用户效果', passed: results.length, results }, null, 2));
 console.log(`${results.length}/${results.length} passed`);

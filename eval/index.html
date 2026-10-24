@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>医嘱整理评测</title>
+<style>
+:root{ --bg:#F6F8FB; --surface:#FFFFFF; --surface-2:#EEF2F7; --ink:#1F2937; --ink-soft:#4B5563; --ink-faint:#8A94A6; --line:#E2E8F0;
+  --accent:#2563EB; --ok:#15803D; --danger:#B42318; --danger-soft:#FDECEA; --warn:#B45309; --warn-soft:#FEF3E2; }
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --bg:#0F141B; --surface:#161D27; --surface-2:#1E2734; --ink:#E5E9F0; --ink-soft:#B6BFCC; --ink-faint:#7D8797; --line:#2A3443;
+  --accent:#7AA7FF; --ok:#5BD08A; --danger:#FF8A80; --danger-soft:#3A1F1E; --warn:#F2B66B; --warn-soft:#3A2C1A; } }
+:root[data-theme="dark"]{ --bg:#0F141B; --surface:#161D27; --surface-2:#1E2734; --ink:#E5E9F0; --ink-soft:#B6BFCC; --ink-faint:#7D8797; --line:#2A3443;
+  --accent:#7AA7FF; --ok:#5BD08A; --danger:#FF8A80; --danger-soft:#3A1F1E; --warn:#F2B66B; --warn-soft:#3A2C1A; }
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;font-size:14px;}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 16px 64px;}
+h1{font-size:24px;margin:0;}
+.sub{color:var(--ink-soft);font-size:13px;margin-top:6px;line-height:1.7;}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0 4px;}
+button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 12px;font-size:13px;cursor:pointer;}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+button:disabled{opacity:.55;cursor:default;}
+.status{font-family:ui-monospace,monospace;font-size:12px;color:var(--ink-faint);}
+.notice{margin:12px 0 0;padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.6;background:var(--warn-soft);}
+h2{font-size:16px;margin:26px 0 10px;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 10px;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+th{text-align:left;font-weight:500;color:var(--ink-soft);border-bottom:1px solid var(--line);padding:8px;white-space:nowrap;}
+td{border-bottom:1px solid var(--line);padding:8px;vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+td.num{font-family:ui-monospace,monospace;white-space:nowrap;}
+.hl{font-weight:700;}
+.tag{display:inline-block;font-size:11px;border-radius:5px;padding:1px 6px;margin:1px 3px 1px 0;white-space:nowrap;}
+.tag.fab{background:var(--danger-soft);color:var(--danger);}
+.tag.wrong{background:var(--warn-soft);color:var(--warn);}
+.tag.miss{background:var(--surface-2);color:var(--ink-soft);}
+.mono{font-family:ui-monospace,monospace;font-size:11.5px;color:var(--ink-soft);line-height:1.6;}
+iframe{position:absolute;width:1px;height:1px;left:-9999px;border:0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>安心药箱 · 医嘱整理评测</h1>
+  <div class="sub">把子女口述、医嘱或药盒用法整理成 4 个字段：药名、每次吃多少、具体几点、怎么吃。<br>
+    最重要的指标是<b>编造</b>：原话里没写、却填了内容（比如把「一日三次」编成 08:00 / 12:00 / 18:00）。对用药来说，空着让子女补，比填错安全得多。</div>
+  <div class="controls">
+    <button class="primary" id="run">开始评测</button>
+    <button id="download" disabled>下载结果 JSON</button>
+    <span class="status" id="status">准备中…</span>
+  </div>
+  <div class="notice">这 40 条是开发者编写的种子用例，对外引用前应补充真实的医嘱或药盒说明。同一次 DeepSeek 返回的结果，分别按「原始输出」和「经过规则核对」两种方式计分。</div>
+
+  <h2>总体</h2>
+  <div class="card"><table><thead><tr><th>方式</th><th>4 个字段全对</th><th>字段准确率</th><th>编造</th><th>填错</th><th>漏填</th></tr></thead><tbody id="summary"></tbody></table></div>
+  <h2>按字段</h2>
+  <div class="card"><table><thead><tr><th>字段</th><th>规则 Mock</th><th>DeepSeek 原始</th><th>DeepSeek + 规则核对</th></tr></thead><tbody id="byField"></tbody></table></div>
+  <h2>出错的用例</h2>
+  <div class="card"><table><thead><tr><th>#</th><th>原话</th><th>方式</th><th>问题</th><th>解析结果</th></tr></thead><tbody id="fails"></tbody></table></div>
+</div>
+<iframe id="app" src="../index.html?eval=1"></iframe>
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var W = null, data = null, rows = [];
+  var MODES = [['rule','规则 Mock'], ['raw','DeepSeek 原始'], ['checked','DeepSeek + 规则核对']];
+  var FIELDS = [['name','药名'], ['dose','每次吃多少'], ['times','具体几点'], ['method','怎么吃']];
+  var KIND = {fab:'编造', wrong:'填错', miss:'漏填'};
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  // "一片" "1片" "半片" "0.5片" → 1片 / 0.5片; ml/毫升, mg/毫克, 个单位/单位 count as the same unit
+  function normDose(s){
+    s = String(s||'').replace(/\s/g, '');
+    if(!s) return '';
+    var m = s.match(/^(\d+(?:\.\d+)?|[一二两三四五六七八九十]+|半)(.*)$/);
+    if(!m) return s;
+    var n = m[1]==='半' ? 0.5 : (/^\d/.test(m[1]) ? parseFloat(m[1]) : W.cnNum(m[1]));
+    var u = m[2].replace(/^个/, '').replace(/^(ml|mL|ML)$/, '毫升').replace(/^毫克$/, 'mg').replace(/^克$/, 'g').replace(/^(u|U|IU)$/, '单位');
+    return n + u;
+  }
+  // one field: ok / fab (said nothing, filled anyway) / wrong (filled with something else) / miss (left empty)
+  function judgeField(c, f, got){
+    var exp = c[f], optional = (c.optional||[]).indexOf(f) >= 0;
+    var empty = f==='times' ? !got.length : !got;
+    var mustEmpty = f==='times' ? !exp.length : !exp;
+    if(mustEmpty) return empty ? 'ok' : 'fab';
+    if(empty) return optional ? 'ok' : 'miss';
+    if(f==='name' || f==='method') return exp.some(function(k){ return String(got).indexOf(k) >= 0; }) ? 'ok' : 'wrong';
+    if(f==='dose') return normDose(got)===normDose(exp) ? 'ok' : 'wrong';
+    return got.slice().sort().join(',')===exp.slice().sort().join(',') ? 'ok' : 'wrong';
+  }
+  function fromRaw(raw){
+    raw = raw || {};
+    var s = function(v){ return typeof v==='string' ? v.trim() : ''; };
+    return {name:s(raw.name), dose:s(raw.dose), method:s(raw.method),
+            times:(Array.isArray(raw.times) ? raw.times : []).filter(function(t){ return /^([01]?\d|2[0-3]):[0-5]\d$/.test(t); }).map(function(t){ return t.padStart(5,'0'); })};
+  }
+  function score(c, mode, got){
+    var fields = {}, ok = 0;
+    FIELDS.forEach(function(f){ var r = judgeField(c, f[0], got[f[0]]); fields[f[0]] = r; if(r==='ok') ok++; });
+    return {id:c.id, cat:c.cat, text:c.text, mode:mode, got:got, fields:fields, allOk: ok===FIELDS.length, dropped:got.dropped||[]};
+  }
+
+  function run(){
+    $('run').disabled = true; rows = [];
+    var i = 0;
+    function next(){
+      if(i >= data.cases.length){ $('status').textContent = '完成：'+data.cases.length+' 条'; $('run').disabled = false; $('download').disabled = false; render(); return; }
+      var c = data.cases[i++];
+      $('status').textContent = i+'/'+data.cases.length+' · '+c.text;
+      rows.push(score(c, 'rule', W.aiParse(c.text)));
+      W.llmParse(c.text).then(function(raw){
+        rows.push(score(c, 'raw', fromRaw(raw)));
+        rows.push(score(c, 'checked', W.groundCheck(c.text, raw)));
+      }).catch(function(e){
+        var none = {name:'', dose:'', times:[], method:'', error:String(e)};
+        rows.push(score(c, 'raw', none)); rows.push(score(c, 'checked', none));
+      }).then(function(){ render(); setTimeout(next, 150); });
+    }
+    next();
+  }
+
+  function pct(a, b){ return b ? (Math.round(a/b*1000)/10)+'%' : '—'; }
+  function render(){
+    $('summary').innerHTML = MODES.map(function(m){
+      var rs = rows.filter(function(r){ return r.mode===m[0]; });
+      if(!rs.length) return '';
+      var cnt = {ok:0, fab:0, wrong:0, miss:0}, mustEmpty = 0;
+      rs.forEach(function(r){
+        FIELDS.forEach(function(f){
+          cnt[r.fields[f[0]]]++;
+          var c = data.cases.filter(function(x){ return x.id===r.id; })[0], e = c[f[0]];
+          if(f[0]==='times' ? !e.length : !e) mustEmpty++;
+        });
+      });
+      var all = rs.filter(function(r){ return r.allOk; }).length, nf = rs.length*FIELDS.length;
+      return '<tr><td>'+m[1]+'</td><td class="num hl">'+all+' / '+rs.length+'（'+pct(all, rs.length)+'）</td><td class="num">'+pct(cnt.ok, nf)+'</td>'+
+        '<td class="num hl">'+cnt.fab+' / '+mustEmpty+' 个应留空的字段</td><td class="num">'+cnt.wrong+'</td><td class="num">'+cnt.miss+'</td></tr>';
+    }).join('');
+    $('byField').innerHTML = FIELDS.map(function(f){
+      return '<tr><td>'+f[1]+'</td>'+MODES.map(function(m){
+        var rs = rows.filter(function(r){ return r.mode===m[0]; });
+        if(!rs.length) return '<td class="num">—</td>';
+        var ok = rs.filter(function(r){ return r.fields[f[0]]==='ok'; }).length;
+        var fab = rs.filter(function(r){ return r.fields[f[0]]==='fab'; }).length;
+        return '<td class="num">'+ok+' / '+rs.length+(fab ? '（编造 '+fab+'）' : '')+'</td>';
+      }).join('')+'</tr>';
+    }).join('');
+    $('fails').innerHTML = rows.filter(function(r){ return !r.allOk; }).sort(function(a,b){ return a.id-b.id; }).map(function(r){
+      var tags = FIELDS.filter(function(f){ return r.fields[f[0]]!=='ok'; }).map(function(f){
+        var k = r.fields[f[0]]; return '<span class="tag '+k+'">'+f[1]+' · '+KIND[k]+'</span>';
+      }).join('');
+      var g = r.got;
+      var shown = '药名：'+esc(g.name||'—')+'<br>剂量：'+esc(g.dose||'—')+'<br>几点：'+esc((g.times||[]).join('、')||'—')+'<br>怎么吃：'+esc(g.method||'—')+
+        (r.dropped.length ? '<br>核对时去掉：'+esc(r.dropped.join('、')) : '') + (g.error ? '<br>'+esc(g.error) : '');
+      var mn = MODES.filter(function(m){ return m[0]===r.mode; })[0][1];
+      return '<tr><td class="num">'+r.id+'</td><td>'+esc(r.text)+'</td><td>'+mn+'</td><td>'+tags+'</td><td class="mono">'+shown+'</td></tr>';
+    }).join('') || '<tr><td colspan="5" style="color:var(--ink-faint)">还没有结果</td></tr>';
+    window.__rxResults = rows;
+  }
+
+  $('run').addEventListener('click', run);
+  $('download').addEventListener('click', function(){
+    var blob = new Blob([JSON.stringify(rows, null, 2)], {type:'application/json'});
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'rx-eval-'+new Date().toISOString().slice(0,10)+'.json'; a.click();
+  });
+  Promise.all([
+    fetch('rx_cases.json?v='+Date.now()).then(function(r){ return r.json(); }),
+    new Promise(function(resolve){
+      var t = setInterval(function(){ var w = $('app').contentWindow; if(w && w.groundCheck && w.llmParse){ clearInterval(t); resolve(w); } }, 100);
+    })
+  ]).then(function(res){ data = res[0]; W = res[1]; $('status').textContent = '已载入 '+data.cases.length+' 条用例'; render(); })
+    .catch(function(e){ $('status').textContent = '载入失败：'+e; });
+})();
+</script>
+</body>
+</html>
