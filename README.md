@@ -2,7 +2,7 @@
 
 第一版核心：到点提醒父母吃什么、在哪、怎么吃 → 父母一键确认 → 子女收到通知 → 没确认或父母记不清时，才需要子女打电话。
 
-交付：`product.html` 产品说明；网页 Demo 与源码；`review.html` 验证与复盘；`strategy.html` 竞品、商业模式与 MVP 取舍；`research.html` 用户验证计划；`figma-prototype/` Figma 高保真原型 v3（父母端 9 屏 + 子女端 9 屏 + 状态规范板 + 成功指标板）。
+交付：`prd.html` PRD；`product.html` 产品说明；网页 Demo 与源码；`review.html` 验证与复盘；`strategy.html` 竞品、商业模式与 MVP 取舍；`research.html` 用户验证计划；`figma-prototype/` Figma 高保真原型 v3（父母端 9 屏 + 子女端 9 屏 + 状态规范板 + 成功指标板）。
 
 ## 在线访问
 
