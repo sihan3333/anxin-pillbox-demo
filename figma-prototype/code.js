@@ -1,7 +1,7 @@
 // 安心药箱 · 一键生成原型 v3（Figma 开发插件）
-// 视觉参考腾讯开源设计体系 TDesign 移动端：品牌蓝、浅色标签、白卡片 + 轻阴影、单元格列表、底部标签栏。
+// 视觉参考主流开源移动端设计规范：品牌蓝、浅色标签、白卡片 + 轻阴影、单元格列表、底部标签栏。
 // 运行后新建一页「安心药箱 原型 v3」：
-//   父母端 8 屏（适老化大字）+ 子女端 9 屏 + 状态规范板 + 成功指标板，每屏下方附设计说明；
+//   父母端 9 屏（适老化大字）+ 子女端 9 屏 + 状态规范板 + 成功指标板，每屏下方附设计说明；
 //   颜色变量、文字样式、阴影样式和点击跳转一并建好。
 
 const C = {
@@ -479,7 +479,7 @@ function avatar(ch, size) {
   return circ('头像/' + ch, size || 36, C.brandLight, txt(ch, size && size > 40 ? 'K_h1' : 'K_bodyB', C.brand, 'CENTER'));
 }
 
-// ---------- 父母端 8 屏 ----------
+// ---------- 父母端 9 屏 ----------
 
 function buildParent() {
   const Y = ROW_P;
@@ -1148,7 +1148,7 @@ async function main() {
   buildParent();
   rowTitle('子女端 · 9 屏', '一眼看清吃没吃，只在需要时介入。①–⑤ 主流程，⑥ 设备离线，⑦ 装药核对与余量，⑧ 通知分级，⑨ 第一次使用', ROW_K - 180);
   buildChild();
-  rowTitle('规范与指标', '给研发、设计和评审对齐用', ROW_SPEC - 180);
+  rowTitle('规范与指标', '给研发、设计和测试对齐用', ROW_SPEC - 180);
   buildSpecs();
 
   await Promise.all(pending);

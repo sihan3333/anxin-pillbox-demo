@@ -1,8 +1,8 @@
-# 场景B · 安心药箱
+# 安心药箱
 
 第一版核心：到点提醒父母吃什么、在哪、怎么吃 → 父母一键确认 → 子女收到通知 → 没确认或父母记不清时，才需要子女打电话。
 
-交付：`product.html` 产品说明；网页 Demo 与源码；`review.html` 验证与复盘；`strategy.html` 竞品、商业模式与 MVP 取舍；`research.html` 用户验证计划；`figma-prototype/` Figma 高保真原型 v3（插件一键生成：父母端 9 屏 + 子女端 9 屏 + 状态规范板 + 成功指标板，视觉参考 TDesign 移动端，使用方法见该目录的 `使用说明.md`）。
+交付：`product.html` 产品说明；网页 Demo 与源码；`review.html` 验证与复盘；`strategy.html` 竞品、商业模式与 MVP 取舍；`research.html` 用户验证计划；`figma-prototype/` Figma 高保真原型 v3（插件一键生成：父母端 9 屏 + 子女端 9 屏 + 状态规范板 + 成功指标板，使用方法见该目录的 `使用说明.md`）。
 
 ## 在线访问
 
@@ -44,4 +44,4 @@ https://sihan3333.github.io/anxin-pillbox-demo/mvp/
 
 ## 工具与投入
 
-初期用 GPT 讨论场景和产品想法；之后主要在 Cursor 中使用 Claude Opus 5.5 完成设计梳理、代码、测试与文档。实际投入时间：约 2 小时。真实用户验证尚未开展；医嘱整理已用 40 条种子用例做过模型评估（`eval/REPORT.md`），还需要用真实医嘱复测。
+初期用 GPT 讨论场景和产品想法；之后主要在 Cursor 中使用 Claude Opus 5.5 完成设计梳理、代码、测试与文档。真实用户验证尚未开展；医嘱整理已用 40 条种子用例做过模型评估（`eval/REPORT.md`），还需要用真实医嘱复测。

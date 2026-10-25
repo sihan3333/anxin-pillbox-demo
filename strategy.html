@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>B · 竞品、商业模式与 MVP · 安心药箱</title><link rel="stylesheet" href="style.css"></head><body class="document"><main>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>竞品、商业模式与 MVP · 安心药箱</title><link rel="stylesheet" href="style.css"></head><body class="document"><main>
 <a href="index.html">← 返回 Demo</a> · <a href="product.html">产品说明</a> · <a href="research.html">用户验证计划</a>
 <h1>安心药箱：竞品、商业模式与 MVP 取舍</h1>
 <p>2026-10-22。外部数据都在文末列出来源；没有来源的判断都标为<b>假设</b>。</p>
@@ -33,7 +33,41 @@
 <li><b>逐级提醒是行业共识</b>：MedMinder 的"灯 → 声 → 短信 → 通知照护者"和我们的"响铃 → 15 分钟再响 → 30/60 分钟通知子女"思路一致；我们的差异是<b>家庭可调</b>，并且<b>区分"没确认 / 打开过 / 设备离线"</b>。</li>
 <li><b>国内的空位在"便宜、简单"</b>：国内已有联网药盒，但报道中的产品又贵又复杂。安心药箱不做自动分药、不接血压血糖设备，把成本和学习难度都压下来。</li>
 </ol>
-<p><b>面试被问"为什么不直接打视频电话"：</b>视频解决"想念"，安心药箱解决"确认"。正常日子里子女不用为确认吃药专门打电话，电话留给聊天和真正出问题的时候。产品不是替代电话，而是让电话不再是唯一的确认手段。</p>
+<h3>对标头部吃药提醒 App：学什么、我们多什么</h3>
+<p>安心药箱的主体是吃药提醒 App，所以再对标 3 款做得最好的吃药提醒 App：<b>Medisafe</b>（App Store 4.7 分、约 10.2 万条评价）、<b>MyTherapy</b>（免费无广告、支持中文，评测中推荐最多）、<b>苹果健康「用药」</b>（系统自带）。把它们的功能合在一起共 14 项，逐项看我们有没有、该不该学。资料核对日期 2026-10-25，只按官方商店页面和评测里写明的功能打勾。</p>
+<table>
+<tr><th>#</th><th>功能</th><th>Medisafe</th><th>MyTherapy</th><th>苹果健康</th><th>安心药箱</th></tr>
+<tr><td>1</td><td>定时提醒</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>2</td><td>一键确认已吃、稍后再提醒</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>3</td><td>药品外观：形状、颜色、照片</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>4</td><td>快捷录入：扫药盒、导入处方</td><td>✅ 导入医院记录</td><td>—</td><td>✅ 扫标签</td><td>✅ 粘贴医嘱，AI 整理</td></tr>
+<tr><td>5</td><td>家人共享、一个账号管多人</td><td>✅</td><td>✅</td><td>✅</td><td>✅ 子女端</td></tr>
+<tr><td>6</td><td>漏服时通知家属</td><td>✅</td><td>—</td><td>—</td><td>✅</td></tr>
+<tr><td>7</td><td>服药历史</td><td>✅</td><td>✅</td><td>✅</td><td>✅ 7 天记录</td></tr>
+<tr><td>8</td><td>个性化提醒声音</td><td>✅</td><td>✅</td><td>—</td><td>✅ 语音分步引导</td></tr>
+<tr><td>9</td><td>支持中文</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>10</td><td><b>补药、余量提醒</b></td><td>✅</td><td>✅</td><td>—</td><td>✅ 已借鉴</td></tr>
+<tr><td>11</td><td>药物相互作用警告</td><td>✅</td><td>—</td><td>✅</td><td>—</td></tr>
+<tr><td>12</td><td>就医报告</td><td>✅</td><td>✅</td><td>—</td><td>—</td></tr>
+<tr><td>13</td><td>血压、血糖等健康指标</td><td>✅</td><td>✅</td><td>—</td><td>—</td></tr>
+<tr><td>14</td><td>症状和副作用日记</td><td>—</td><td>✅</td><td>—</td><td>—</td></tr>
+<tr><td></td><td><b>覆盖数</b></td><td><b>13/14</b></td><td><b>11/14</b></td><td><b>8/14</b></td><td><b>10/14</b></td></tr>
+</table>
+<p><b>学什么，按优先级：</b></p>
+<ol>
+<li><b>补药提醒：已借鉴。</b>父母常常药吃完了才发现。确认吃了才按每次用量扣减，"记不清吃没吃"不扣；按每天次数推算还够几天，降到子女设定的天数时提醒子女买药。</li>
+<li><b>就医报告：下一步。</b>复诊时医生想看最近一个月吃药是否规律，可以在现有的子女周报基础上做。</li>
+<li><b>药物相互作用：暂不做。</b>需要有授权的药品数据库，不能让 AI 自己生成，否则违背"不编造用药信息"的原则。</li>
+<li><b>健康指标、症状日记：不做。</b>偏离"确认父母吃没吃药"这个核心；国内联网药盒正是因为功能多，被老人反映"过于复杂"。</li>
+</ol>
+<p><b>我们多什么：</b>头部 App 是为"自己管自己吃药"设计的，安心药箱面对的是<b>异地子女管父母吃药</b>，所以多了 3 项它们都没有的能力：</p>
+<ol>
+<li><b>逐级升级到子女</b>：到点响铃，15 分钟后再响，30 或 60 分钟仍没确认才通知子女；子女打完电话可以设"15 分钟后再响"。Medisafe 漏服后只通知家属一次。</li>
+<li><b>防止重复吃药</b>：父母可以选"记不清吃没吃"，父母端提示先别再吃，子女端提示先看药格。</li>
+<li><b>AI 整理医嘱，标出原文依据</b>：每个字段都要给出原文出处，对不上的去掉留给子女补充。在 40 条医嘱评测集上，4 个字段全对 97.5%，编造率 1.7%（<a href="eval/REPORT.md">评测报告</a>）。</li>
+</ol>
+
+<p><b>常被问到"为什么不直接打视频电话"：</b>视频解决"想念"，安心药箱解决"确认"。正常日子里子女不用为确认吃药专门打电话，电话留给聊天和真正出问题的时候。产品不是替代电话，而是让电话不再是唯一的确认手段。</p>
 
 <h2>三、差异化定位</h2>
 <table>
@@ -103,6 +137,7 @@
 <li>国内智能药盒 3900 元及老人反馈：<a href="https://news.bjd.com.cn/2026/09/18/11963614.shtml">京报网《养老大调研｜一个智能药盒卖3900元！》（2026-09-18）</a></li>
 <li>国内联网药盒功能示例：<a href="https://finance.sina.cn/2020-03-30/detail-iimxxsth2582158.d.html">新浪财经 2020 年报道</a>；<a href="https://apps.apple.com/am/app/%E5%BA%B7%E8%A8%80%E6%99%BA%E8%83%BD%E8%8D%AF%E7%9B%92/id1590317154">康言智能药盒 App 介绍</a></li>
 <li>Hero Health 价格与服务：<a href="https://herohealth.com/our-product">Hero 官网</a>、<a href="https://herohealth.com/smart-pill-dispenser/">Hero 产品页</a></li>
+<li>Medisafe：<a href="https://apps.apple.com/us/app/medisafe-medication-management/id573916946">App Store 页面</a>；MyTherapy：<a href="https://apps.apple.com/au/app/id662170995">App Store 页面</a>；苹果健康「用药」：<a href="https://support.apple.com/en-bw/guide/iphone/iph811670c81/ios">Apple 使用手册</a>、<a href="https://tidbits.com/2022/10/07/an-apple-a-day-ios-16-medications-feature-provides-alerts-logging-and-peace-of-mind/">TidBITS 评测</a></li>
 <li>MedMinder 功能与价格（各来源不一致）：<a href="https://caringvillage.com/product-review/the-best-automatic-pill-dispensers/">Caring Village 评测</a>、<a href="https://wcgazette.com/story/2015/04/15/people/savvy-senior/17194.html">Whitman County Gazette（2015）</a></li>
 </ul>
 <p class="muted">价格和功能以各产品官方最新信息为准；本文不构成医疗建议。</p>
