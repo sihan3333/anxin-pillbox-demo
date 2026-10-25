@@ -1133,6 +1133,17 @@ function rowTitle(s, sub, y) {
   figma.currentPage.appendChild(d);
 }
 
+// 重新运行时先删掉上一次生成的同版本页面、样式和颜色变量，不留重复的一套
+async function clearOldRun(keep) {
+  for (const p of figma.root.children) if (p !== keep && p.name === keep.name) p.remove();
+  const mine = s => s.name.startsWith(V + '/');
+  for (const s of await figma.getLocalTextStylesAsync()) if (mine(s)) s.remove();
+  for (const s of await figma.getLocalEffectStylesAsync()) if (mine(s)) s.remove();
+  try {
+    for (const c of await figma.variables.getLocalVariableCollectionsAsync()) if (c.name === '安心药箱 ' + V + ' 颜色') c.remove();
+  } catch (e) { console.warn('旧颜色变量没删掉', e); }
+}
+
 async function main() {
   F = await pickFont();
   await figma.loadFontAsync(F.r);
@@ -1140,6 +1151,7 @@ async function main() {
   const page = figma.createPage();
   page.name = '安心药箱 原型 ' + V;
   await figma.setCurrentPageAsync(page);
+  await clearOldRun(page);
   page.backgrounds = [{ type: 'SOLID', color: rgb('#E9EBEF') }];
   setupVars();
   setupStyles();
