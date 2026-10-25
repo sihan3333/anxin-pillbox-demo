@@ -98,6 +98,38 @@ test('依据不是原文里的话（模型自己编的）时，规则层去掉',
     evidence: { name: '降压药', dose: '每次1片', times: ['早上8点', '晚上8点'] } });
   assert.equal(r.dose, ''); assert.deepEqual(r.times, []); assert.deepEqual(r.dropped, ['每次吃多少', '具体几点']);
 });
+test('补药：确认吃了才按每次用量扣减，按每天次数推算还够几天', () => {
+  const [m1, m2] = D.S.meds;
+  assert.equal(D.daysLeft(m2), 8);
+  at('08:01'); D.confirm(am(), 'self');
+  assert.equal(m1.stock, 29); assert.equal(m2.stock, 15); assert.equal(D.daysLeft(m2), 7);
+});
+test('补药：没确认、求助“记不清吃没吃”都不扣药量', () => {
+  at('09:00'); D.askHelp(am(), '记不清吃没吃');
+  assert.deepEqual(D.S.meds.map(m => m.stock), [30, 16]);
+});
+test('补药：降到提醒天数时通知子女一次，不抢“已吃药”的横幅', () => {
+  const refill = () => D.S.msgs.filter(m => m.type === 'refill');
+  at('08:01'); D.confirm(am(), 'self');
+  assert.equal(refill().length, 1); assert.equal(refill()[0].read, false);
+  assert.ok(refill()[0].text.includes('约够吃 7 天'));
+  assert.equal(D.S.msgs.find(m => m.type === 'ok').title, '✅ 妈妈已经吃药了');
+  at('20:01'); D.confirm(D.dose('20:00'), 'self');
+  assert.equal(refill().length, 1);
+});
+test('补药：补上药量后不再算“快吃完”，提醒标记重置', () => {
+  const m2 = D.S.meds[1];
+  at('08:01'); D.confirm(am(), 'self');
+  D.restock(m2, 30); assert.equal(D.daysLeft(m2), 22); assert.equal(m2.refillWarned, false);
+});
+test('补药：半片能算，单位不是片/粒或没填药量时不推算', () => {
+  const base = { times: ['08:00', '20:00'] };
+  assert.equal(D.perDose({ ...base, dose: '半片' }), 0.5);
+  assert.equal(D.daysLeft({ ...base, dose: '半片', stock: 10 }), 10);
+  assert.equal(D.perDose({ ...base, dose: '两粒' }), 2);
+  assert.equal(D.daysLeft({ ...base, dose: '5mg', stock: 30 }), null);
+  assert.equal(D.daysLeft({ ...base, dose: '1片', stock: null }), null);
+});
 
 fs.writeFileSync(path.join(__dirname, 'demo-results.json'), JSON.stringify({ testedAt: new Date().toISOString(), scope: '双手机 Demo（demo.js）的提醒、通知、求助、服药顺序与规则统计；不代表实际服药或用户效果', passed: results.length, results }, null, 2));
 console.log(`${results.length}/${results.length} passed`);

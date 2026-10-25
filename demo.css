@@ -106,6 +106,13 @@ button{font:inherit;cursor:pointer;border:0}
 @keyframes drop{from{transform:translateY(-40px);opacity:0}}
 .alert{background:#fef2f2;border:2px solid #fca5a5;border-radius:14px;padding:10px 12px;margin-bottom:10px}
 .alert.help{background:#fff7ed;border-color:#fdba74}
+.alert.refill{background:#eff6ff;border-color:#93c5fd}
+.sms.refill{border-left-color:#3b82f6}
+.medrow .grow{flex:1;min-width:0}
+.stock{font-size:13px;color:#166534;margin-top:2px}
+.stock.low{color:#b91c1c;font-weight:700}
+.linkbtn{background:none;color:#0f766e;font-weight:700;font-size:13px;padding:2px 0}
+.restock input{flex:1;min-width:0;padding:8px;border:1px solid #d1d5db;border-radius:8px;font:inherit;font-size:14px}
 .alert p{margin:2px 0 8px;font-size:14px}
 .callbtn{background:var(--r);color:#fff;border-radius:10px;padding:8px 14px;font-weight:700;width:100%;margin-top:6px}
 .c-dose{display:flex;gap:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:8px}

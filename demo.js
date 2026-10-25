@@ -31,10 +31,10 @@ let S;
 
 function fresh() {
   S = {
-    min: 7 * 60 + 58, waitMin: 30, repeatMin: 15,
+    min: 7 * 60 + 58, waitMin: 30, repeatMin: 15, refillDays: 7, restock: null,
     meds: [
-      { id: 'm1', name: '降压药（示例）', dose: '1片', slot: 1, box: 'blue', pill: 'white', shape: 'round', method: '早饭后，用一杯温水送服', times: ['08:00'] },
-      { id: 'm2', name: '降糖药（示例）', dose: '1片', slot: 2, box: 'orange', pill: 'yellow', shape: 'oval', method: '和饭一起吃，用温水送服', times: ['08:00', '20:00'] }
+      { id: 'm1', name: '降压药（示例）', dose: '1片', slot: 1, box: 'blue', pill: 'white', shape: 'round', method: '早饭后，用一杯温水送服', times: ['08:00'], stock: 30 },
+      { id: 'm2', name: '降糖药（示例）', dose: '1片', slot: 2, box: 'orange', pill: 'yellow', shape: 'oval', method: '和饭一起吃，用温水送服', times: ['08:00', '20:00'], stock: 16 }
     ],
     doses: [], parent: 'home', active: null, ringType: null, psms: null, lastSpeech: '',
     tab: 'home', call: null, msgs: [], banner: null, showAI: false, weekend: false, draft: null, note: '', listening: false,
@@ -156,6 +156,31 @@ function confirm(d, by) {
   d.status = 'done'; d.by = by; d.at = S.min; d.follow = d.recheck = null;
   if (by === 'self') notify({ type: 'ok', dose: d.id, title: '✅ 妈妈已经吃药了', text: `${period(d.time)} ${d.time} 的药：${names(d)}。妈妈在 ${fmt(S.min)} 自己确认吃好了（药箱第 ${slots(d)} 格已打开）。` });
   else notify({ type: 'ok', dose: d.id, title: '✅ 已电话确认：妈妈吃了药', text: `${period(d.time)} ${d.time} 的药：${names(d)}。你在 ${fmt(S.min)} 通过电话确认。` });
+  useStock(d);
+}
+
+// ---------- 补药提醒（参考 Medisafe、MyTherapy 的余量提醒）----------
+// 只在确认吃了之后按每次用量扣减；"记不清吃没吃"、没确认都不扣，宁可少算也不乱算
+const perDose = m => { const r = String(m.dose).match(/^([0-9.]+|[一二两三四五六七八九十]+|半)\s*(片|粒|颗|袋)/); const v = r ? cnNum(r[1]) : NaN; return v > 0 ? v : null; };
+const unit = m => String(m.dose).match(/片|粒|颗|袋/)?.[0] || '片';
+const daysLeft = m => { const p = perDose(m); return m.stock == null || !p ? null : Math.floor(m.stock / (p * m.times.length)); };
+const lowStock = () => S.meds.filter(m => daysLeft(m) != null && daysLeft(m) <= S.refillDays);
+const stockText = m => `还剩 ${m.stock} ${unit(m)}，每天 ${m.times.length} 次、每次${m.dose}，约够吃 ${daysLeft(m)} 天`;
+function useStock(d) {
+  for (const m of medsOf(d)) {
+    const p = perDose(m); if (m.stock == null || !p) continue;
+    m.stock = Math.max(0, m.stock - p);
+    if (daysLeft(m) <= S.refillDays && !m.refillWarned) {
+      m.refillWarned = true;
+      // 不抢"妈妈已经吃药了"的横幅，放进消息里标未读
+      notify({ type: 'refill', title: `💊 ${short(m.name)}快吃完了`, text: `${stockText(m)}。记得帮妈妈买药，买回来后在【💊 药品】里补上药量。` }, true);
+      S.msgs[0].read = false;
+    }
+  }
+}
+function restock(m, n) {
+  m.stock = (m.stock || 0) + n;
+  m.refillWarned = daysLeft(m) <= S.refillDays;
 }
 
 const UNSURE = '记不清吃没吃';
@@ -341,7 +366,7 @@ const SC = {
     { text: '8 点到了！妈妈的手机像来电一样<b>响铃</b>，还会<b>语音</b>说“该吃药了，请按绿色的接听键”。点绿色的【接听】。', target: '[data-act=answer]', wait: 'answer' },
     { text: '妈妈能看到<b>药盒和药片长什么样、药箱第几格亮灯、吃几片、怎么吃</b>，手机会全部读出来，并告诉她遇到问题可以按橙色的【我需要帮忙】。假设妈妈吃完了，点【我吃好了】。', target: '[data-act=done]', wait: 'doneClick' },
     { text: '手机会语音问妈妈“都吃好了吗？”，防止误按。点绿色的【是的，都吃了】。', target: '[data-act=yes]', wait: 'confirmed' },
-    { text: '看右边！你的手机<b>马上收到通知</b>，几点吃的、吃了什么都写清楚了，不用再打电话问。点【📊 看看这一周】，看看按最近 7 天记录统计出的规律和建议。', target: '[data-act=summary]', wait: 'summary' },
+    { text: '看右边！你的手机<b>马上收到通知</b>，几点吃的、吃了什么都写清楚了，不用再打电话问。首页还提示<b>降糖药只够吃 7 天了</b>：每次确认吃药都按用量扣减，快吃完时提醒你买药。点【📊 看看这一周】，看看按最近 7 天记录统计出的规律和建议。', target: '[data-act=summary]', wait: 'summary' },
     { text: '🎉 完成！统计发现妈妈<b>周末早上</b>经常要提醒两次，建议把周末的提醒改到 9 点。接着试试「② 妈妈忘了吃药」。', end: true }
   ] },
   forgot: { title: '② 妈妈忘了吃药', steps: [
@@ -429,6 +454,9 @@ function statusText(d) {
   return '还没到时间';
 }
 const open = d => d && !d.skip && (d.status === 'help' || (d.status === 'pending' && d.escalated));
+const restockForm = m => S.restock === m.id
+  ? `<div class="ai-btns restock"><input id="restockN" type="number" min="1" max="999" placeholder="买了多少${unit(m)}"><button data-act="restockSave" data-med="${m.id}" class="p-ok sm">补上</button></div>`
+  : `<div class="ai-btns"><button data-act="restock" data-med="${m.id}" class="smsbtn">🛒 已经买了药，补上药量</button></div>`;
 const contactBtns = d => `<div class="ai-btns"><button data-act="call" data-dose="${d.id}" class="callbtn">📞 打给妈妈</button><button data-act="sms" data-dose="${d.id}" class="smsbtn">💬 发短信提醒</button></div>`;
 
 function weekHTML() {
@@ -450,6 +478,7 @@ function childHTML() {
     const todo = S.doses.filter(open);
     body = `<div class="c-head"><div class="c-hi">妈妈今天的吃药情况</div><div class="c-sub">10月9日 周五 · 现在 ${fmt(S.min)}</div></div>
       ${todo.map(d => `<div class="alert ${d.status}"><b>${d.status === 'help' ? '🙋 妈妈需要帮忙' : '⚠️ 妈妈还没确认吃药'}</b><p>${d.status === 'help' ? `${d.time} 的药：妈妈说“${esc(d.reason)}”` : `${d.time} 的药提醒了 2 次，${S.waitMin} 分钟没确认`}${d.follow != null ? `<br>⏰ ${fmt(d.follow)} 会再响铃提醒妈妈` : ''}</p>${contactBtns(d)}</div>`).join('')}
+      ${lowStock().map(m => `<div class="alert refill"><b>💊 ${esc(short(m.name))}快吃完了</b><p>${esc(stockText(m))}，记得帮妈妈买药。</p>${restockForm(m)}</div>`).join('')}
       <div class="c-doses">${S.doses.map(d => `<div class="c-dose ${d.status} ${open(d) && d.status === 'pending' ? 'late' : ''}"><div class="c-time">${d.time}<small>${period(d.time)}</small></div><div><div class="c-meds">${esc(names(d))}</div><div class="c-st">${statusText(d)}</div></div></div>`).join('')}</div>
       ${weekHTML()}
       ${S.showAI ? aiHTML() : '<button data-act="summary" class="aibtn">📊 看看这一周：接下来怎么做</button>'}`;
@@ -465,6 +494,7 @@ function childHTML() {
         <label>药名</label><input data-f="name" value="${esc(f.name)}">
         <div class="two"><div><label>每次吃多少</label><input data-f="dose" value="${esc(f.dose)}" placeholder="1片"></div><div><label>几点吃（可多个）</label><input data-f="times" value="${esc(f.times)}" placeholder="08:00, 20:00"></div></div>
         <label>怎么吃</label><input data-f="method" value="${esc(f.method)}" placeholder="例如：饭后用温水送服">
+        <label>现在还剩多少（选填，快吃完时提醒你买药）</label><input data-f="stock" type="number" min="0" value="${esc(f.stock)}" placeholder="例如：30">
         <label>放在药箱第几格</label><select data-f="slot">${[1, 2, 3, 4, 5, 6].map(i => `<option ${+f.slot === i ? 'selected' : ''}>${i}</option>`).join('')}</select>
         <label>📷 药盒 / 药片照片（推荐，妈妈对照实物不容易吃错）</label><label class="upload">${f.photo ? '已上传，点这里换一张' : '拍照 / 上传照片'}<input type="file" accept="image/*" capture="environment" data-photo hidden></label>
         <div class="muted">没有照片时，用下面的颜色和形状画示意图：</div>
@@ -474,8 +504,11 @@ function childHTML() {
         ${f.err ? `<div class="err">${esc(f.err)}</div>` : ''}
         <div class="two"><button data-act="cancel" class="c-ghost">取消</button><button data-act="save" class="p-ok sm">保存</button></div>
       </div>` : '<button data-act="add" class="addbtn">＋ 添加新药</button>'}
-      ${S.meds.map(m => `<div class="medrow">${art(m, .6)}<div><b>${esc(short(m.name))} · ${esc(m.dose)}</b><div class="muted">${m.times.join('、')} · 第 ${m.slot} 格</div><div class="muted">${esc(m.method)}</div></div></div>`).join('')}
-      <div class="setting"><label for="wait">妈妈超过多久没确认，就通知我</label><select id="wait"><option value="30" ${S.waitMin === 30 ? 'selected' : ''}>30 分钟</option><option value="60" ${S.waitMin === 60 ? 'selected' : ''}>60 分钟</option></select></div>`;
+      ${S.meds.map(m => { const left = daysLeft(m), low = left != null && left <= S.refillDays;
+        return `<div class="medrow">${art(m, .6)}<div class="grow"><b>${esc(short(m.name))} · ${esc(m.dose)}</b><div class="muted">${m.times.join('、')} · 第 ${m.slot} 格</div><div class="muted">${esc(m.method)}</div>
+        <div class="stock ${low ? 'low' : ''}">${left == null ? (m.stock == null ? '没填药量，不会提醒买药' : '剂量单位不是片/粒，暂不推算') : `剩 ${m.stock} ${unit(m)} · 约够 ${left} 天${low ? ' · 该买药了' : ''}`}</div>${left == null ? '' : low || S.restock === m.id ? restockForm(m) : `<button data-act="restock" data-med="${m.id}" class="linkbtn">＋ 补药量</button>`}</div></div>`; }).join('')}
+      <div class="setting"><label for="wait">妈妈超过多久没确认，就通知我</label><select id="wait"><option value="30" ${S.waitMin === 30 ? 'selected' : ''}>30 分钟</option><option value="60" ${S.waitMin === 60 ? 'selected' : ''}>60 分钟</option></select>
+        <label for="refill">药还够吃几天时，提醒我买药</label><select id="refill">${[3, 5, 7, 10].map(n => `<option value="${n}" ${S.refillDays === n ? 'selected' : ''}>${n} 天</option>`).join('')}</select></div>`;
   }
   const tabs = [['home', '🏠', '首页'], ['msgs', '💬', '消息'], ['meds', '💊', '药品']].map(([k, i, n]) => `<button data-tab="${k}" class="${S.tab === k ? 'on' : ''}">${i}<span>${n}</span>${k === 'msgs' && unread ? `<em>${unread}</em>` : ''}</button>`).join('');
   return sbar() + b + `<div class="c-body">${body}</div><nav class="tabbar">${tabs}</nav>`;
@@ -502,7 +535,7 @@ function render() {
   const st = SC[S.sc]?.steps[S.step];
   if (st?.target) { const el = document.querySelector(st.target); if (el) { el.classList.add('pulse'); el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } }
 }
-if (!BROWSER) module.exports = { fresh, start, tick, check, confirm, ring, nextEvent, medsOf, instruction, aiParse, groundCheck, rxPrompt, weekStats, askHelp, dose, WEEK, get S() { return S; } };
+if (!BROWSER) module.exports = { fresh, start, tick, check, confirm, ring, nextEvent, medsOf, instruction, aiParse, groundCheck, rxPrompt, weekStats, askHelp, dose, perDose, daysLeft, restock, WEEK, get S() { return S; } };
 else {
 
 // ---------- 交互 ----------
@@ -546,7 +579,7 @@ document.addEventListener('click', e => {
       emit('later'); break;
     }
     case 'add':
-      S.note = ''; S.draft = { text: '', name: '', dose: '', times: '', method: '', slot: '3', box: 'green', pill: 'white', shape: 'capsule', photo: '' };
+      S.note = ''; S.draft = { text: '', name: '', dose: '', times: '', method: '', stock: '', slot: '3', box: 'green', pill: 'white', shape: 'capsule', photo: '' };
       emit('add'); break;
     case 'voice': if (!S.listening) voiceInput(); return;
     case 'ai': {
@@ -566,11 +599,19 @@ document.addEventListener('click', e => {
       break;
     }
     case 'cancel': S.draft = null; break;
+    case 'restock': S.restock = el.dataset.med; break;
+    case 'restockSave': {
+      const m = S.meds.find(x => x.id === el.dataset.med), n = +document.querySelector('#restockN')?.value;
+      if (!m || !Number.isInteger(n) || n < 1 || n > 999) return;
+      restock(m, n); S.restock = null; S.note = `✅ 已给「${short(m.name)}」补上 ${n} ${unit(m)}，现在约够吃 ${daysLeft(m)} 天。`; emit('restock'); break;
+    }
     case 'save': {
       const f = S.draft, times = f.times.split(/[,，、\s]+/).filter(Boolean).map(t => t.replace('：', ':').padStart(5, '0'));
       if (!f.name.trim() || !f.dose.trim() || !f.method.trim()) { f.err = '请填写药名、每次吃多少和怎么吃。'; break; }
       if (!times.length || times.some(t => !/^([01]\d|2[0-3]):[0-5]\d$/.test(t))) { f.err = '吃药时间请写成 08:00 这样的格式。'; break; }
-      S.meds.push({ id: 'm' + Date.now(), name: f.name.trim(), dose: f.dose.trim(), method: f.method.trim(), slot: +f.slot, box: f.box, pill: f.pill, shape: f.shape, photo: f.photo, times: [...new Set(times)] });
+      const stock = String(f.stock ?? '').trim();
+      if (stock && !/^\d{1,3}$/.test(stock)) { f.err = '剩余药量请填 0–999 的整数，不知道可以空着。'; break; }
+      S.meds.push({ id: 'm' + Date.now(), name: f.name.trim(), dose: f.dose.trim(), method: f.method.trim(), slot: +f.slot, box: f.box, pill: f.pill, shape: f.shape, photo: f.photo, times: [...new Set(times)], stock: stock ? +stock : null });
       buildDoses(); S.draft = null; S.note = `✅ 已保存「${short(f.name)}」，到点会提醒妈妈。`; emit('setup'); break;
     }
     default: return;
@@ -583,6 +624,7 @@ document.addEventListener('input', e => {
   const k = e.target.dataset.f;
   if (k && S.draft) { S.draft[k] = e.target.value; if (['box', 'pill', 'shape', 'name'].includes(k)) refreshPreview(); }
   if (e.target.id === 'wait') { S.waitMin = +e.target.value; render(); }
+  if (e.target.id === 'refill') { S.refillDays = +e.target.value; render(); }
 });
 document.addEventListener('change', async e => {
   if (e.target.dataset.photo === undefined || !S.draft) return;
