@@ -1148,9 +1148,17 @@ async function main() {
   F = await pickFont();
   await figma.loadFontAsync(F.r);
   await figma.loadFontAsync(F.b);
-  const page = figma.createPage();
-  page.name = '安心药箱 原型 ' + V;
-  await figma.setCurrentPageAsync(page);
+  // 免费版一个文件最多 3 页，所以有同名页面就清空复用，不再新建
+  const name = '安心药箱 原型 ' + V;
+  let page = figma.root.children.find(p => p.name === name);
+  if (page) {
+    await figma.setCurrentPageAsync(page);
+    for (const n of [...page.children]) n.remove();
+  } else {
+    page = figma.createPage();
+    page.name = name;
+    await figma.setCurrentPageAsync(page);
+  }
   await clearOldRun(page);
   page.backgrounds = [{ type: 'SOLID', color: rgb('#E9EBEF') }];
   setupVars();
