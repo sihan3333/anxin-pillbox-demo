@@ -37,7 +37,7 @@ function fresh() {
       { id: 'm2', name: '降糖药（示例）', dose: '1片', slot: 2, box: 'orange', pill: 'yellow', shape: 'oval', method: '和饭一起吃，用温水送服', times: ['08:00', '20:00'], stock: 16 }
     ],
     doses: [], parent: 'home', active: null, ringType: null, psms: null, lastSpeech: '',
-    tab: 'home', call: null, msgs: [], banner: null, showAI: false, weekend: false, draft: null, note: '', listening: false,
+    tab: 'home', view: null, call: null, msgs: [], banner: null, showAI: false, weekend: false, weekendSkip: false, draft: null, note: '', listening: false, medIdx: 0,
     sc: 'normal', step: 0
   };
   buildDoses();
@@ -100,15 +100,21 @@ const VOICE = {
   help: '遇到什么问题了？请按对应的按钮。一，找不到药。二，不知道怎么吃。三，记不清吃没吃。四，让孩子给我打电话。',
   helpSent: '好的，已经告诉女儿了。她会马上给您打电话，请稍等。',
   unsureSent: '好的，已经告诉女儿了。先不要再吃这一次的药，等女儿给您打电话，一起确认。',
-  later: '好的，等一会儿再提醒您。'
+  later: '什么时候再提醒您？还没开饭，按第 1 个；不在家，按第 2 个。',
+  ask: '早上的药吃好了吗？吃好了，直接说“吃好了”，或者按绿色的按钮。'
 };
+const ASK_AFTER = 10; // 看完指引多少分钟还没确认，手机追问一句
 
 // ---------- 时间推进与规则 ----------
 function tick(to) { while (S.min < to) { S.min++; check(); } render(); }
 function check() {
   for (const d of S.doses) {
     if (d.skip || d.status === 'done') continue;
-    const dt = S.min - toMin(d.time);
+    // 父母选了"待会再吃"后，再次响铃、通知子女的时间都从延后的时刻重新算
+    const dt = S.min - (d.base ?? toMin(d.time));
+    if (d.status === 'pending' && d.guideAt != null && !d.asked && S.min >= d.guideAt + ASK_AFTER && S.parent === 'guide' && S.active === d.id) {
+      d.asked = true; S.parent = 'ask'; say(VOICE.ask); emit('ask');
+    }
     if (d.status === 'pending') {
       if (dt >= 0 && !d.rang) { d.rang = true; ring(d, 'due'); }
       if (dt >= S.repeatMin && !d.reminded) { d.reminded = true; ring(d, 'repeat'); }
@@ -129,7 +135,8 @@ function nextEvent() {
   const c = [];
   for (const d of S.doses) {
     if (d.skip || d.status === 'done') continue;
-    const t = toMin(d.time);
+    const t = d.base ?? toMin(d.time);
+    if (d.status === 'pending' && d.guideAt != null && !d.asked && S.parent === 'guide' && S.active === d.id) c.push(d.guideAt + ASK_AFTER);
     if (d.status === 'pending') { if (!d.rang) c.push(t); else if (!d.reminded) c.push(t + S.repeatMin); else if (!d.escalated) c.push(t + S.waitMin); }
     if (d.follow != null) c.push(d.follow);
     if (d.recheck != null) c.push(d.recheck);
@@ -138,9 +145,15 @@ function nextEvent() {
   return f.length ? Math.min(...f) : null;
 }
 function ring(d, type) {
-  S.parent = 'ring'; S.active = d.id; S.ringType = type; S.psms = null;
+  if (d.snooze && type === 'due') { type = 'snooze'; d.snooze = null; }
+  S.parent = 'ring'; S.active = d.id; S.ringType = type; S.psms = null; S.medIdx = 0;
   startRing(type === 'follow' ? '妈妈，女儿让我再提醒您吃药。请按绿色的接听键。' : '妈妈，该吃药了。请按绿色的接听键。');
-  emit(type === 'due' ? 'ring' : type === 'repeat' ? 'remind' : 'follow');
+  emit(type === 'due' ? 'ring' : type === 'repeat' ? 'remind' : type === 'snooze' ? 'snoozeRing' : 'follow');
+}
+// 待会再吃：从现在起延后若干分钟再响铃，期间不算"没确认"
+function snooze(d, mins, why) {
+  d.base = S.min + mins; d.rang = d.reminded = d.escalated = false; d.guideAt = null; d.asked = false;
+  d.snooze = { until: d.base, why };
 }
 
 function notify(m, quiet) {
@@ -185,7 +198,7 @@ function restock(m, n) {
 
 const UNSURE = '记不清吃没吃';
 function askHelp(d, reason) {
-  d.status = 'help'; d.reason = reason; S.parent = 'helpSent';
+  d.status = 'help'; d.reason = reason; d.helpAt = S.min; S.parent = 'helpSent';
   say(reason === UNSURE ? VOICE.unsureSent : VOICE.helpSent);
   notify({ type: 'help', dose: d.id, title: '🙋 妈妈需要帮忙', text: `${period(d.time)} ${d.time} 的药：妈妈说“${reason}”。` + (reason === UNSURE ? `已提醒妈妈先别再吃。打电话时先请她看看药盒第 ${slots(d)} 格里的药还在不在，再决定要不要补吃，避免重复吃药。` : '建议现在打个电话。') });
 }
@@ -227,37 +240,6 @@ function patternText(label, s) {
   if (s.help.length) t += `；${s.help.map(h => `周${h.w}求助过${h.why ? `“${h.why}”` : ''}`).join('、')}`;
   return t + '。';
 }
-function aiHTML() {
-  const today = [];
-  for (const d of S.doses) {
-    if (d.skip) continue;
-    const p = `${period(d.time)} ${d.time}`;
-    if (d.status === 'help') today.push(`${p} 的药，妈妈求助“${esc(d.reason)}”`);
-    else if (d.status === 'pending' && d.escalated) today.push(`${p} 的药提醒了 2 次还没确认`);
-    else if (d.status === 'done' && d.by === 'call') today.push(`${p} 的药是你打电话后才确认的`);
-    else if (d.status === 'done' && todayMark(d) === 'late') today.push(`${p} 的药第 2 次提醒后才确认`);
-  }
-  const openNow = S.doses.find(open);
-  const acts = [];
-  if (openNow) acts.push(`<li><b>现在先联系妈妈</b>：${esc(openNow.status === 'help' ? `她说“${openNow.reason}”，打电话最快。` : '先发短信，不回再打电话。')}<div class="ai-btns"><button data-act="call" data-dose="${openNow.id}" class="callbtn sm">📞 打电话</button><button data-act="sms" data-dose="${openNow.id}" class="smsbtn sm">💬 发短信</button></div></li>`);
-  const ws = weekStats();
-  for (const [k, label] of [['am', '早上'], ['pm', '晚上']]) {
-    const s = ws[k];
-    if (s.weekendPattern && k === 'am') {
-      acts.push(`<li><b>把周六、周日早上的提醒改到 9:00</b>：避开妈妈周末出门、起得晚的时间。<div class="ai-btns">${S.weekend ? '<span class="okchip">✅ 已改好，从明天（周六）开始</span>' : '<button data-act="weekend" class="aibtn sm">一键修改</button>'}</div></li>`);
-      acts.push('<li><b>周末打电话时可以这样问</b>：“妈，周末早上手机提醒的时候你一般在干嘛呀？要不要换个时间提醒？”</li>');
-    } else if (s.weekendPattern) acts.push(`<li><b>${label}的药周末经常要再提醒</b>：周末打电话时问问妈妈这个时间一般在做什么，看要不要换个提醒时间。</li>`);
-  }
-  const unsure = [['am', '早上'], ['pm', '晚上']].filter(([k]) => ws[k].help.some(h => h.why === UNSURE)).map(([, l]) => l);
-  if (unsure.length) acts.push(`<li><b>${unsure.join('和')}的药出现过“记不清吃没吃”</b>：提醒妈妈吃完立刻按确认；记不清时先别补吃，先看药盒格子里的药还在不在。</li>`);
-  if (acts.length === (openNow ? 1 : 0)) acts.push('<li><b>保持现在的提醒时间</b>：这一周没有看出需要调整的规律。</li>');
-  return `<div class="ai-card"><div class="ai-h">📊 这一周的情况</div>
-    <div class="ai-sec"><b>📋 今天</b><p>${today.length ? today.join('；') + '。' : '到目前为止都按时确认了，不用专门打电话问吃药。'}</p></div>
-    <div class="ai-sec"><b>📈 这一周的规律</b><p>${patternText('早上 8 点的药', ws.am)}</p><p>${patternText('晚上 8 点的药', ws.pm)}</p></div>
-    <div class="ai-sec"><b>💡 建议你这样做</b><ol>${acts.join('')}</ol></div>
-    <div class="ai-foot">这里是<b>规则统计</b>，不是大模型：从最近 7 天的确认记录（过去 6 天为示例数据）算出规律，再按规则给建议。真实产品中可以让大模型把记录写成更好懂的话、起草打电话的开场白；什么时候提醒、什么时候通知你仍由固定规则决定，模型不判断妈妈吃没吃，也不改药。</div></div>`;
-}
-
 // 把口语/医嘱文字整理成表单（规则 Mock）
 function cnNum(s) {
   if (/^\d+(\.\d+)?$/.test(s)) return +s;
@@ -364,21 +346,21 @@ const SC = {
   normal: { title: '① 妈妈按时吃药', steps: [
     { text: '现在是早上 7:58。左边是<b>妈妈的手机</b>，右边是<b>你的手机</b>。建议打开电脑声音。点下面的【快进到 08:00】，看看到点会发生什么。', ff: '08:00', target: '#g-ff', wait: 'ring' },
     { text: '8 点到了！妈妈的手机像来电一样<b>响铃</b>，还会<b>语音</b>说“该吃药了，请按绿色的接听键”。点绿色的【接听】。', target: '[data-act=answer]', wait: 'answer' },
-    { text: '妈妈能看到<b>药盒和药片长什么样、打开药盒第几格、吃几片、怎么吃</b>，手机会全部读出来，并告诉她遇到问题可以按橙色的【我需要帮忙】。假设妈妈吃完了，点【我吃好了】。', target: '[data-act=done]', wait: 'doneClick' },
-    { text: '手机会语音问妈妈“都吃好了吗？”，防止误按。点绿色的【是的，都吃了】。', target: '[data-act=yes]', wait: 'confirmed' },
-    { text: '看右边！你的手机<b>马上收到通知</b>，几点吃的、吃了什么都写清楚了，不用再打电话问。首页还提示<b>降糖药只够吃 7 天了</b>：每次确认吃药都按用量扣减，快吃完时提醒你买药。点【📊 看看这一周】，看看按最近 7 天记录统计出的规律和建议。', target: '[data-act=summary]', wait: 'summary' },
+    { text: '妈妈的手机<b>一次只讲一种药</b>：打开药盒第几格、药盒和药片长什么样、吃几片、怎么吃，全部读出来；点【下一种】能看第二种。遇到问题可以按橙色的【我需要帮忙】。假设妈妈吃完了，点绿色的【我吃好了】。', target: '[data-act=done]', wait: 'doneClick' },
+    { text: '手机会语音问妈妈“您都吃好了吗？”，防止误按。点绿色的【都吃好了】。', target: '[data-act=yes]', wait: 'confirmed' },
+    { text: '看右边！你的手机<b>马上收到通知</b>，几点吃的、吃了什么都写清楚了，不用再打电话问。首页还提示<b>降糖药还剩 7 天</b>：每次确认吃药都按用量扣减，快吃完时提醒你买药。点底部的【这一周】，看看按最近 7 天记录统计出的规律和建议。', target: '[data-tab=week]', wait: 'tab:week' },
     { text: '🎉 完成！统计发现妈妈<b>周末早上</b>经常要提醒两次，建议把周末的提醒改到 9 点。接着试试「② 妈妈忘了吃药」。', end: true }
   ] },
   forgot: { title: '② 妈妈忘了吃药', steps: [
     { text: '现在是早上 7:58。点【快进到 08:00】。', ff: '08:00', target: '#g-ff', wait: 'ring' },
     { text: '8 点手机响了，但这次假设<b>妈妈没听到</b>，没有接。点【快进到 08:15】。', ff: '08:15', target: '#g-ff', wait: 'remind' },
     { text: '8:15，妈妈的手机<b>第 2 次响铃</b>。假设还是没接，点【快进到 08:30】。', ff: '08:30', target: '#g-ff', wait: 'escalate' },
-    { text: '过了约定的 30 分钟还没确认，<b>你的手机收到提醒</b>。可以发短信，也可以打电话。这次点红色的【📞 打给妈妈】。', target: '[data-act=call]', wait: 'call' },
-    { text: '电话通了。假设妈妈说<b>“哎呀还没吃，我在买菜”</b>。点【还没吃，15 分钟后再响铃提醒妈妈】。', target: '[data-act=calllater]', wait: 'later' },
+    { text: '过了约定的 30 分钟还没确认，<b>你的手机收到提醒</b>。可以发短信，也可以打电话。这次点蓝色的【给妈妈打电话】。', target: '[data-act=call]', wait: 'call' },
+    { text: '电话通了。假设妈妈说<b>“哎呀还没吃，我在买菜”</b>。点【妈妈还没吃】，15 分钟后妈妈的手机会再响铃。', target: '[data-act=calllater]', wait: 'later' },
     { text: '设好了。点【快进到 08:45】，看看会不会再提醒妈妈。', ff: '08:45', target: '#g-ff', wait: 'follow' },
     { text: '8:45 妈妈的手机又响了，写着“女儿让我再提醒您”。这次妈妈接了，点【接听】。', target: '[data-act=answer]', wait: 'answer' },
     { text: '点【我吃好了】。', target: '[data-act=done]', wait: 'doneClick' },
-    { text: '点【是的，都吃了】。', target: '[data-act=yes]', wait: 'confirmed' },
+    { text: '点【都吃好了】。', target: '[data-act=yes]', wait: 'confirmed' },
     { text: '🎉 完成！你的手机收到“妈妈已经吃药了”。只有真的没确认时你才需要介入，而且一个电话就能安排好后续提醒。', end: true }
   ] },
   unsure: { title: '③ 妈妈记不清吃没吃', steps: [
@@ -386,9 +368,19 @@ const SC = {
     { text: '妈妈的手机响了，点绿色的【接听】。', target: '[data-act=answer]', wait: 'answer' },
     { text: '这次假设妈妈<b>记不清刚才有没有吃过</b>。点橙色的【我需要帮忙】。', target: '[data-act=help]', wait: 'helpClick' },
     { text: '手机会<b>按序号读出</b>四个选项，妈妈看不清字也能按。点【3 记不清吃没吃】。', target: '[data-reason="记不清吃没吃"]', wait: 'help' },
-    { text: '妈妈的手机用大字和语音提醒她<b>先不要再吃</b>：重复吃药有风险，比如降糖药。你的手机<b>立刻收到求助</b>，并提示先看药盒格子。点【📞 打给妈妈】。', target: '[data-act=call]', wait: 'call' },
+    { text: '妈妈的手机用大字和语音提醒她<b>先不要再吃</b>：重复吃药有风险，比如降糖药。你的手机<b>立刻收到求助</b>，并提示先看药盒格子。点【给妈妈打电话】。', target: '[data-act=call]', wait: 'call' },
     { text: '电话里请妈妈看看药盒第 1、2 格：药已经不在了，说明刚才吃过。点【妈妈已经吃了】。', target: '[data-act=callok]', wait: 'callResult' },
     { text: '🎉 完成！记不清时不催着补吃，而是先停下、一起核对，避免重复吃药。', end: true }
+  ] },
+  later: { title: '④ 现在不方便吃', steps: [
+    { text: '现在是早上 7:58。点【快进到 08:00】。', ff: '08:00', target: '#g-ff', wait: 'ring' },
+    { text: '降糖药要<b>和饭一起吃</b>，可妈妈的饭还没做好。点【现在不方便吃？】。', target: '[data-act=snoozeOpen]', wait: 'snoozeOpen' },
+    { text: '妈妈可以选“还没开饭”，或者“我不在家”并选多久后再提醒。点【还没开饭】。', target: '[data-act=snooze][data-min="20"]', wait: 'snooze' },
+    { text: '看右边：你的首页显示<b>“待会再吃 · 08:20”</b>，不算没确认，也不会打扰你。点【快进到 08:20】。', ff: '08:20', target: '#g-ff', wait: 'snoozeRing' },
+    { text: '到了妈妈说的时间，手机再次响铃。点【接听】。', target: '[data-act=answer]', wait: 'answer' },
+    { text: '假设妈妈看完指引去吃饭了，<b>忘了按“我吃好了”</b>。点【快进到 08:30】。', ff: '08:30', target: '#g-ff', wait: 'ask' },
+    { text: '看完指引 10 分钟还没确认，手机<b>主动问一句</b>“吃好了吗”，说一声或按按钮都行。点绿色的【吃好了】。', target: '[data-act=askyes]', wait: 'confirmed' },
+    { text: '🎉 完成！延后吃药不算没确认；忘了按确认时，手机会追问一句，减少误报。', end: true }
   ] },
   free: { title: '自由体验（录入新药等）', steps: [] }
 };
@@ -399,7 +391,23 @@ function start(key) {
 }
 function emit(ev) { const st = SC[S.sc]?.steps[S.step]; if (st && st.wait === ev) S.step++; }
 
-// ---------- 渲染 ----------
+// ---------- 渲染（与 Figma 高保真原型 v3 保持一致）----------
+const IC = {
+  back: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  chev: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
+  check: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  phone: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>',
+  msg: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+  speaker: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>',
+  mic: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/></svg>',
+  alert: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 7v6"/><path d="M12 16.5v.5"/></svg>',
+  gear: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+  home: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
+  pill: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7z"/><path d="m8.5 8.5 7 7"/></svg>',
+  chart: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 21h18"/><path d="M7 17V11"/><path d="M12 17V5"/><path d="M17 17v-8"/></svg>',
+  camera: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
+  house: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v11h14V9"/></svg>'
+};
 function art(m, k = 1) {
   if (m.photo) return `<img class="photo" src="${esc(m.photo)}" style="max-width:${130 * k}px;max-height:${100 * k}px" alt="${esc(short(m.name))}实物照片">`;
   const box = BOX[m.box][1], pill = PILL[m.pill][1]; let p;
@@ -408,117 +416,240 @@ function art(m, k = 1) {
   else p = `<g transform="rotate(-25 98 45)"><rect x="78" y="37" width="40" height="16" rx="8" fill="${pill}" stroke="#334155" stroke-width="2"/><rect x="78" y="37" width="20" height="16" rx="8" fill="${box}" stroke="#334155" stroke-width="2"/></g>`;
   return `<svg class="art" viewBox="0 0 125 80" width="${125 * k}" height="${80 * k}" role="img" aria-label="${esc(look(m))}"><rect x="6" y="8" width="62" height="64" rx="6" fill="${box}"/><rect x="12" y="26" width="50" height="22" rx="3" fill="#fff"/><text x="37" y="41" font-size="10" text-anchor="middle" fill="#111">${esc(short(m.name).slice(0, 4))}</text>${p}</svg>`;
 }
-const pillbox = lit => `<div class="pillbox">${[1, 2, 3, 4, 5, 6].map(i => `<div class="cell ${lit.includes(i) ? 'lit' : ''}">${i}</div>`).join('')}</div>`;
-const sbar = dark => `<div class="sbar ${dark ? 'dark' : ''}"><span>${fmt(S.min)}</span><span>📶 🔋</span></div>`;
-const replay = '<button data-act="replay" class="p-sec">🔊 再听一遍</button>';
+// 妈妈的药盒：深色盒身，要打开的格子高亮
+function pillbox(lit, tag, tagCls = 'warn') {
+  const n = Math.min(6, Math.max(4, ...S.meds.map(m => +m.slot || 1)));
+  return `<div class="box"><div class="box-h"><span>妈妈的药盒</span>${tag ? `<span class="box-tag ${tagCls}">${esc(tag)}</span>` : ''}</div>
+    <div class="box-cells" style="grid-template-columns:repeat(${n},1fr)">${Array.from({ length: n }, (_, i) => i + 1).map(i => `<div class="cell ${lit.includes(i) ? 'lit' : ''}"><b>${i}</b><small>${lit.includes(i) ? '这格' : '格'}</small></div>`).join('')}</div></div>`;
+}
+const slotList = d => medsOf(d).map(m => m.slot).sort((a, b) => a - b);
+const sbar = cls => `<div class="sbar ${cls || ''}"><span>${fmt(S.min)}</span><span class="sig">▂▄▆ ▭</span></div>`;
+const navbar = (title, opt = {}) => `<div class="nav">${opt.back ? `<button class="nav-back" data-act="${opt.back}">${IC.back}返回</button>` : ''}<b>${esc(title)}</b>${opt.right || ''}</div>`;
+const firstSentence = t => { const s = (String(t || '').match(/[^。！？]+[。！？]?/) || [''])[0]; return s.length > 26 ? s.slice(0, 26) + '……' : s; };
+const voiceBox = t => `<button class="voice" data-act="replay">${IC.speaker}<span>正在朗读：“${esc(firstSentence(t))}”</span></button>`;
+const btn = (label, act, cls, extra = '') => `<button class="btn ${cls}" data-act="${act}" ${extra}>${label}</button>`;
 
 function parentHTML() {
   const d = dose(S.active);
-  if (S.call) return sbar(true) + `<div class="p-incall"><div class="avatar">👩</div><div class="who">女儿</div><div class="cst">${S.call.stage === 'calling' ? '来电中…' : '通话中'}</div></div>`;
+  if (S.call) return sbar('dark') + `<div class="incall"><div class="avatar">女</div><div class="who">女儿</div><div class="cst">${S.call.stage === 'calling' ? '来电中…' : '通话中'}</div></div>`;
   switch (S.parent) {
-    case 'ring': return sbar(true) + `<div class="p-ring"><div class="ring-icon">💊</div><div class="ring-title">该吃药了</div><div class="ring-sub">${period(d.time)} ${d.time} · ${d.medIds.length} 种药</div>${S.ringType === 'repeat' ? '<div class="ring-tag">第 2 次提醒</div>' : S.ringType === 'follow' ? '<div class="ring-tag">女儿让我再提醒您</div>' : ''}<div class="ring-actions"><div><button data-act="later" class="r-btn r-later">⏰</button><span>稍后</span></div><div><button data-act="answer" class="r-btn r-answer">📞</button><span>接听</span></div></div></div>`;
-    case 'sms': return sbar() + `<div class="p-body"><h2>💬 女儿发来消息</h2><div class="p-sms">${esc(S.psms.text)}</div>${replay}</div><div class="p-actions one"><button data-act="gotake" class="p-ok">💊 好的，去吃药</button></div>`;
-    case 'guide': {
-      const ms = medsOf(d);
-      const seq = ms.length > 1;
-      return sbar() + `<div class="p-body"><h2>${period(d.time)} ${d.time}<br>要吃 ${ms.length} 种药${seq ? '<br><small>请按顺序吃</small>' : ''}</h2>
-        <div class="pb-wrap"><div class="pb-title">💊 打开药盒的这几格</div>${pillbox(ms.map(m => m.slot))}</div>
-        ${ms.map((m, i) => `<div class="med">${seq ? `<div class="mstep">${stepName(m, i)}</div>` : ''}<div class="slotno">第 ${m.slot} 格</div>${art(m, 1.3)}<div class="mname">${esc(short(m.name))}</div><div class="mlook">${esc(look(m))}</div><div class="mdose">吃 <b>${esc(m.dose)}</b></div><div class="mhow">${esc(m.method)}</div></div>`).join('')}
-        ${replay}</div>
-        <div class="p-actions"><button data-act="done" class="p-ok">✅ 我吃好了</button><button data-act="help" class="p-help">🙋 我需要帮忙</button></div>`;
+    case 'ring': {
+      const sl = slotList(d), tag = S.ringType === 'repeat' ? '第 2 次提醒' : S.ringType === 'follow' ? '女儿让我再提醒您' : S.ringType === 'snooze' ? '到了您说的时间' : `${period(d.time)} ${d.time} · 吃药时间`;
+      return sbar('blue') + `<div class="p ring"><div class="ring-top"><span class="ring-tag">${esc(tag)}</span><h1>该吃药了</h1><p>${period(d.time)}有 ${d.medIds.length} 种药，在药盒第 ${sl.join('、')} 格</p></div>
+        <div class="ring-sheet">${pillbox(sl, `打开第 ${sl.join('、')} 格`)}${voiceBox('该吃药了，请按绿色的接听键')}
+        <div class="answer"><button class="answer-btn" data-act="answer" aria-label="接听">${IC.phone}</button><b>接听</b><button class="link" data-act="snoozeOpen">现在不方便吃？${IC.chev}</button></div>
+        ${btn('我需要帮忙', 'help', 'orange-line')}</div></div>`;
     }
-    case 'confirm': return sbar() + `<div class="p-body center"><h2>都吃好了吗？</h2>${medsOf(d).map(m => `<div class="cfm">${art(m, .8)}<span>${esc(short(m.name))} ${esc(m.dose)}</span></div>`).join('')}${replay}</div><div class="p-actions col"><button data-act="yes" class="p-ok">✅ 是的，都吃了</button><button data-act="no" class="p-sec">还没有，返回</button></div>`;
-    case 'help': return sbar() + `<div class="p-body"><h2>遇到什么问题？</h2>${REASONS.map((r, i) => `<button data-reason="${r}" class="p-reason"><span class="num">${i + 1}</span>${r}</button>`).join('')}${replay}<button data-act="back" class="p-sec">返回</button></div>`;
-    case 'helpSent': return sbar() + `<div class="p-body center"><div class="big-emoji">📨</div><h2>已经告诉女儿了</h2>${d.reason === UNSURE ? '<p class="p-warn">先不要再吃<br>这一次的药</p>' : ''}<p class="p-text">她会马上给您打电话，<br>请稍等。</p>${replay}</div>`;
+    case 'guide': {
+      const ms = medsOf(d), i = Math.min(S.medIdx, ms.length - 1), m = ms[i], seq = ms.length > 1, lbl = mealStep(m).label;
+      const next = ms[i + 1];
+      return sbar() + navbar('吃药指引', { right: `<button class="chip" data-act="replay">${IC.speaker}再听一遍</button>` }) + `<div class="p body">
+        ${seq ? `<div class="prog-t">第 ${i + 1} 种，共 ${ms.length} 种</div><div class="prog">${ms.map((_, k) => `<span class="${k <= i ? 'on' : ''}"></span>`).join('')}</div>` : ''}
+        <div class="card med"><span class="tag green">${esc(lbl ? lbl + '吃' : '按时吃')}</span>
+          <div class="med-top"><div class="med-art">${art(m, .7)}</div><div><b>${esc(BOX[m.box][0])}盒子</b><small>${esc(PILL[m.pill][0] + SHAPE[m.shape])}${m.shape === 'capsule' ? '' : '药片'}</small></div></div>
+          <div class="kv"><span>药名</span><b>${esc(short(m.name))}</b></div>
+          <div class="kv"><span>在哪</span><b>药盒第 ${m.slot} 格（贴着 ${m.slot} 号）</b></div>
+          <div class="kv"><span>吃几片</span><b>${esc(m.dose)}</b></div>
+          <div class="kv"><span>怎么吃</span><b>${esc(m.method)}</b></div></div>
+        ${next ? `<div class="card nextmed"><span class="num gray">${i + 2}</span><div><b>${esc(mealStep(next).label ? mealStep(next).label + '吃 · ' : '')}第 ${next.slot} 格</b><small>${esc(next.dose)} · ${esc(short(next.name))}</small></div><button class="mini" data-act="nextmed">下一种</button></div>` : (seq ? `<button class="link center" data-act="prevmed">← 回到第一种</button>` : '')}
+        </div><div class="p-foot">${btn(IC.check + '我吃好了', 'done', 'green')}<button class="link center" data-act="done">${IC.mic}也可以直接说“吃好了”</button>${btn('我需要帮忙', 'help', 'orange-line')}</div>`;
+    }
+    case 'confirm': return sbar() + navbar('确认一下') + `<div class="p body center"><div class="okcircle">${IC.check}</div><h2>您都吃好了吗？</h2>
+        <div class="card list">${medsOf(d).map(m => `<div class="row"><span class="rt">第 ${m.slot} 格 · ${esc(short(m.name))} · ${esc(m.dose)}</span><i class="ok">${IC.check}</i></div>`).join('')}</div>${voiceBox(VOICE.confirm)}</div>
+        <div class="p-foot">${btn(IC.check + '都吃好了', 'yes', 'green')}${btn('还没有，回去看看', 'no', 'white')}</div>`;
+    case 'ask': {
+      const sl = slotList(d);
+      return sbar() + navbar('确认一下') + `<div class="p body">${pillbox(sl, `${period(d.time)} ${+d.time.slice(0, 2)} 点的药`, 'ok')}<h2 class="ask-h">${period(d.time)} ${+d.time.slice(0, 2)} 点的药，<br>吃好了吗？</h2>
+        <div class="listen"><span class="mic">${IC.mic}</span><b>正在听：直接说“吃好了”就行</b></div>
+        <div class="card soft center"><b>不想说话也没关系</b><small>按下面的绿色按钮，一样能告诉女儿</small></div></div>
+        <div class="p-foot">${btn(IC.check + '吃好了', 'askyes', 'green')}${btn('还没吃', 'askno', 'white')}</div>`;
+    }
+    case 'later': {
+      const back = h => fmt(S.min + h);
+      return sbar() + navbar('待会再吃', { back: 'laterBack' }) + `<div class="p body"><h2>什么时候再提醒您？</h2>
+        <div class="card list">
+          <button class="row big" data-act="snooze" data-min="20" data-why="还没开饭"><span class="num green">饭</span><div><b>还没开饭</b><small>开饭了再提醒我 · 20 分钟后</small></div>${IC.chev}</button>
+          <div class="row big col"><div class="row-h"><span class="num blue">${IC.house}</span><div><b>我不在家</b><small>回去再吃，多久后提醒？</small></div></div>
+            <div class="seg">${[[30, '30 分钟'], [60, '1 小时'], [120, '2 小时']].map(([v, l]) => `<button data-act="snooze" data-min="${v}" data-why="不在家">${l}</button>`).join('')}</div></div>
+        </div>
+        <div class="card soft"><small>女儿那边只会看到：</small><b>“妈妈说不在家，${back(60)} 再提醒”</b><small>不会说您没吃药。</small></div>${voiceBox(VOICE.later)}</div>
+        <div class="p-foot">${btn('现在就吃', 'eatnow', 'green')}</div>`;
+    }
+    case 'sms': return sbar() + navbar('女儿发来消息') + `<div class="p body"><div class="bubble">${esc(S.psms.text)}</div>${voiceBox('女儿给您发来消息')}</div><div class="p-foot">${btn('好的，去吃药', 'gotake', 'green')}</div>`;
+    case 'help': return sbar() + navbar('我需要帮忙', { back: 'back' }) + `<div class="p body"><h2>需要什么帮助？</h2><p class="sub">按号码，或者直接说出来</p>
+        <div class="card list">${REASONS.map((r, i) => `<button class="row big" data-reason="${r}"><span class="num orange">${i + 1}</span><b>${r}</b>${IC.chev}</button>`).join('')}</div>${voiceBox('第 1，找不到药；第 2，不知道怎么吃……')}</div>
+        <div class="p-foot">${btn('返回', 'back', 'white')}</div>`;
+    case 'helpSent': {
+      const unsure = d.reason === UNSURE, sl = slotList(d);
+      return sbar() + navbar('我需要帮忙') + `<div class="p body">
+        <div class="card warmbig"><span class="warn-ic">${IC.alert}</span><h2>${unsure ? '先不要再吃这一次的药' : '已经告诉女儿了'}</h2><p>${unsure ? '已经告诉女儿，她马上给您打电话。' : '她马上给您打电话，请稍等。'}</p></div>
+        ${unsure ? `<div class="card"><p class="mb">等电话的时候，看看第 ${sl.join('、')} 格里的药还在不在。</p>${pillbox(sl, `打开第 ${sl.join('、')} 格`)}</div>` : ''}${voiceBox(S.lastSpeech)}</div>
+        <div class="p-foot">${btn('好的，我等电话', 'home', 'blue')}</div>`;
+    }
     case 'done': {
       const nx = S.doses.find(x => x.status === 'pending' && !x.skip && toMin(x.time) > S.min);
-      return sbar() + `<div class="p-body center"><div class="big-emoji">👍</div><h2>吃好了！</h2><p class="p-text">${d?.by === 'call' ? '女儿已经帮您记录好了' : '已经告诉女儿了'}</p>${nx ? `<p class="p-text small">下一次：${period(nx.time)} ${nx.time}</p>` : ''}${replay}<button data-act="home" class="p-sec">返回</button></div>`;
+      return sbar() + navbar('吃好了') + `<div class="p body center"><div class="okcircle">${IC.check}</div><h2>吃好了！</h2><p class="lead">${d?.by === 'call' ? '女儿已经帮您记录好了' : '已经告诉女儿了'}</p>${nx ? `<div class="card soft center"><small>下一次吃药</small><b class="big">${period(nx.time)} ${nx.time}</b></div>` : '<div class="card soft center"><b>今天的药都吃完了</b></div>'}${voiceBox(S.lastSpeech)}</div>
+        <div class="p-foot">${btn('返回', 'home', 'white')}</div>`;
     }
     default: {
-      const nx = S.doses.find(x => x.status === 'pending' && !x.skip && toMin(x.time) > S.min);
-      return sbar() + `<div class="p-body"><div class="bigclock">${fmt(S.min)}</div><div class="date">10月9日 星期五</div>
-        ${nx ? `<div class="p-card"><div class="lbl">下一次吃药</div><div class="t">${period(nx.time)} ${nx.time}</div><div>${medsOf(nx).map(m => esc(short(m.name))).join('、')}</div></div>` : '<div class="p-card"><div class="lbl">今天的药</div><div class="t">都吃完啦</div></div>'}
-        <div class="p-list">${S.doses.map(x => `<div>${x.status === 'done' ? '✅' : x.status === 'help' ? '🙋' : '⏰'} ${period(x.time)} ${x.time}</div>`).join('')}</div>
-        <p class="hint">到点时手机会响铃，告诉您吃什么</p></div>`;
+      const nx = S.doses.find(x => x.status === 'pending' && !x.skip && (x.base ?? toMin(x.time)) > S.min);
+      return sbar() + navbar('安心药箱') + `<div class="p body"><div class="bigclock">${fmt(S.min)}</div><div class="date">10月9日 星期五</div>
+        ${nx ? `<div class="card soft center"><small>下一次吃药</small><b class="big">${nx.snooze ? fmt(nx.base) : `${period(nx.time)} ${nx.time}`}</b><small>${medsOf(nx).map(m => esc(short(m.name))).join('、')}</small></div>` : '<div class="card soft center"><b>今天的药都吃完了</b></div>'}
+        <div class="card list">${S.doses.map(x => `<div class="row"><span class="rt">${period(x.time)} ${x.time}</span>${x.status === 'done' ? '<span class="tag green">已吃</span>' : x.status === 'help' ? '<span class="tag orange">已求助</span>' : x.snooze ? '<span class="tag blue">待会再吃</span>' : '<span class="tag gray">待提醒</span>'}</div>`).join('')}</div>
+        <p class="hint">到点时手机会像来电一样响，告诉您吃什么</p></div>`;
     }
   }
 }
 
+// 每一顿在子女端的状态标签
+function doseTag(d) {
+  if (d.status === 'done') return `<span class="tag green">${IC.check}${d.by === 'call' ? '电话确认' : '自己确认'} ${fmt(d.at)}</span>`;
+  if (d.status === 'help') return '<span class="tag orange">求助中</span>';
+  if (d.skip) return '<span class="tag gray">今天已过</span>';
+  if (d.snooze && !d.rang) return `<span class="tag blue">待会再吃 · ${fmt(d.base)}</span>`;
+  if (d.follow != null) return `<span class="tag blue">${fmt(d.follow)} 再提醒</span>`;
+  if (d.escalated) return '<span class="tag orange">还没确认</span>';
+  if (d.rang) return '<span class="tag gray">已提醒</span>';
+  return '<span class="tag gray">待提醒</span>';
+}
 function statusText(d) {
   if (d.status === 'done') return `✅ 已吃 · ${d.by === 'call' ? '电话确认' : '妈妈自己确认'} ${fmt(d.at)}`;
   if (d.status === 'help') return `🙋 需要帮忙：${esc(d.reason)}`;
   if (d.skip) return '今天已过，明天开始';
+  if (d.snooze && !d.rang) return `妈妈说待会再吃 · ${fmt(d.base)} 再提醒`;
   if (d.follow != null) return `⏰ ${fmt(d.follow)} 会再提醒妈妈`;
   if (d.escalated) return '⚠️ 超时没确认';
   if (d.rang) return '⏳ 已提醒，等妈妈确认';
   return '还没到时间';
 }
 const open = d => d && !d.skip && (d.status === 'help' || (d.status === 'pending' && d.escalated));
+const contactBtns = d => `<div class="two">${btn(IC.phone + '给妈妈打电话', 'call', 'blue', `data-dose="${d.id}"`)}${btn(IC.msg + '发短信', 'sms', 'light', `data-dose="${d.id}"`)}</div>`;
 const restockForm = m => S.restock === m.id
-  ? `<div class="ai-btns restock"><input id="restockN" type="number" min="1" max="999" placeholder="买了多少${unit(m)}"><button data-act="restockSave" data-med="${m.id}" class="p-ok sm">补上</button></div>`
-  : `<div class="ai-btns"><button data-act="restock" data-med="${m.id}" class="smsbtn">🛒 已经买了药，补上药量</button></div>`;
-const contactBtns = d => `<div class="ai-btns"><button data-act="call" data-dose="${d.id}" class="callbtn">📞 打给妈妈</button><button data-act="sms" data-dose="${d.id}" class="smsbtn">💬 发短信提醒</button></div>`;
+  ? `<div class="two restock"><input id="restockN" type="number" min="1" max="999" placeholder="买了多少${unit(m)}"><button class="btn blue sm" data-act="restockSave" data-med="${m.id}">补上</button></div>`
+  : `<button class="btn light sm" data-act="restock" data-med="${m.id}">已经买了药，补上药量</button>`;
 
+const MARKS = { ok: ['√', 'ok'], late: ['2', 'late'], call: ['☎', 'call'], help: ['○', 'help'], miss: ['!', 'miss'], wait: ['·', 'wait'] };
 function weekHTML() {
   const rows = [['早上', '08:00', 'am'], ['晚上', '20:00', 'pm']];
   const days = [...WEEK, { d: '10/9', w: '五', today: true }];
-  return `<div class="week"><div class="week-h">最近 7 天</div><table><tr><th></th>${days.map(x => `<th class="${x.today ? 'today' : ''}">${x.w}</th>`).join('')}</tr>${rows.map(([n, t, k]) => `<tr><td>${n}</td>${days.map(x => { const v = x.today ? todayMark(dose(t)) : x[k]; return `<td title="${MARK[v][1]}">${MARK[v][0]}</td>`; }).join('')}</tr>`).join('')}</table><div class="legend">✅ 按时　🟠 第2次提醒后　📞 打电话后　🙋 求助</div></div>`;
+  const marks = days.flatMap(x => rows.map(([, t, k]) => x.today ? todayMark(dose(t)) : x[k])).filter(v => v !== 'wait');
+  return `<div class="wk-h"><div><b>10 月 3 日 – 9 日</b><small>示例记录 · 本人确认 ${marks.filter(v => v === 'ok' || v === 'late').length}/${marks.length}</small></div><span class="tag gray">规则统计，不是大模型</span></div>
+    <div class="card week"><table><tr><th></th>${days.map(x => `<th class="${x.today ? 'today' : ''}">${x.w}</th>`).join('')}</tr>${rows.map(([n, t, k]) => `<tr><td>${n}</td>${days.map(x => { const v = x.today ? todayMark(dose(t)) : x[k]; return `<td><span class="wc ${MARKS[v][1]}" title="${MARK[v][1]}">${MARKS[v][0]}</span></td>`; }).join('')}</tr>`).join('')}</table></div>
+    <div class="legend"><span class="tag green">√ 自己确认</span><span class="tag orange">2 第 2 次提醒后确认</span><span class="tag blue">☎ 电话确认</span><span class="tag gray">○ 求助</span></div>`;
+}
+function findings() {
+  const ws = weekStats(), out = [];
+  const s = ws.am;
+  if (s.weekendPattern) out.push(`<div class="card find"><b class="find-h">💡 发现</b><p>周末早上 ${s.weLate}/${s.we} 天要第 2 次提醒才确认，工作日 ${s.wdLate}/${s.wd} 天。</p>${S.weekend ? '<span class="tag green">已改好，从明天（周六）开始 9:00 提醒</span>' : S.weekendSkip ? '<span class="tag gray">先不改，下周再看</span>' : `<b>要把周末早上的提醒改到 9:00 吗？</b><div class="two">${btn('改到 9:00', 'weekend', 'blue')}${btn('先不改', 'weekendNo', 'white')}</div>`}</div>`);
+  const unsure = [['am', '早上'], ['pm', '晚上']].filter(([k]) => ws[k].help.some(h => h.why === UNSURE)).map(([, l]) => l);
+  if (unsure.length) out.push(`<div class="card find"><b class="find-h">💡 发现</b><p>${unsure.join('和')}的药出现过“记不清吃没吃”。提醒妈妈吃完立刻确认；记不清时先别补吃，先看药盒格子里的药还在不在。</p></div>`);
+  if (!out.length) out.push('<div class="card find"><b class="find-h">💡 发现</b><p>这一周没有看出需要调整的规律，保持现在的提醒时间。</p></div>');
+  return out.join('');
+}
+
+function childView() {
+  const v = S.view;
+  if (v && v.startsWith('alert:')) {
+    const d = dose(v.slice(6)); if (!d) return null;
+    const t0 = d.base ?? toMin(d.time);
+    return navbar('提醒详情', { back: 'cback' }) + `<div class="c-body">
+      <div class="card warm"><span class="warn-ic">${IC.alert}</span><div><b>${fmt(t0 + S.waitMin)} 妈妈还没确认${period(d.time)}的药</b><p>提醒已经响了 2 次。还没确认不等于没吃，先打个电话问问。</p></div></div>
+      <h3>发生了什么</h3><div class="card"><div class="tl">
+        <div><i></i><b>${fmt(t0)}</b><span>第 1 次响铃，没有接</span></div>
+        <div><i></i><b>${fmt(t0 + S.repeatMin)}</b><span>第 2 次响铃，没有接</span></div>
+        <div class="hot"><i></i><b>${fmt(t0 + S.waitMin)}</b><span>到了家里约定的 ${S.waitMin} 分钟，通知你</span></div></div></div>
+      ${d.status === 'pending' ? contactBtns(d) : ''}
+      <h3>打完电话后</h3><div class="card list">
+        <button class="row big" data-act="calllater" data-dose="${d.id}"><div><b>妈妈还没吃</b><small>15 分钟后妈妈手机再响铃，仍未确认会再通知你</small></div>${IC.chev}</button>
+        <button class="row big" data-act="callok" data-dose="${d.id}"><div><b>妈妈说吃过了</b><small>记为“电话确认”，和“自己确认”分开显示</small></div>${IC.chev}</button></div></div>`;
+  }
+  if (v && v.startsWith('help:')) {
+    const d = dose(v.slice(5)); if (!d) return null;
+    const unsure = d.reason === UNSURE, sl = slotList(d);
+    return navbar('妈妈求助', { back: 'cback' }) + `<div class="c-body">
+      <div class="card warm"><span class="warn-ic">${IC.alert}</span><div><b>${fmt(d.helpAt ?? S.min)} 妈妈按了“我需要帮忙”</b><p class="o">她选了：${REASONS.indexOf(d.reason) + 1} ${esc(d.reason)}</p></div></div>
+      ${unsure ? `<div class="card"><small>妈妈的手机上正在显示</small><div class="warnrow">${IC.alert}<b>先不要再吃这一次的药，等女儿打电话</b></div></div>
+      <h3>建议这样做</h3><div class="card"><ol class="steps"><li>先请妈妈看看药盒第 ${sl.join('、')} 格，药还在不在</li><li>药还在，再决定要不要补吃；拿不准就先别吃</li><li>需要时问医生或药师</li></ol></div>` : `<h3>建议这样做</h3><div class="card"><ol class="steps"><li>现在给妈妈打个电话，问清楚是哪一步卡住了</li></ol></div>`}
+      ${d.answeredAt != null ? `<div class="card soft"><b class="bl">参考：${d.time} 的提醒妈妈 ${fmt(d.answeredAt)} 接听了</b><small>接听不代表吃了，只供电话里核对用。</small></div>` : ''}
+      ${d.status === 'help' ? btn(IC.phone + '给妈妈打电话', 'call', 'blue', `data-dose="${d.id}"`) : ''}
+      ${d.status === 'help' ? `<h3>打完电话后</h3><div class="card list"><button class="row big" data-act="callok" data-dose="${d.id}"><div><b>妈妈已经吃了</b><small>记为“电话确认”</small></div>${IC.chev}</button></div>` : ''}</div>`;
+  }
+  if (v === 'settings') {
+    const seg = (act, cur, opts) => `<div class="seg sm">${opts.map(([val, l]) => `<button class="${cur === val ? 'on' : ''}" data-act="${act}" data-v="${val}">${l}</button>`).join('')}</div>`;
+    return navbar('提醒设置', { back: 'cback' }) + `<div class="c-body"><h3>没确认时</h3><div class="card list">
+      <div class="row"><div><b>再响一次铃</b><small>没接听时</small></div><span class="muted">${S.repeatMin} 分钟后</span></div>
+      <div class="row"><div><b>通知家人</b><small>仍没确认时</small></div>${seg('setwait', S.waitMin, [[30, '30 分钟'], [60, '60 分钟']])}</div></div>
+      <h3>补药</h3><div class="card list"><div class="row"><div><b>药快吃完时提醒我</b><small>按每次用量推算还够几天</small></div>${seg('setrefill', S.refillDays, [[3, '3 天'], [5, '5 天'], [7, '7 天'], [10, '10 天']])}</div></div>
+      <p class="muted">等待时间是家里约定的沟通时间，不是医学上的安全时间。</p></div>`;
+  }
+  if (v === 'add' && S.draft) {
+    const f = S.draft;
+    return navbar('添加药品', { back: 'cancel' }) + `<div class="c-body">
+      <div class="card"><div class="add-h"><div><b>说出或粘贴用法</b><small>医生写的用法、药盒说明都可以</small></div><div class="ibtns"><label class="ibtn ghost" aria-label="拍药盒照片">${IC.camera}<input type="file" accept="image/*" capture="environment" data-photo hidden></label><button class="ibtn ${S.listening ? 'on' : ''}" data-act="voice" aria-label="语音说">${IC.mic}</button></div></div>
+        <textarea data-f="text" rows="3" placeholder="例如：这是降脂药，每次一片，晚上九点吃，睡前用温水送服">${esc(f.text)}</textarea>
+        ${btn('✨ AI 帮我整理', 'ai', 'blue')}</div>
+      ${f.aiNote ? `<div class="ainote">✦ AI 整理的草稿 · ${esc(f.aiNote)}</div>` : '<p class="muted">✦ AI 只整理原话里说到的内容，没提到的不猜，留给你补。</p>'}
+      <div class="card list form">
+        <label class="row"><span>药名</span><input data-f="name" value="${esc(f.name)}" placeholder="必填"></label>
+        <label class="row"><span>每次</span><input data-f="dose" value="${esc(f.dose)}" placeholder="例如 1片"></label>
+        <label class="row"><span>时间</span><input data-f="times" value="${esc(f.times)}" placeholder="08:00, 20:00"></label>
+        <label class="row"><span>吃法</span><input data-f="method" value="${esc(f.method)}" placeholder="例如 饭后，温水送服"></label>
+        <label class="row"><span>放在</span><select data-f="slot">${[1, 2, 3, 4, 5, 6].map(i => `<option value="${i}" ${+f.slot === i ? 'selected' : ''}>第 ${i} 格</option>`).join('')}</select></label>
+        <label class="row"><span>还剩</span><input data-f="stock" type="number" min="0" value="${esc(f.stock)}" placeholder="选填，快吃完时提醒你"></label></div>
+      <div class="two"><label class="dash">${IC.camera}<span>${f.photo ? '换一张照片' : '拍药盒照片'}</span><input type="file" accept="image/*" capture="environment" data-photo hidden></label>
+        <div class="dash shape"><span>颜色和形状</span><div class="sel3"><select data-f="box">${Object.entries(BOX).map(([k, x]) => `<option value="${k}" ${f.box === k ? 'selected' : ''}>${x[0]}盒</option>`).join('')}</select><select data-f="pill">${Object.entries(PILL).map(([k, x]) => `<option value="${k}" ${f.pill === k ? 'selected' : ''}>${x[0]}</option>`).join('')}</select><select data-f="shape">${Object.entries(SHAPE).map(([k, x]) => `<option value="${k}" ${f.shape === k ? 'selected' : ''}>${x}</option>`).join('')}</select></div></div></div>
+      <div class="preview">妈妈会看到：${art({ ...f, name: f.name || '药名' }, .8)}</div>
+      ${f.err ? `<div class="err">${esc(f.err)}</div>` : ''}
+      ${btn('核对无误，保存', 'save', 'blue')}</div>`;
+  }
+  return null;
 }
 
 function childHTML() {
   if (S.call) {
     const talking = S.call.stage === 'talking';
-    return sbar(true) + `<div class="c-call"><div class="avatar">👵</div><div class="who">妈妈</div><div class="cst">${talking ? '通话中' : '正在呼叫…'}</div>
-      ${talking ? `<div class="c-callnote">问完以后，记录一下结果：</div><button data-act="callok" class="p-ok">✅ 妈妈已经吃了</button><button data-act="calllater" class="c-ghost">还没吃，15 分钟后再响铃提醒妈妈</button>` : ''}</div>`;
+    return sbar('dark') + `<div class="incall"><div class="avatar">妈</div><div class="who">妈妈</div><div class="cst">${talking ? '通话中' : '正在呼叫…'}</div>
+      ${talking ? `<div class="callrec"><small>问完以后，记录一下结果：</small><button class="row big" data-act="callok"><div><b>妈妈已经吃了</b><small>记为“电话确认”</small></div>${IC.chev}</button><button class="row big" data-act="calllater"><div><b>妈妈还没吃</b><small>15 分钟后再响铃提醒妈妈</small></div>${IC.chev}</button></div>` : ''}</div>`;
   }
-  const unread = S.msgs.filter(m => !m.read).length;
-  const b = S.banner ? `<div class="banner ${S.banner.type}" data-tab="msgs"><div class="b-app">安心药箱 · 现在</div><b>${esc(S.banner.title)}</b><div>${esc(S.banner.text)}</div></div>` : '';
+  const b = S.banner ? `<div class="banner ${S.banner.type}" data-act="${S.banner.dose && open(dose(S.banner.dose)) ? 'detail' : 'cback'}" data-dose="${S.banner.dose || ''}"><div class="b-app">安心药箱 · 现在</div><b>${esc(S.banner.title)}</b><div>${esc(S.banner.text)}</div></div>` : '';
+  const sub = childView();
+  if (sub) return sbar() + b + sub;
   let body = '';
   if (S.tab === 'home') {
-    const todo = S.doses.filter(open);
-    body = `<div class="c-head"><div class="c-hi">妈妈今天的吃药情况</div><div class="c-sub">10月9日 周五 · 现在 ${fmt(S.min)}</div></div>
-      ${todo.map(d => `<div class="alert ${d.status}"><b>${d.status === 'help' ? '🙋 妈妈需要帮忙' : '⚠️ 妈妈还没确认吃药'}</b><p>${d.status === 'help' ? `${d.time} 的药：妈妈说“${esc(d.reason)}”` : `${d.time} 的药提醒了 2 次，${S.waitMin} 分钟没确认`}${d.follow != null ? `<br>⏰ ${fmt(d.follow)} 会再响铃提醒妈妈` : ''}</p>${contactBtns(d)}</div>`).join('')}
-      ${lowStock().map(m => `<div class="alert refill"><b>💊 ${esc(short(m.name))}快吃完了</b><p>${esc(stockText(m))}，记得帮妈妈买药。</p>${restockForm(m)}</div>`).join('')}
-      <div class="c-doses">${S.doses.map(d => `<div class="c-dose ${d.status} ${open(d) && d.status === 'pending' ? 'late' : ''}"><div class="c-time">${d.time}<small>${period(d.time)}</small></div><div><div class="c-meds">${esc(names(d))}</div><div class="c-st">${statusText(d)}</div></div></div>`).join('')}</div>
-      ${weekHTML()}
-      ${S.showAI ? aiHTML() : '<button data-act="summary" class="aibtn">📊 看看这一周：接下来怎么做</button>'}`;
-  } else if (S.tab === 'msgs') {
-    body = `<div class="c-head"><div class="c-hi">消息</div><div class="c-sub">来自 安心药箱</div></div>` + (S.msgs.map(m => `<div class="sms ${m.type}"><div class="sms-t">${esc(m.title)}</div><div>${esc(m.text)}</div><small>${m.time}</small>${open(dose(m.dose)) && (m.type === 'alert' || m.type === 'help') ? contactBtns(dose(m.dose)) : ''}</div>`).join('') || '<p class="empty">还没有消息。妈妈吃完药、或者需要你帮忙时，这里会收到通知。</p>');
+    const done = S.doses.filter(d => d.status === 'done'), help = S.doses.filter(d => d.status === 'help');
+    const waiting = S.doses.filter(d => d.status === 'pending' && !d.skip).length, total = S.doses.filter(d => !d.skip).length || S.doses.length;
+    const last = done.slice().sort((a, b) => b.at - a.at)[0];
+    const pct = total ? done.length / total : 0;
+    body = navbar('安心药箱', { right: `<button class="nav-r" data-act="settings" aria-label="提醒设置">${IC.gear}</button>` }) + `<div class="c-body">
+      <div class="card sum"><div class="sum-top"><span class="ava">妈</span><div><b>妈妈今天</b><small>10 月 9 日 周五 · 妈妈手机在线</small></div>
+        <svg class="ringp" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="none" stroke="#E7ECF8" stroke-width="5"/><circle cx="22" cy="22" r="18" fill="none" stroke="#0052D9" stroke-width="5" stroke-linecap="round" stroke-dasharray="${(pct * 113).toFixed(1)} 113" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle" font-size="11" font-weight="700" fill="#1A1A1A">${done.length}/${total}</text></svg></div>
+        <div class="sum-n"><div><b class="g">${done.length}</b><small>已确认</small></div><div><b>${waiting}</b><small>待提醒</small></div><div><b class="${help.length ? 'o' : ''}">${help.length}</b><small>求助</small></div></div></div>
+      ${S.doses.filter(open).map(d => d.status === 'help'
+        ? `<div class="card warm"><span class="warn-ic">${IC.alert}</span><div><b>${d.time} 妈妈需要帮忙</b><p>妈妈说“${esc(d.reason)}”${d.reason === UNSURE ? '，已提醒她先别再吃' : ''}</p>${btn(IC.phone + '给妈妈打电话', 'call', 'blue', `data-dose="${d.id}"`)}<button class="link" data-act="detail" data-dose="${d.id}">查看详情${IC.chev}</button></div></div>`
+        : `<div class="card warm"><span class="warn-ic">${IC.alert}</span><div><b>${d.time} 的药妈妈还没确认</b><p>提醒了 2 次，${S.waitMin} 分钟没确认${d.follow != null ? `；${fmt(d.follow)} 会再响铃` : ''}</p>${contactBtns(d)}<button class="link" data-act="detail" data-dose="${d.id}">查看详情${IC.chev}</button></div></div>`).join('')}
+      ${last ? `<div class="card okcard"><span class="okdot">${IC.check}</span><div><b>妈妈 ${fmt(last.at)} ${last.by === 'call' ? '电话确认' : '自己确认'}吃好了</b><small>${esc(names(last))}</small></div></div>` : ''}
+      <div class="sec-h"><b>今日安排</b><small>共 ${S.doses.length} 次</small></div>
+      <div class="card list">${S.doses.map(d => `<div class="row dose"><div class="t"><b>${d.time}</b><small>${period(d.time)}</small></div><span class="dm">${esc(medsOf(d).map(m => short(m.name)).join('、'))}</span>${doseTag(d)}</div>`).join('')}</div>
+      ${lowStock().map(m => `<button class="card refill" data-tab="meds">${IC.pill}<div><b>${esc(short(m.name))}还剩 ${daysLeft(m)} 天</b><small>还剩 ${m.stock} ${unit(m)} · 记得帮妈妈买药</small></div>${IC.chev}</button>`).join('')}</div>`;
+  } else if (S.tab === 'week') {
+    body = navbar('这一周') + `<div class="c-body">${weekHTML()}${findings()}<p class="muted">这里是规则统计，不是大模型：从最近 7 天的确认记录（过去 6 天为示例数据）算出规律，再按规则给建议；什么时候提醒、什么时候通知你仍由固定规则决定。</p></div>`;
   } else {
-    const f = S.draft;
-    body = `<div class="c-head"><div class="c-hi">妈妈的药</div><div class="c-sub">录入一次，每天自动提醒</div></div>
+    body = navbar('药品', { right: `<button class="nav-r txt" data-act="add">＋ 添加</button>` }) + `<div class="c-body">
       ${S.note ? `<div class="okbar">${esc(S.note)}</div>` : ''}
-      ${f ? `<div class="form">
-        <label>说一说，或者把医生写的用法贴进来</label><textarea data-f="text" rows="3" placeholder="例如：这是降脂药，每次一片，晚上九点吃，睡前用温水送服">${esc(f.text)}</textarea>
-        <div class="two"><button data-act="voice" class="voicebtn">${S.listening ? '👂 正在听…' : '🎤 语音说'}</button><button data-act="ai" class="aibtn">✨ AI 帮我填</button></div>${f.aiNote ? `<div class="ainote">${esc(f.aiNote)}</div>` : ''}
-        <label>药名</label><input data-f="name" value="${esc(f.name)}">
-        <div class="two"><div><label>每次吃多少</label><input data-f="dose" value="${esc(f.dose)}" placeholder="1片"></div><div><label>几点吃（可多个）</label><input data-f="times" value="${esc(f.times)}" placeholder="08:00, 20:00"></div></div>
-        <label>怎么吃</label><input data-f="method" value="${esc(f.method)}" placeholder="例如：饭后用温水送服">
-        <label>现在还剩多少（选填，快吃完时提醒你买药）</label><input data-f="stock" type="number" min="0" value="${esc(f.stock)}" placeholder="例如：30">
-        <label>放在药盒第几格</label><select data-f="slot">${[1, 2, 3, 4, 5, 6].map(i => `<option ${+f.slot === i ? 'selected' : ''}>${i}</option>`).join('')}</select>
-        <label>📷 药盒 / 药片照片（推荐，妈妈对照实物不容易吃错）</label><label class="upload">${f.photo ? '已上传，点这里换一张' : '拍照 / 上传照片'}<input type="file" accept="image/*" capture="environment" data-photo hidden></label>
-        <div class="muted">没有照片时，用下面的颜色和形状画示意图：</div>
-        <div class="two"><div><label>药盒颜色</label><select data-f="box">${Object.entries(BOX).map(([k, v]) => `<option value="${k}" ${f.box === k ? 'selected' : ''}>${v[0]}</option>`).join('')}</select></div><div><label>药片颜色</label><select data-f="pill">${Object.entries(PILL).map(([k, v]) => `<option value="${k}" ${f.pill === k ? 'selected' : ''}>${v[0]}</option>`).join('')}</select></div></div>
-        <label>药片形状</label><select data-f="shape">${Object.entries(SHAPE).map(([k, v]) => `<option value="${k}" ${f.shape === k ? 'selected' : ''}>${v}</option>`).join('')}</select>
-        <div class="preview">妈妈会看到：${art({ ...f, name: f.name || '药名' }, .9)}</div>
-        ${f.err ? `<div class="err">${esc(f.err)}</div>` : ''}
-        <div class="two"><button data-act="cancel" class="c-ghost">取消</button><button data-act="save" class="p-ok sm">保存</button></div>
-      </div>` : '<button data-act="add" class="addbtn">＋ 添加新药</button>'}
       ${S.meds.map(m => { const left = daysLeft(m), low = left != null && left <= S.refillDays;
-        return `<div class="medrow">${art(m, .6)}<div class="grow"><b>${esc(short(m.name))} · ${esc(m.dose)}</b><div class="muted">${m.times.join('、')} · 第 ${m.slot} 格</div><div class="muted">${esc(m.method)}</div>
-        <div class="stock ${low ? 'low' : ''}">${left == null ? (m.stock == null ? '没填药量，不会提醒买药' : '剂量单位不是片/粒，暂不推算') : `剩 ${m.stock} ${unit(m)} · 约够 ${left} 天${low ? ' · 该买药了' : ''}`}</div>${left == null ? '' : low || S.restock === m.id ? restockForm(m) : `<button data-act="restock" data-med="${m.id}" class="linkbtn">＋ 补药量</button>`}</div></div>`; }).join('')}
-      <div class="setting"><label for="wait">妈妈超过多久没确认，就通知我</label><select id="wait"><option value="30" ${S.waitMin === 30 ? 'selected' : ''}>30 分钟</option><option value="60" ${S.waitMin === 60 ? 'selected' : ''}>60 分钟</option></select>
-        <label for="refill">药还够吃几天时，提醒我买药</label><select id="refill">${[3, 5, 7, 10].map(n => `<option value="${n}" ${S.refillDays === n ? 'selected' : ''}>${n} 天</option>`).join('')}</select></div>`;
+        return `<div class="card medrow"><div class="mr-art">${art(m, .55)}</div><div class="grow"><b>${esc(short(m.name))} · ${esc(m.dose)}</b><small>${m.times.join('、')} · 第 ${m.slot} 格 · ${esc(m.method)}</small>
+          <div class="stock ${low ? 'low' : ''}">${left == null ? (m.stock == null ? '没填药量，不会提醒买药' : '剂量单位不是片/粒，暂不推算') : `剩 ${m.stock} ${unit(m)} · 约够 ${left} 天${low ? ' · 该买药了' : ''}`}</div>${left != null && (low || S.restock === m.id) ? restockForm(m) : left != null ? `<button class="link" data-act="restock" data-med="${m.id}">＋ 补药量</button>` : ''}</div></div>`; }).join('')}
+      ${btn('＋ 添加药品', 'add', 'blue')}</div>`;
   }
-  const tabs = [['home', '🏠', '首页'], ['msgs', '💬', '消息'], ['meds', '💊', '药品']].map(([k, i, n]) => `<button data-tab="${k}" class="${S.tab === k ? 'on' : ''}">${i}<span>${n}</span>${k === 'msgs' && unread ? `<em>${unread}</em>` : ''}</button>`).join('');
-  return sbar() + b + `<div class="c-body">${body}</div><nav class="tabbar">${tabs}</nav>`;
+  const tabs = [['home', IC.home, '今天'], ['meds', IC.pill, '药品'], ['week', IC.chart, '这一周']].map(([k, i, n]) => `<button data-tab="${k}" class="${S.tab === k ? 'on' : ''}">${i}<span>${n}</span></button>`).join('');
+  return sbar() + b + body + `<nav class="tabbar">${tabs}</nav>`;
 }
 
 function guideHTML() {
   const sc = SC[S.sc], st = sc.steps[S.step];
   const tabs = Object.entries(SC).map(([k, v]) => `<button data-sc="${k}" class="sc ${k === S.sc ? 'on' : ''}">${v.title}</button>`).join('');
   let box;
-  if (S.sc === 'free') box = '<p>随意操作两部手机：左边是妈妈的，右边是你的。用下面的按钮让时间往前走。想试试录入新药，点右边手机底部的【💊 药品】→【＋ 添加新药】，可以打字或语音说出用法。</p>';
+  if (S.sc === 'free') box = '<p>随意操作两部手机：左边是妈妈的，右边是你的。用下面的按钮让时间往前走。想试试录入新药，点右边手机底部的【药品】→【＋ 添加药品】，可以打字或语音说出用法。</p>';
   else box = `<div class="stepno">第 ${S.step + 1} 步 / 共 ${sc.steps.length} 步</div><p>${st.text}</p>${st.ff ? `<button id="g-ff" data-act="ff" data-to="${st.ff}" class="primary">⏩ 快进到 ${st.ff}</button>` : ''}${st.end ? '<button data-act="restart" class="primary">↺ 再来一遍</button>' : ''}`;
   const free = S.sc === 'free' ? '<button data-act="next">⏩ 快进到下一次提醒</button><button data-act="plus15">+15 分钟</button>' : '';
   return `<div class="sc-row"><span class="pick">选一个情景体验：</span>${tabs}</div><div class="stepbox">${box}</div><div class="timebar"><span>🕗 现在 <b>${fmt(S.min)}</b></span>${free}<button data-act="sound">${sound ? '🔊 声音：开' : '🔇 声音：关'}</button><button data-act="restart">↺ 重新开始</button></div>`;
@@ -539,14 +670,16 @@ if (!BROWSER) module.exports = { fresh, start, tick, check, confirm, ring, nextE
 else {
 
 // ---------- 交互 ----------
-function toGuide(d) { S.parent = 'guide'; S.active = d.id; say(instruction(d)); }
+function toGuide(d) { S.parent = 'guide'; S.active = d.id; S.medIdx = 0; if (d.guideAt == null) d.guideAt = S.min; say(instruction(d)); }
+const callDose = el => dose(S.call?.dose || el.dataset.dose);
+function sayDone() { const nx = S.doses.find(x => x.status === 'pending' && !x.skip && toMin(x.time) > S.min); say(`好的，吃好了，已经告诉女儿了。${nx ? `下一次是${spokenTime(nx.time)}。` : '今天的药都吃完了。'}`); }
 
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-act],[data-tab],[data-sc],[data-reason]'); if (!el) return;
   ac()?.resume?.();
   const d = dose(S.active);
   if (el.dataset.sc) return start(el.dataset.sc);
-  if (el.dataset.tab) { S.tab = el.dataset.tab; S.banner = null; S.note = ''; if (S.tab === 'msgs') S.msgs.forEach(m => m.read = true); emit('tab:' + S.tab); return render(); }
+  if (el.dataset.tab) { S.tab = el.dataset.tab; S.view = null; S.banner = null; S.note = ''; emit('tab:' + S.tab); return render(); }
   if (el.dataset.reason) { askHelp(d, el.dataset.reason); emit('help'); return render(); }
   switch (el.dataset.act) {
     case 'ff': return tick(toMin(el.dataset.to));
@@ -554,32 +687,49 @@ document.addEventListener('click', e => {
     case 'plus15': return tick(S.min + 15);
     case 'sound': sound = !sound; if (!sound) hush(); break;
     case 'restart': return start(S.sc);
-    case 'answer': stopRing(); toGuide(d); emit('answer'); break;
-    case 'later': stopRing(); S.parent = 'home'; say(VOICE.later); break;
+    case 'answer': stopRing(); if (d.answeredAt == null) d.answeredAt = S.min; toGuide(d); emit('answer'); break;
+    case 'snoozeOpen': stopRing(); if (d.answeredAt == null) d.answeredAt = S.min; S.parent = 'later'; say(VOICE.later); emit('snoozeOpen'); break;
+    case 'laterBack': S.parent = 'ring'; break;
+    case 'snooze': {
+      const mins = +el.dataset.min, why = el.dataset.why;
+      snooze(d, mins, why); S.parent = 'home'; say(`好的，${mins >= 60 ? mins / 60 + '小时' : mins + '分钟'}后再提醒您。`);
+      notify({ type: 'sent', dose: d.id, title: '⏰ 妈妈说待会再吃', text: `妈妈说${why}，${fmt(d.base)} 再提醒。这不算没确认。` }, true);
+      emit('snooze'); break;
+    }
+    case 'eatnow': toGuide(d); break;
     case 'replay': speak(S.lastSpeech); break;
+    case 'nextmed': S.medIdx++; { const m = medsOf(d)[S.medIdx]; if (m) say(`${stepName(m, S.medIdx)}：打开药盒第${m.slot}格，拿${BOX[m.box][0]}盒子的${short(m.name)}，吃${m.dose}。${m.method}。`); } break;
+    case 'prevmed': S.medIdx = 0; break;
     case 'done': S.parent = 'confirm'; say(VOICE.confirm); emit('doneClick'); break;
     case 'no': toGuide(d); break;
-    case 'yes': confirm(d, 'self'); S.parent = 'done'; { const nx = S.doses.find(x => x.status === 'pending' && !x.skip && toMin(x.time) > S.min); say(`好的，吃好了，已经告诉女儿了。${nx ? `下一次是${spokenTime(nx.time)}。` : '今天的药都吃完了。'}`); } emit('confirmed'); break;
-    case 'help': S.parent = 'help'; say(VOICE.help); emit('helpClick'); break;
+    case 'yes': confirm(d, 'self'); S.parent = 'done'; sayDone(); emit('confirmed'); break;
+    case 'askyes': confirm(d, 'self'); S.parent = 'done'; sayDone(); emit('confirmed'); break;
+    case 'askno': toGuide(d); break;
+    case 'help': stopRing(); if (d.answeredAt == null) d.answeredAt = S.min; S.parent = 'help'; say(VOICE.help); emit('helpClick'); break;
     case 'back': toGuide(d); break;
     case 'home': hush(); S.parent = 'home'; break;
     case 'gotake': toGuide(dose(S.psms.dose)); S.psms = null; break;
-    case 'summary': S.showAI = true; emit('summary'); break;
     case 'weekend': S.weekend = true; break;
+    case 'weekendNo': S.weekendSkip = true; break;
+    case 'detail': { const x = dose(el.dataset.dose); if (x) { S.view = (x.status === 'help' ? 'help:' : 'alert:') + x.id; S.banner = null; emit('detail'); } break; }
+    case 'cback': S.view = null; S.banner = null; break;
+    case 'settings': S.view = 'settings'; break;
+    case 'setwait': S.waitMin = +el.dataset.v; break;
+    case 'setrefill': S.refillDays = +el.dataset.v; break;
     case 'sms': sendSms(dose(el.dataset.dose)); emit('sms'); break;
     case 'call': {
       hush(); S.call = { dose: el.dataset.dose, stage: 'calling' }; S.banner = null; emit('call');
       setTimeout(() => { if (S.call) { S.call.stage = 'talking'; render(); } }, 1300); break;
     }
-    case 'callok': { const cd = dose(S.call.dose); S.call = null; S.active = cd.id; confirm(cd, 'call'); S.parent = 'done'; S.tab = 'home'; emit('callResult'); break; }
+    case 'callok': { const cd = callDose(el); S.call = null; S.view = null; S.active = cd.id; confirm(cd, 'call'); S.parent = 'done'; S.tab = 'home'; emit('callResult'); break; }
     case 'calllater': {
-      const cd = dose(S.call.dose); S.call = null; S.parent = 'home'; S.tab = 'home';
+      const cd = callDose(el); S.call = null; S.view = null; S.parent = 'home'; S.tab = 'home';
       cd.follow = S.min + 15; cd.recheck = null;
       notify({ type: 'sent', dose: cd.id, title: '⏰ 已设好再次提醒', text: `${fmt(cd.follow)} 妈妈的手机会再响铃提醒；如果之后 15 分钟还没确认，会再通知你。` }, true);
       emit('later'); break;
     }
     case 'add':
-      S.note = ''; S.draft = { text: '', name: '', dose: '', times: '', method: '', stock: '', slot: '3', box: 'green', pill: 'white', shape: 'capsule', photo: '' };
+      S.note = ''; S.view = 'add'; S.draft = { text: '', name: '', dose: '', times: '', method: '', stock: '', slot: '3', box: 'green', pill: 'white', shape: 'capsule', photo: '' };
       emit('add'); break;
     case 'voice': if (!S.listening) voiceInput(); return;
     case 'ai': {
@@ -588,7 +738,7 @@ document.addEventListener('click', e => {
       const fill = (r, how) => {
         Object.assign(f, { name: r.name || f.name, dose: r.dose || f.dose, times: r.times.join(', ') || f.times, method: r.method || f.method });
         const miss = [!r.name && '药名', !r.dose && '每次吃多少', !r.times.length && '具体几点', !r.method && '怎么吃'].filter(Boolean);
-        f.aiNote = `✨ ${how}，已整理出能确定的内容。` +
+        f.aiNote = `${how}，已整理出能确定的内容。` +
           (r.dropped && r.dropped.length ? `AI 给出的「${r.dropped.join('、')}」在原话里找不到依据，已去掉。` : '') +
           (miss.length ? `原话里没说清楚的（${miss.join('、')}）请你补上，AI 不会瞎猜。` : '请核对一遍。');
       };
@@ -598,7 +748,7 @@ document.addEventListener('click', e => {
         .then(() => { emit('ai'); render(); });
       break;
     }
-    case 'cancel': S.draft = null; break;
+    case 'cancel': S.draft = null; S.view = null; break;
     case 'restock': S.restock = el.dataset.med; break;
     case 'restockSave': {
       const m = S.meds.find(x => x.id === el.dataset.med), n = +document.querySelector('#restockN')?.value;
@@ -612,19 +762,17 @@ document.addEventListener('click', e => {
       const stock = String(f.stock ?? '').trim();
       if (stock && !/^\d{1,3}$/.test(stock)) { f.err = '剩余药量请填 0–999 的整数，不知道可以空着。'; break; }
       S.meds.push({ id: 'm' + Date.now(), name: f.name.trim(), dose: f.dose.trim(), method: f.method.trim(), slot: +f.slot, box: f.box, pill: f.pill, shape: f.shape, photo: f.photo, times: [...new Set(times)], stock: stock ? +stock : null });
-      buildDoses(); S.draft = null; S.note = `✅ 已保存「${short(f.name)}」，到点会提醒妈妈。`; emit('setup'); break;
+      buildDoses(); S.draft = null; S.view = null; S.tab = 'meds'; S.note = `✅ 已保存「${short(f.name)}」，到点会提醒妈妈。`; emit('setup'); break;
     }
     default: return;
   }
   render();
 });
 
-const refreshPreview = () => { const p = document.querySelector('.preview'); if (p && S.draft) p.innerHTML = '妈妈会看到：' + art({ ...S.draft, name: S.draft.name || '药名' }, .9); };
+const refreshPreview = () => { const p = document.querySelector('.preview'); if (p && S.draft) p.innerHTML = '妈妈会看到：' + art({ ...S.draft, name: S.draft.name || '药名' }, .8); };
 document.addEventListener('input', e => {
   const k = e.target.dataset.f;
   if (k && S.draft) { S.draft[k] = e.target.value; if (['box', 'pill', 'shape', 'name'].includes(k)) refreshPreview(); }
-  if (e.target.id === 'wait') { S.waitMin = +e.target.value; render(); }
-  if (e.target.id === 'refill') { S.refillDays = +e.target.value; render(); }
 });
 document.addEventListener('change', async e => {
   if (e.target.dataset.photo === undefined || !S.draft) return;
