@@ -93,7 +93,7 @@ function hush() { stopRing(); clearTimeout(speakTimer); try { speechSynthesis.ca
 
 const stepName = (m, i) => `第${CN[i]}种${mealStep(m).label ? `，${mealStep(m).label}吃` : ''}`;
 const instruction = d => { const ms = medsOf(d), seq = ms.length > 1; return `该吃${spokenTime(d.time)}的药了。` + (seq ? `一共${ms.length}种，请按顺序吃。` : '') + ms.map((m, i) =>
-  `${seq ? stepName(m, i) + '：' : ''}打开药箱第${m.slot}格，拿${BOX[m.box][0]}盒子的${short(m.name)}，是${PILL[m.pill][0]}${SHAPE[m.shape]}的，吃${m.dose}。${m.method}。`).join('') +
+  `${seq ? stepName(m, i) + '：' : ''}打开药盒第${m.slot}格，拿${BOX[m.box][0]}盒子的${short(m.name)}，是${PILL[m.pill][0]}${SHAPE[m.shape]}的，吃${m.dose}。${m.method}。`).join('') +
   `${seq ? '都' : ''}吃好以后，请按左边绿色的“我吃好了”。如果遇到问题，比如找不到药、不知道怎么吃，请按右边橙色的“我需要帮忙”。`; };
 const VOICE = {
   confirm: '您都吃好了吗？吃好了，请按绿色的“是的，都吃了”。还没吃，请按下面灰色的“还没有，返回”。',
@@ -154,7 +154,7 @@ function notify(m, quiet) {
 
 function confirm(d, by) {
   d.status = 'done'; d.by = by; d.at = S.min; d.follow = d.recheck = null;
-  if (by === 'self') notify({ type: 'ok', dose: d.id, title: '✅ 妈妈已经吃药了', text: `${period(d.time)} ${d.time} 的药：${names(d)}。妈妈在 ${fmt(S.min)} 自己确认吃好了（药箱第 ${slots(d)} 格已打开）。` });
+  if (by === 'self') notify({ type: 'ok', dose: d.id, title: '✅ 妈妈已经吃药了', text: `${period(d.time)} ${d.time} 的药：${names(d)}。妈妈在 ${fmt(S.min)} 自己确认吃好了。` });
   else notify({ type: 'ok', dose: d.id, title: '✅ 已电话确认：妈妈吃了药', text: `${period(d.time)} ${d.time} 的药：${names(d)}。你在 ${fmt(S.min)} 通过电话确认。` });
   useStock(d);
 }
@@ -187,11 +187,11 @@ const UNSURE = '记不清吃没吃';
 function askHelp(d, reason) {
   d.status = 'help'; d.reason = reason; S.parent = 'helpSent';
   say(reason === UNSURE ? VOICE.unsureSent : VOICE.helpSent);
-  notify({ type: 'help', dose: d.id, title: '🙋 妈妈需要帮忙', text: `${period(d.time)} ${d.time} 的药：妈妈说“${reason}”。` + (reason === UNSURE ? `已提醒妈妈先别再吃。打电话时先请她看看药箱第 ${slots(d)} 格里的药还在不在，再决定要不要补吃，避免重复吃药。` : '建议现在打个电话。') });
+  notify({ type: 'help', dose: d.id, title: '🙋 妈妈需要帮忙', text: `${period(d.time)} ${d.time} 的药：妈妈说“${reason}”。` + (reason === UNSURE ? `已提醒妈妈先别再吃。打电话时先请她看看药盒第 ${slots(d)} 格里的药还在不在，再决定要不要补吃，避免重复吃药。` : '建议现在打个电话。') });
 }
 
 function sendSms(d) {
-  const text = `妈，记得吃${period(d.time)}${d.time}的药，药箱第${slots(d)}格。吃完按一下“我吃好了”哦。`;
+  const text = `妈，记得吃${period(d.time)}${d.time}的药，药盒第${slots(d)}格。吃完按一下“我吃好了”哦。`;
   S.psms = { dose: d.id, text }; S.parent = 'sms'; S.active = d.id; stopRing();
   tone(988, 0.2); say(`女儿给您发来消息：${text}`);
   notify({ type: 'sent', dose: d.id, title: '💬 你给妈妈发了提醒短信', text }, true);
@@ -245,11 +245,11 @@ function aiHTML() {
     const s = ws[k];
     if (s.weekendPattern && k === 'am') {
       acts.push(`<li><b>把周六、周日早上的提醒改到 9:00</b>：避开妈妈周末出门、起得晚的时间。<div class="ai-btns">${S.weekend ? '<span class="okchip">✅ 已改好，从明天（周六）开始</span>' : '<button data-act="weekend" class="aibtn sm">一键修改</button>'}</div></li>`);
-      acts.push('<li><b>周末打电话时可以这样问</b>：“妈，周末早上药箱响的时候你一般在干嘛呀？要不要换个时间提醒？”</li>');
+      acts.push('<li><b>周末打电话时可以这样问</b>：“妈，周末早上手机提醒的时候你一般在干嘛呀？要不要换个时间提醒？”</li>');
     } else if (s.weekendPattern) acts.push(`<li><b>${label}的药周末经常要再提醒</b>：周末打电话时问问妈妈这个时间一般在做什么，看要不要换个提醒时间。</li>`);
   }
   const unsure = [['am', '早上'], ['pm', '晚上']].filter(([k]) => ws[k].help.some(h => h.why === UNSURE)).map(([, l]) => l);
-  if (unsure.length) acts.push(`<li><b>${unsure.join('和')}的药出现过“记不清吃没吃”</b>：提醒妈妈吃完立刻按确认；记不清时先别补吃，先看药格里的药还在不在。</li>`);
+  if (unsure.length) acts.push(`<li><b>${unsure.join('和')}的药出现过“记不清吃没吃”</b>：提醒妈妈吃完立刻按确认；记不清时先别补吃，先看药盒格子里的药还在不在。</li>`);
   if (acts.length === (openNow ? 1 : 0)) acts.push('<li><b>保持现在的提醒时间</b>：这一周没有看出需要调整的规律。</li>');
   return `<div class="ai-card"><div class="ai-h">📊 这一周的情况</div>
     <div class="ai-sec"><b>📋 今天</b><p>${today.length ? today.join('；') + '。' : '到目前为止都按时确认了，不用专门打电话问吃药。'}</p></div>
@@ -364,7 +364,7 @@ const SC = {
   normal: { title: '① 妈妈按时吃药', steps: [
     { text: '现在是早上 7:58。左边是<b>妈妈的手机</b>，右边是<b>你的手机</b>。建议打开电脑声音。点下面的【快进到 08:00】，看看到点会发生什么。', ff: '08:00', target: '#g-ff', wait: 'ring' },
     { text: '8 点到了！妈妈的手机像来电一样<b>响铃</b>，还会<b>语音</b>说“该吃药了，请按绿色的接听键”。点绿色的【接听】。', target: '[data-act=answer]', wait: 'answer' },
-    { text: '妈妈能看到<b>药盒和药片长什么样、药箱第几格亮灯、吃几片、怎么吃</b>，手机会全部读出来，并告诉她遇到问题可以按橙色的【我需要帮忙】。假设妈妈吃完了，点【我吃好了】。', target: '[data-act=done]', wait: 'doneClick' },
+    { text: '妈妈能看到<b>药盒和药片长什么样、打开药盒第几格、吃几片、怎么吃</b>，手机会全部读出来，并告诉她遇到问题可以按橙色的【我需要帮忙】。假设妈妈吃完了，点【我吃好了】。', target: '[data-act=done]', wait: 'doneClick' },
     { text: '手机会语音问妈妈“都吃好了吗？”，防止误按。点绿色的【是的，都吃了】。', target: '[data-act=yes]', wait: 'confirmed' },
     { text: '看右边！你的手机<b>马上收到通知</b>，几点吃的、吃了什么都写清楚了，不用再打电话问。首页还提示<b>降糖药只够吃 7 天了</b>：每次确认吃药都按用量扣减，快吃完时提醒你买药。点【📊 看看这一周】，看看按最近 7 天记录统计出的规律和建议。', target: '[data-act=summary]', wait: 'summary' },
     { text: '🎉 完成！统计发现妈妈<b>周末早上</b>经常要提醒两次，建议把周末的提醒改到 9 点。接着试试「② 妈妈忘了吃药」。', end: true }
@@ -386,8 +386,8 @@ const SC = {
     { text: '妈妈的手机响了，点绿色的【接听】。', target: '[data-act=answer]', wait: 'answer' },
     { text: '这次假设妈妈<b>记不清刚才有没有吃过</b>。点橙色的【我需要帮忙】。', target: '[data-act=help]', wait: 'helpClick' },
     { text: '手机会<b>按序号读出</b>四个选项，妈妈看不清字也能按。点【3 记不清吃没吃】。', target: '[data-reason="记不清吃没吃"]', wait: 'help' },
-    { text: '妈妈的手机用大字和语音提醒她<b>先不要再吃</b>：重复吃药有风险，比如降糖药。你的手机<b>立刻收到求助</b>，并提示先看药格。点【📞 打给妈妈】。', target: '[data-act=call]', wait: 'call' },
-    { text: '电话里请妈妈看看药箱第 1、2 格：药已经不在了，说明刚才吃过。点【妈妈已经吃了】。', target: '[data-act=callok]', wait: 'callResult' },
+    { text: '妈妈的手机用大字和语音提醒她<b>先不要再吃</b>：重复吃药有风险，比如降糖药。你的手机<b>立刻收到求助</b>，并提示先看药盒格子。点【📞 打给妈妈】。', target: '[data-act=call]', wait: 'call' },
+    { text: '电话里请妈妈看看药盒第 1、2 格：药已经不在了，说明刚才吃过。点【妈妈已经吃了】。', target: '[data-act=callok]', wait: 'callResult' },
     { text: '🎉 完成！记不清时不催着补吃，而是先停下、一起核对，避免重复吃药。', end: true }
   ] },
   free: { title: '自由体验（录入新药等）', steps: [] }
@@ -422,7 +422,7 @@ function parentHTML() {
       const ms = medsOf(d);
       const seq = ms.length > 1;
       return sbar() + `<div class="p-body"><h2>${period(d.time)} ${d.time}<br>要吃 ${ms.length} 种药${seq ? '<br><small>请按顺序吃</small>' : ''}</h2>
-        <div class="pb-wrap"><div class="pb-title">💡 药箱这几格在亮灯</div>${pillbox(ms.map(m => m.slot))}</div>
+        <div class="pb-wrap"><div class="pb-title">💊 打开药盒的这几格</div>${pillbox(ms.map(m => m.slot))}</div>
         ${ms.map((m, i) => `<div class="med">${seq ? `<div class="mstep">${stepName(m, i)}</div>` : ''}<div class="slotno">第 ${m.slot} 格</div>${art(m, 1.3)}<div class="mname">${esc(short(m.name))}</div><div class="mlook">${esc(look(m))}</div><div class="mdose">吃 <b>${esc(m.dose)}</b></div><div class="mhow">${esc(m.method)}</div></div>`).join('')}
         ${replay}</div>
         <div class="p-actions"><button data-act="done" class="p-ok">✅ 我吃好了</button><button data-act="help" class="p-help">🙋 我需要帮忙</button></div>`;
@@ -495,7 +495,7 @@ function childHTML() {
         <div class="two"><div><label>每次吃多少</label><input data-f="dose" value="${esc(f.dose)}" placeholder="1片"></div><div><label>几点吃（可多个）</label><input data-f="times" value="${esc(f.times)}" placeholder="08:00, 20:00"></div></div>
         <label>怎么吃</label><input data-f="method" value="${esc(f.method)}" placeholder="例如：饭后用温水送服">
         <label>现在还剩多少（选填，快吃完时提醒你买药）</label><input data-f="stock" type="number" min="0" value="${esc(f.stock)}" placeholder="例如：30">
-        <label>放在药箱第几格</label><select data-f="slot">${[1, 2, 3, 4, 5, 6].map(i => `<option ${+f.slot === i ? 'selected' : ''}>${i}</option>`).join('')}</select>
+        <label>放在药盒第几格</label><select data-f="slot">${[1, 2, 3, 4, 5, 6].map(i => `<option ${+f.slot === i ? 'selected' : ''}>${i}</option>`).join('')}</select>
         <label>📷 药盒 / 药片照片（推荐，妈妈对照实物不容易吃错）</label><label class="upload">${f.photo ? '已上传，点这里换一张' : '拍照 / 上传照片'}<input type="file" accept="image/*" capture="environment" data-photo hidden></label>
         <div class="muted">没有照片时，用下面的颜色和形状画示意图：</div>
         <div class="two"><div><label>药盒颜色</label><select data-f="box">${Object.entries(BOX).map(([k, v]) => `<option value="${k}" ${f.box === k ? 'selected' : ''}>${v[0]}</option>`).join('')}</select></div><div><label>药片颜色</label><select data-f="pill">${Object.entries(PILL).map(([k, v]) => `<option value="${k}" ${f.pill === k ? 'selected' : ''}>${v[0]}</option>`).join('')}</select></div></div>
@@ -575,7 +575,7 @@ document.addEventListener('click', e => {
     case 'calllater': {
       const cd = dose(S.call.dose); S.call = null; S.parent = 'home'; S.tab = 'home';
       cd.follow = S.min + 15; cd.recheck = null;
-      notify({ type: 'sent', dose: cd.id, title: '⏰ 已设好再次提醒', text: `${fmt(cd.follow)} 药箱会再响铃提醒妈妈；如果之后 15 分钟还没确认，会再通知你。` }, true);
+      notify({ type: 'sent', dose: cd.id, title: '⏰ 已设好再次提醒', text: `${fmt(cd.follow)} 妈妈的手机会再响铃提醒；如果之后 15 分钟还没确认，会再通知你。` }, true);
       emit('later'); break;
     }
     case 'add':

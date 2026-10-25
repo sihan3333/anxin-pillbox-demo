@@ -15,7 +15,7 @@ const COLOR_NAMES = {
   brand: '品牌/主色', brandLight: '品牌/浅色-1', brandLight2: '品牌/浅色-2',
   green: '功能/成功', greenLight: '功能/成功-浅', orange: '功能/警示', orangeLight: '功能/警示-浅',
   text: '文字/主要', text2: '文字/次要', line: '中性/描边', bg: '中性/页面背景', white: '中性/白', gray: '中性/浅灰',
-  lit: '药箱/亮灯', litEdge: '药箱/亮灯描边', box: '药箱/机身', boxCell: '药箱/药格'
+  lit: '药盒/当前格', litEdge: '药盒/当前格描边', box: '药盒/盒身', boxCell: '药盒/格子'
 };
 // [字号, 是否加粗, 样式名]
 const TS = {
@@ -323,21 +323,21 @@ function screen(key, name, col, y, o = {}) {
 // ---------- 父母端零件 ----------
 
 function pillbox(lit, o = {}) {
-  const wrap = box(o.name || '药箱示意', { gap: 10, pad: 14, fill: C.box, radius: 16 });
-  const head = box('药箱标题', { dir: 'HORIZONTAL', cross: 'CENTER', gap: 8 });
+  const wrap = box(o.name || '药盒示意', { gap: 10, pad: 14, fill: C.box, radius: 16 });
+  const head = box('药盒标题', { dir: 'HORIZONTAL', cross: 'CENTER', gap: 8 });
   put(wrap, head);
-  put(head, txt(o.title || '我的药箱', 'P_small', C.white));
-  const tagText = o.tag || (lit.length ? '第 ' + lit.join('、') + ' 格亮灯' : '');
+  put(head, txt(o.title || '妈妈的药盒', 'P_small', C.white));
+  const tagText = o.tag || (lit.length ? '打开第 ' + lit.join('、') + ' 格' : '');
   if (tagText) put(head, tag(tagText, o.tagTheme || 'warning', true), 'HUG');
-  const r = box('药格', { dir: 'HORIZONTAL', gap: 8 });
+  const r = box('格子', { dir: 'HORIZONTAL', gap: 8 });
   put(wrap, r);
   for (let i = 1; i <= 4; i++) {
     const on = lit.includes(i);
-    const c = fixed(box('第' + i + '格' + (on ? '（亮灯）' : ''), { gap: 0, fill: on ? C.lit : C.boxCell, radius: 10, align: 'CENTER', cross: 'CENTER', stroke: on ? C.litEdge : null, strokeW: 2 }), 60, 72);
+    const c = fixed(box('第' + i + '格' + (on ? '（这一格）' : ''), { gap: 0, fill: on ? C.lit : C.boxCell, radius: 10, align: 'CENTER', cross: 'CENTER', stroke: on ? C.litEdge : null, strokeW: 2 }), 60, 72);
     if (on) c.effects = GLOW;
     put(r, c, 'FILL');
     put(c, txt(String(i), 'P_h2', on ? C.text : C.white, 'CENTER'), 'HUG');
-    put(c, txt(on ? '亮灯' : '格', 'P_small', on ? C.text : C.white, 'CENTER'), 'HUG');
+    put(c, txt(on ? '这格' : '格', 'P_small', on ? C.text : C.white, 'CENTER'), 'HUG');
   }
   return wrap;
 }
@@ -493,7 +493,7 @@ function buildParent() {
   put(body, hero);
   put(hero, tag('早上 8:00 · 吃药时间', 'brand', true), 'HUG');
   put(hero, txt('该吃药了', 'P_h1', C.white));
-  put(hero, txt('早上有 2 种药，在药箱第 1、2 格', 'P_body', C.white));
+  put(hero, txt('早上有 2 种药，在药盒第 1、2 格', 'P_body', C.white));
   const sheet = box('白色面板', { gap: 18, pad: [24, 20, 28, 20], fill: C.white });
   sheet.cornerRadius = 0; sheet.topLeftRadius = 28; sheet.topRightRadius = 28;
   put(body, sheet, 'FILL', true);
@@ -554,7 +554,7 @@ function buildParent() {
   put(vt, txt('蓝色盒子', 'P_bodyB'));
   put(vt, txt('白色圆片', 'P_small', C.text2));
   divider(c1);
-  fact(c1, '在哪', '药箱第 1 格（灯亮着）');
+  fact(c1, '在哪', '药盒第 1 格（贴着 1 号）');
   fact(c1, '吃几片', '1 片');
   fact(c1, '怎么吃', '和早饭一起吃，温水送服');
   const c2 = card('第 2 种药', { dir: 'HORIZONTAL', cross: 'CENTER', gap: 12 });
@@ -629,11 +629,11 @@ function buildParent() {
   spacer(body);
   link(put(body, btn('好的，我等电话', 'primary', 'P_btn', 64)), 'ChildHelp');
 
-  // ⑥ 合上药格时（降低“忘按确认”的误报）
-  ({ s, body } = screen('CloseLid', '父母 ⑥ 合上药格时', 5, Y, { parent: true, nav: '确认一下',
-    note: '针对最关键的假设“老人会忘按确认”：合上药格时药箱主动问一句，说“吃好了”即可确认。药格开合只作参考信号，不等于已经吃了。' }));
-  put(body, pillbox([], { tag: '第 1、2 格刚合上', tagTheme: 'success' }));
-  put(body, txt('刚合上药格，\n吃好了吗？', 'P_h1'));
+  // ⑥ 手机追问（降低“忘按确认”的误报）
+  ({ s, body } = screen('CloseLid', '父母 ⑥ 手机追问', 5, Y, { parent: true, nav: '确认一下',
+    note: '针对最关键的假设“老人会忘按确认”：看完指引 10 分钟还没确认，手机主动问一句，说“吃好了”即可确认。追问不能太早，并说清是哪一顿的药。' }));
+  put(body, pillbox([1, 2], { tag: '早上 8 点的药', tagTheme: 'success' }));
+  put(body, txt('早上 8 点的药，\n吃好了吗？', 'P_h1'));
   const listen = col(body, '语音确认', 10);
   listen.counterAxisAlignItems = 'CENTER';
   const micc = circ('正在听', 96, C.brandLight, ico('mic', C.brand, 44));
@@ -670,7 +670,7 @@ function buildParent() {
 
   // ⑧ 每周装药
   ({ s, body } = screen('RefillParent', '父母 ⑧ 每周装药', 7, Y, { parent: true, nav: '装药',
-    note: '装错药是整个闭环的隐患：逐格亮灯、逐格朗读要放什么、放几片；装完拍一张照片给子女核对。' }));
+    note: '装错药是整个闭环的隐患：逐格显示、逐格朗读要放什么、放几片；装完拍一张照片给子女核对。' }));
   const rp = col(body, '进度', 8);
   put(rp, txt('第 1 格，共 3 格', 'P_small', C.text2));
   const rseg = row(rp, '进度条', 6);
@@ -684,7 +684,7 @@ function buildParent() {
   put(what, tag('降糖药 · 蓝色盒子', 'brand', true), 'HUG');
   put(what, txt('放 14 片白色圆片', 'P_h2'));
   put(what, txt('早饭、午饭各吃 1 片，够吃一周', 'P_body', C.text2));
-  put(body, voice('正在朗读：“第 1 格亮了，放 14 片蓝色盒子里的白色圆片”'));
+  put(body, voice('正在朗读：“第 1 格，放 14 片蓝色盒子里的白色圆片”'));
   spacer(body);
   put(body, btn('放好了，下一格', 'success', 'P_btn', 64, 'check'));
   link(put(body, btn('全部装好，拍照给女儿', 'line', 'P_btn', 60, 'camera')), 'RefillCheck');
@@ -736,7 +736,7 @@ function buildChild() {
   const gear = box('设置', { pad: 4 });
   put(gear, ico('gear', C.text, 22), null);
   ({ s, body, nav, tab } = screen('ChildHome', '子女 ① 今天', 0, Y, { nav: '安心药箱', right: gear, tab: '今天',
-    note: '每条记录都写清楚“谁、怎么确认的”（自己确认 / 电话确认 / 打开过药格），只写看到的事实，不写推断。药快吃完时提前提醒补药。' }));
+    note: '每条记录都写清楚“谁、怎么确认的”（自己确认 / 电话确认），只写看到的事实，不写推断。药快吃完时提前提醒补药。' }));
   link(gear, 'Settings');
   const sum = card('妈妈今天', { gap: 12 });
   put(body, sum);
@@ -744,7 +744,7 @@ function buildChild() {
   put(who, avatar('妈', 48), null);
   const wt = col(who, '文字');
   put(wt, txt('妈妈今天', 'K_h1'));
-  put(wt, txt('10 月 22 日 周四 · 药箱在线', 'K_small', C.text2));
+  put(wt, txt('10 月 22 日 周四 · 妈妈手机在线', 'K_small', C.text2));
   put(who, ring(1 / 3, '1/3'), null);
   divider(sum);
   const stats = box('统计', { dir: 'HORIZONTAL', align: 'SPACE_BETWEEN', pad: [0, 12, 0, 12] });
@@ -757,7 +757,7 @@ function buildChild() {
   put(noti, circ('已确认', 32, C.green, ico('check', C.white, 18, 2.4)), null);
   const nt = col(noti, '文字');
   put(nt, txt('妈妈 08:03 自己确认吃好了', 'K_bodyB'));
-  put(nt, txt('降糖药、降压药各 1 片 · 第 1、2 格已打开过', 'K_small', C.text2));
+  put(nt, txt('降糖药、降压药各 1 片 · 妈妈自己确认', 'K_small', C.text2));
   const sh = box('小标题', { dir: 'HORIZONTAL', cross: 'CENTER', pad: [4, 4, 0, 4] });
   put(body, sh);
   put(sh, txt('今日安排', 'K_h2'));
@@ -779,14 +779,14 @@ function buildChild() {
 
   // ② 还没确认
   ({ s, body, nav } = screen('ChildAlert', '子女 ② 还没确认', 1, Y, { nav: '提醒详情', back: true,
-    note: '写“还没确认”而不是“没吃”，并附上药格是否打开过；先给行动（打电话），电话后可设 15 分钟后再响铃，或记为“电话确认”。' }));
+    note: '写“还没确认”而不是“没吃”；先给行动（打电话），电话后可设 15 分钟后再响铃，或记为“电话确认”。' }));
   link(nav.left, 'ChildHome');
   const al = card('通知：还没确认', { fill: C.orangeLight, dir: 'HORIZONTAL', gap: 12, pad: 14 });
   put(body, al);
   put(al, ico('alert', C.orange, 22), null);
   const alt = col(al, '文字', 2);
   put(alt, txt('08:30 妈妈还没确认早上的药', 'K_bodyB'));
-  put(alt, txt('药格 08:00 之后也没有打开过。还没确认不等于没吃，先打个电话问问。', 'K_body', C.text2));
+  put(alt, txt('提醒已经响了 2 次。还没确认不等于没吃，先打个电话问问。', 'K_body', C.text2));
   sectionTitle(body, '发生了什么');
   const tl = card('时间线', { gap: 0 });
   put(body, tl);
@@ -797,7 +797,7 @@ function buildChild() {
   sectionTitle(body, '打完电话后');
   const after = card('电话后', { gap: 0, pad: 0 });
   put(body, after);
-  navCell(after, '妈妈还没吃', '15 分钟后药箱再响铃，仍未确认会再通知你');
+  navCell(after, '妈妈还没吃', '15 分钟后妈妈手机再响铃，仍未确认会再通知你');
   navCell(after, '妈妈说吃过了', '记为“电话确认”，和“自己确认”分开显示', true);
 
   // ③ 妈妈求助
@@ -820,13 +820,13 @@ function buildChild() {
   sectionTitle(body, '建议这样做');
   const steps = card('建议步骤', { gap: 12 });
   put(body, steps);
-  stepRow(steps, 1, '先请妈妈看看药箱第 1、2 格，药还在不在');
+  stepRow(steps, 1, '先请妈妈看看药盒第 1、2 格，药还在不在');
   stepRow(steps, 2, '药还在，再决定要不要补吃；拿不准就先别吃');
   stepRow(steps, 3, '需要时问医生或药师');
   const facts = card('参考信息', { gap: 6, fill: C.brandLight });
   put(body, facts);
-  put(facts, txt('参考：第 1、2 格今天 07:42 打开过一次', 'K_bodyB', C.brand));
-  put(facts, txt('打开过不代表吃了，只供电话里核对用。', 'K_small', C.text2));
+  put(facts, txt('参考：08:00 的提醒妈妈 08:01 接听了', 'K_bodyB', C.brand));
+  put(facts, txt('接听不代表吃了，只供电话里核对用。', 'K_small', C.text2));
   spacer(body);
   put(body, btn('给妈妈打电话', 'primary', 'K_btn', 48, 'phone'));
 
@@ -878,7 +878,7 @@ function buildChild() {
   const grid = card('一周记录', { gap: 8 });
   put(body, grid);
   const days = ['五', '六', '日', '一', '二', '三', '四'];
-  const NAMES = { '1': '自己确认', '2': '第 2 次提醒后确认', p: '电话确认', o: '打开过药格，未确认' };
+  const NAMES = { '1': '自己确认', '2': '第 2 次提醒后确认', p: '电话确认', o: '求助' };
   const rows = [['', days], ['早上', ['1', '2', '2', '1', '1', '1', '1']], ['中午', ['1', '1', '1', '1', 'o', '1', '1']], ['睡前', ['1', '1', '1', '1', '1', 'p', '1']]];
   for (const [label, cells] of rows) {
     const r = row(grid, label || '星期', 6);
@@ -900,7 +900,7 @@ function buildChild() {
   put(legend, tag('√ 自己确认', 'success'), 'HUG');
   put(legend, tag('2 第 2 次提醒后确认', 'warning'), 'HUG');
   put(legend, tag('电话确认', 'brand', false, 'phone'), 'HUG');
-  put(legend, tag('○ 打开过药格，未确认', 'gray'), 'HUG');
+  put(legend, tag('○ 求助', 'gray'), 'HUG');
   const ins = card('发现与建议', { fill: C.brandLight, gap: 8 });
   put(body, ins);
   const ih = row(ins, '标题', 6);
@@ -914,26 +914,26 @@ function buildChild() {
   put(br, btn('先不改', 'line', 'K_btn', 40));
   link(tab.items['今天'], 'ChildHome'); link(tab.items['药品'], 'Meds');
 
-  // ⑥ 药箱离线
-  ({ s, body, nav } = screen('ChildOffline', '子女 ⑥ 药箱离线', 5, Y, { nav: '提醒详情', back: true,
-    note: '系统故障 ≠ 没吃：离线单独提示，并自动改用妈妈手机响铃兜底，避免子女误判、也避免漏提醒。' }));
+  // ⑥ 妈妈手机离线
+  ({ s, body, nav } = screen('ChildOffline', '子女 ⑥ 妈妈手机离线', 5, Y, { nav: '提醒详情', back: true,
+    note: '手机故障 ≠ 没吃：离线单独提示，提醒可能没响，建议直接打个电话，避免子女误判、也避免漏提醒。' }));
   link(nav.left, 'ChildHome');
-  const off = card('通知：药箱离线', { fill: C.gray, dir: 'HORIZONTAL', gap: 12, pad: 14 });
+  const off = card('通知：妈妈手机离线', { fill: C.gray, dir: 'HORIZONTAL', gap: 12, pad: 14 });
   put(body, off);
   put(off, ico('offline', C.text2, 22), null);
   const oft = col(off, '文字', 2);
-  put(oft, txt('药箱离线 1 小时 50 分', 'K_bodyB'));
-  put(oft, txt('这不代表妈妈没吃药，只是药箱的提醒可能没有响。', 'K_body', C.text2));
+  put(oft, txt('妈妈手机离线 1 小时 50 分', 'K_bodyB'));
+  put(oft, txt('这不代表妈妈没吃药，只是手机上的提醒可能没有响。', 'K_body', C.text2));
   sectionTitle(body, '发生了什么');
   const otl = card('时间线', { gap: 0 });
   put(body, otl);
-  timeline(otl, [['06:10', '药箱最后一次在线，电量 5%'], ['08:00', '早上的提醒没有送到药箱', true], ['08:01', '已改用妈妈的手机响铃提醒']]);
+  timeline(otl, [['06:10', '妈妈手机最后一次在线，电量 5%'], ['08:00', '早上的提醒没有送到妈妈手机', true], ['08:01', '已通知你，建议打个电话']]);
   sectionTitle(body, '可能的原因');
   const why = card('原因', { gap: 12 });
   put(body, why);
-  stepRow(why, 1, '药箱没电了，请妈妈插上充电线');
+  stepRow(why, 1, '手机没电了，请妈妈充上电');
   stepRow(why, 2, '家里的网络断了');
-  stepRow(why, 3, '插头被拔掉了');
+  stepRow(why, 3, '手机关机或开了飞行模式');
   spacer(body);
   const oacts = row(body, '操作', 12);
   put(oacts, btn('给妈妈打电话', 'primary', 'K_btn', 48, 'phone'));
@@ -950,7 +950,7 @@ function buildChild() {
   put(pct, txt('妈妈 10 月 18 日 19:20 装好了', 'K_bodyB'));
   put(pct, txt('每周日装一次', 'K_small', C.text2));
   put(pch, tag('AI 比对 · 仅供参考', 'brand', false, 'sparkle'), 'HUG');
-  put(pc, pillbox([], { name: '妈妈拍的药箱照片（示意）', title: '照片', tag: '19:20 拍摄', tagTheme: 'gray' }));
+  put(pc, pillbox([], { name: '妈妈拍的药盒照片（示意）', title: '照片', tag: '19:20 拍摄', tagTheme: 'gray' }));
   const chk = card('逐格核对', { gap: 0, pad: 0 });
   put(body, chk);
   navCell(chk, '第 1 格 · 降糖药', '应放 14 片白色圆片', false, tag('对上了', 'success', false, 'check'));
@@ -971,7 +971,7 @@ function buildChild() {
 
   // ⑧ 家庭与提醒设置
   ({ s, body, nav } = screen('Settings', '子女 ⑧ 提醒设置', 7, Y, { nav: '提醒设置', back: true,
-    note: '通知分级：正常时每晚一条汇总，异常按顺序升级给家人，避免几个人同时打电话；夜间免打扰，但求助和离线除外。等待时间是家庭沟通参数，不是医学安全时间。' }));
+    note: '通知分级：正常时每晚一条汇总，异常按顺序升级给家人，避免几个人同时打电话；夜间免打扰，但求助和手机离线除外。等待时间是家庭沟通参数，不是医学安全时间。' }));
   link(nav.left, 'ChildHome');
   sectionTitle(body, '没确认时');
   const s1 = card('没确认时', { gap: 0, pad: 0 });
@@ -999,17 +999,17 @@ function buildChild() {
   const s3 = card('少打扰', { gap: 0, pad: 0 });
   put(body, s3);
   navCell(s3, '正常时只发每晚汇总', '每晚 21:30 一条', false, toggle(true));
-  navCell(s3, '22:00–07:00 免打扰', '求助和药箱离线除外', true, toggle(true));
+  navCell(s3, '22:00–07:00 免打扰', '求助和手机离线除外', true, toggle(true));
   const s4 = card('妈妈的播报', { gap: 0, pad: 0 });
   put(body, s4);
   navCell(s4, '妈妈那边的播报', '普通话 · 大音量 · 可选方言', true);
 
   // ⑨ 第一次使用
-  ({ s, body, nav } = screen('Onboarding', '子女 ⑨ 第一次使用', 8, Y, { nav: '添加药箱',
-    note: '三步开通：绑定药箱 → 邀请家人 → 妈妈本人同意。妈妈不同意，就不开始记录。' }));
+  ({ s, body, nav } = screen('Onboarding', '子女 ⑨ 第一次使用', 8, Y, { nav: '开通安心药箱',
+    note: '三步开通：绑定妈妈的手机 → 邀请家人 → 妈妈本人同意。妈妈不同意，就不开始记录。' }));
   const stepper = box('步骤条', { dir: 'HORIZONTAL', gap: 6, cross: 'CENTER', pad: [4, 4, 4, 4] });
   put(body, stepper);
-  const stepDefs = [['绑定药箱', 'done'], ['邀请家人', 'now'], ['妈妈同意', 'todo']];
+  const stepDefs = [['绑定妈妈手机', 'done'], ['邀请家人', 'now'], ['妈妈同意', 'todo']];
   stepDefs.forEach(([label, st], i) => {
     const it = box('步骤/' + label, { dir: 'HORIZONTAL', gap: 6, cross: 'CENTER' });
     put(stepper, it, 'HUG');
@@ -1021,12 +1021,12 @@ function buildChild() {
       stepper.appendChild(l); l.layoutSizingHorizontal = 'FILL';
     }
   });
-  const dev = card('药箱', { dir: 'HORIZONTAL', gap: 12, cross: 'CENTER' });
+  const dev = card('妈妈的手机', { dir: 'HORIZONTAL', gap: 12, cross: 'CENTER' });
   put(body, dev);
-  put(dev, circ('药箱图标', 44, C.box, ico('pill', C.white, 22)), null);
+  put(dev, circ('手机图标', 44, C.brand, ico('phone', C.white, 22)), null);
   const devt = col(dev, '文字');
-  put(devt, txt('药箱 AX-2041 已连接', 'K_bodyB'));
-  put(devt, txt('电量 100% · 4 个药格', 'K_small', C.text2));
+  put(devt, txt('妈妈的手机 138****2041', 'K_bodyB'));
+  put(devt, txt('已开启提醒和语音朗读', 'K_small', C.text2));
   put(dev, tag('已绑定', 'success', false, 'check'), 'HUG');
   sectionTitle(body, '邀请家人一起照看');
   const fam = card('家人', { gap: 0, pad: 0 });
@@ -1099,16 +1099,16 @@ function board(name, x, y, w, title, sub) {
 function buildSpecs() {
   const Y = ROW_SPEC;
   const st = board('规范：服药状态体系', 0, Y, 1640, '服药状态体系：只写看到的事实，不写推断',
-    '子女端所有页面统一用这 6 种状态。“打开过药格”只是参考信号，不能当作“已吃”；系统故障单独成一种状态，不和“没确认”混在一起。');
+    '子女端所有页面统一用这 6 种状态。“还没确认”不等于“没吃”；手机故障单独成一种状态，不和“没确认”混在一起。');
   table(st, [200, 150, 420, 300, 370],
     ['子女端显示', '状态', '什么时候出现', '子女该做什么', '会不会通知子女'],
     [
-      [tag('自己确认 08:03', 'success', false, 'check'), '本人确认', '妈妈按了“吃好了”，或合上药格后说了“吃好了”', '不用做什么', '默认并入每晚汇总，可改为实时'],
+      [tag('自己确认 08:03', 'success', false, 'check'), '本人确认', '妈妈按了“吃好了”，或在手机追问时说了“吃好了”', '不用做什么', '默认并入每晚汇总，可改为实时'],
       [tag('电话确认', 'brand', false, 'phone'), '电话确认', '子女打电话后，选择“妈妈说吃过了”', '不用做什么', '不通知（是子女自己记的）'],
       [tag('待会再吃 · 10:00', 'brand'), '父母主动延后', '父母选了“还没开饭”或“我不在家”', '不用做什么', '不通知；到延后时间仍没确认，按“还没确认”处理'],
-      [tag('打开过药格', 'gray'), '有开合、未确认', '药格被打开过，但到约定时间还没有确认', '可以先等等，或打电话问一句', '到约定时间通知，并写明“药格打开过”'],
-      [tag('还没确认', 'warning', false, 'alert'), '未确认', '到约定时间，既没有确认，药格也没打开过', '打电话；之后可设 15 分钟再响铃', '通知，按设置的顺序升级给家人'],
-      [tag('药箱离线', 'gray', false, 'offline'), '设备离线', '超过 30 分钟联系不上药箱', '打电话，请妈妈检查电源和网络', '通知，并自动改用妈妈手机响铃兜底']
+      [tag('求助中', 'warning'), '父母求助', '妈妈按了“我需要帮忙”并选了原因', '马上打电话；记不清时先请妈妈看药盒格子', '立即通知，不用等超时'],
+      [tag('还没确认', 'warning', false, 'alert'), '未确认', '到约定时间还没有确认', '打电话；之后可设 15 分钟再响铃', '通知，按设置的顺序升级给家人'],
+      [tag('手机离线', 'gray', false, 'offline'), '手机离线', '超过 30 分钟联系不上妈妈的手机', '打电话，请妈妈检查手机', '通知，并写明“提醒可能没响，不代表没吃”']
     ]);
 
   const mt = board('成功指标（待验证）', 1720, Y, 1000, '成功指标：先找 3–5 个家庭试用 2 周验证',
@@ -1146,7 +1146,7 @@ async function main() {
 
   rowTitle('父母端 · 9 屏', '适老化：大字、语音、一页只做一个决定。①–⑤ 主流程，⑥ 降低误报，⑦ 首次同意，⑧ 每周装药，⑨ 现在不方便吃', ROW_P - 180);
   buildParent();
-  rowTitle('子女端 · 9 屏', '一眼看清吃没吃，只在需要时介入。①–⑤ 主流程，⑥ 设备离线，⑦ 装药核对与余量，⑧ 通知分级，⑨ 第一次使用', ROW_K - 180);
+  rowTitle('子女端 · 9 屏', '一眼看清吃没吃，只在需要时介入。①–⑤ 主流程，⑥ 手机离线，⑦ 装药核对与余量，⑧ 通知分级，⑨ 第一次使用', ROW_K - 180);
   buildChild();
   rowTitle('规范与指标', '给研发、设计和测试对齐用', ROW_SPEC - 180);
   buildSpecs();
@@ -1165,7 +1165,7 @@ async function main() {
     page.flowStartingPoints = [
       { nodeId: S.Main.id, name: '① 按时吃药 / ③ 记不清' },
       { nodeId: S.ChildAlert.id, name: '② 忘了吃药（子女端）' },
-      { nodeId: S.ChildOffline.id, name: '④ 药箱离线' },
+      { nodeId: S.ChildOffline.id, name: '④ 妈妈手机离线' },
       { nodeId: S.RefillParent.id, name: '⑤ 每周装药' },
       { nodeId: S.Onboarding.id, name: '⑥ 第一次使用' },
       { nodeId: S.ChildHome.id, name: '子女端首页' }

@@ -48,7 +48,7 @@ test('父母求助立即通知子女，不用等 30 分钟', () => {
   at('08:01'); D.askHelp(am(), '找不到药');
   assert.equal(D.S.msgs.filter(m => m.type === 'help').length, 1); assert.equal(am().status, 'help');
 });
-test('“记不清吃没吃”提醒父母先别再吃，并提示子女先看药格', () => {
+test('“记不清吃没吃”提醒父母先别再吃，并提示子女先看药盒格子', () => {
   at('08:01'); D.askHelp(am(), '记不清吃没吃');
   assert.ok(D.S.lastSpeech.includes('先不要再吃'));
   assert.ok(D.S.msgs[0].text.includes('避免重复吃药'));
