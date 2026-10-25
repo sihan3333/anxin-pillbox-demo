@@ -1,0 +1,80 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>医嘱整理数据分析报告</title>
+<style>
+:root{--bg:#F6F8FB;--surface:#fff;--ink:#1F2937;--soft:#4B5563;--faint:#8A94A6;--line:#E2E8F0;--accent:#2563EB;--c1:#2563EB;--c2:#E8590C;--up:#E7F6EC;--down:#FDECEA}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F141B;--surface:#161D27;--ink:#E5E9F0;--soft:#B6BFCC;--faint:#7D8797;--line:#2A3443;--accent:#7AA7FF;--c1:#7AA7FF;--c2:#FFA06B;--up:#16301F;--down:#3A1F1E}}
+:root[data-theme="dark"]{--bg:#0F141B;--surface:#161D27;--ink:#E5E9F0;--soft:#B6BFCC;--faint:#7D8797;--line:#2A3443;--accent:#7AA7FF;--c1:#7AA7FF;--c2:#FFA06B;--up:#16301F;--down:#3A1F1E}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:28px 16px 64px}h1{font-size:26px;margin:0}h2{font-size:18px;margin:30px 0 10px}h3{font-size:15px;margin:18px 0 6px}
+a{color:var(--accent)}.sub{color:var(--soft)}.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px;overflow-x:auto;margin:10px 0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:16px 0}.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.kpi b{display:block;font-size:26px}.kpi small{color:var(--faint)}
+table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:var(--soft);font-weight:500;border-bottom:1px solid var(--line);padding:7px;white-space:nowrap}
+td{border-bottom:1px solid var(--line);padding:7px;vertical-align:top}tr:last-child td{border-bottom:0}td.num{font-family:ui-monospace,monospace;white-space:nowrap}.hl{font-weight:700}
+tr.up td{background:var(--up)}tr.down td{background:var(--down)}svg{width:100%;height:auto}svg .v{font-size:11px;fill:var(--soft)}svg .l{font-size:12px;fill:var(--soft)}
+.legend span{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 4px 0 12px;vertical-align:middle}ol li,ul li{margin:4px 0}
+</style></head><body><div class="wrap">
+<a href="../prd.html">← PRD</a> · <a href="index.html">在线评测页</a> · <a href="DATASET.md">评测集设计</a> · <a href="rx_cases_v2.csv">评测集 CSV</a>
+<h1>安心药箱 · 医嘱整理数据分析报告</h1>
+<p class="sub">2026-10-25 · 评测对象：AI 整理医嘱（DeepSeek 抽取 + 规则核对原文依据）· 评测集 v2 共 120 条 · 4 轮迭代</p>
+
+<h2>1. 结论</h2>
+<div class="kpis">
+<div class="kpi"><small>4 字段全对率</small><b>98.3%</b><small>基线 92.5%</small></div>
+<div class="kpi"><small>编造率（第一指标）</small><b>0.0%</b><small>基线 2.6%，门槛 ≤ 2%</small></div>
+<div class="kpi"><small>字段准确率</small><b>99.6%</b><small>基线 98.1%</small></div>
+<div class="kpi"><small>holdout 全对</small><b>28/30</b><small>迭代中未查看具体用例</small></div>
+</div>
+<ol>
+<li><b>编造从 5 个降到 0</b>：191 个应留空的字段里，最终版本一个都没有编；holdout 上同样为 0，说明改动不是只对着见过的用例。</li>
+<li><b>收紧有代价</b>：第 2 轮编造清零的同时，漏填从 4 个升到 10 个，模型变得过于保守；第 3、4 轮针对性放宽后，漏填回到 2 个。护栏要同时看"拦住了多少"和"误伤了多少"。</li>
+<li><b>规则版兜底差距明显</b>：没连上大模型时，规则整理全对率 63.3%、编造 17 个（主要是把整句当药名），只适合断网兜底，不适合当主力。</li>
+<li><b>还剩 2 个 holdout 漏填</b>：英文处方 "at bedtime" 没识别成睡前，"早餐前打10个单位、晚餐前打6个单位" 漏了"餐前"。前者可能是"时段不是吃法"这条规则的副作用，下一轮用新的 dev 用例验证后再改。</li>
+</ol>
+
+<h2>2. 评测集构成</h2>
+<div class="card"><table><tr><th>划分</th><th>条数</th><th>用途</th></tr>
+<tr><td>seed</td><td class="num">40</td><td>v1 种子集，保留作历史对比</td></tr>
+<tr><td>dev</td><td class="num">50</td><td>迭代时找坏例、定位原因</td></tr>
+<tr><td>holdout</td><td class="num">30</td><td>只看汇总分数，验证改动能否泛化</td></tr></table></div>
+<p>来源：子女口述 81 条，处方 / 说明书 / 药盒标签 36 条，语音转写 3 条。共 480 个字段，其中 191 个按规范应留空——这是编造率的分母。覆盖 33 类陷阱，标注规范和判分规则见 <a href="DATASET.md">评测集设计</a>。</p>
+
+<h2>3. 迭代过程</h2>
+<div class="card"><svg viewBox="0 0 640 260" role="img" aria-label="各轮全对率与编造率"><line x1="46" y1="220" x2="630" y2="220" stroke="var(--line)"/><rect x="84" y="35" width="34" height="185" rx="3" fill="var(--c1)"><title>全对率 92.5%</title></rect><text x="101" y="30" text-anchor="middle" class="v">92.5%</text><rect x="122" y="168" width="34" height="52" rx="3" fill="var(--c2)"><title>编造率 2.6%</title></rect><text x="139" y="163" text-anchor="middle" class="v">2.6%</text><text x="120" y="238" text-anchor="middle" class="l">第 1 轮</text><rect x="227" y="37" width="34" height="183" rx="3" fill="var(--c1)"><title>全对率 91.7%</title></rect><text x="244" y="32" text-anchor="middle" class="v">91.7%</text><rect x="265" y="220" width="34" height="1" rx="3" fill="var(--c2)"><title>编造率 0.0%</title></rect><text x="282" y="215" text-anchor="middle" class="v">0.0%</text><text x="263" y="238" text-anchor="middle" class="l">第 2 轮</text><rect x="371" y="27" width="34" height="193" rx="3" fill="var(--c1)"><title>全对率 96.7%</title></rect><text x="388" y="22" text-anchor="middle" class="v">96.7%</text><rect x="409" y="220" width="34" height="1" rx="3" fill="var(--c2)"><title>编造率 0.0%</title></rect><text x="426" y="215" text-anchor="middle" class="v">0.0%</text><text x="407" y="238" text-anchor="middle" class="l">第 3 轮</text><rect x="514" y="23" width="34" height="197" rx="3" fill="var(--c1)"><title>全对率 98.3%</title></rect><text x="531" y="18" text-anchor="middle" class="v">98.3%</text><rect x="552" y="220" width="34" height="1" rx="3" fill="var(--c2)"><title>编造率 0.0%</title></rect><text x="569" y="215" text-anchor="middle" class="v">0.0%</text><text x="550" y="238" text-anchor="middle" class="l">第 4 轮</text></svg><div class="legend"><span style="background:var(--c1)"></span>4 字段全对率<span style="background:var(--c2)"></span>编造率（柱高放大 10 倍）</div></div>
+<div class="card"><table><tr><th>轮次</th><th>改了什么</th><th>seed</th><th>dev</th><th>holdout</th><th>全对</th><th>编造</th><th>漏填</th></tr><tr><td>第 1 轮</td><td>基线：DeepSeek 抽取 + 原文依据 + 规则核对（依据须在原文、剂量数字一致、时刻须原文说过）</td><td class="num">37/40 · 编造 1</td><td class="num">47/50 · 编造 2</td><td class="num">27/30 · 编造 2</td><td class="num">111/120</td><td class="num hl">5</td><td class="num">4</td></tr><tr><td>第 2 轮</td><td>提示词写明"时段不是吃法""剂量范围留空""规格 + qd 即每次剂量"；核对新增两条规则：只含时段词的吃法去掉、剂量范围去掉</td><td class="num">39/40 · 编造 0</td><td class="num">47/50 · 编造 0</td><td class="num">24/30 · 编造 0</td><td class="num">110/120</td><td class="num hl">0</td><td class="num">10</td></tr><tr><td>第 3 轮</td><td>提示词写明"早晚各一片就是 1 片""说明书取成人剂量"；判分把"吃饭时 / 餐时 / 跟饭一起"视为"随餐"同义；保存原始输出便于排查</td><td class="num">39/40 · 编造 0</td><td class="num">49/50 · 编造 0</td><td class="num">28/30 · 编造 0</td><td class="num">116/120</td><td class="num hl">0</td><td class="num">4</td></tr><tr><td>第 4 轮</td><td>提示词写明"睡前是吃法"；同一配置重复运行一次检查稳定性</td><td class="num">40/40 · 编造 0</td><td class="num">50/50 · 编造 0</td><td class="num">28/30 · 编造 0</td><td class="num">118/120</td><td class="num hl">0</td><td class="num">2</td></tr></table></div>
+<p class="sub">所有轮次都用最终判分规则重新计分，保证可比。第 4 轮同一配置重复运行一次，结果完全一致（118/120、编造 0）。</p>
+
+<h2>4. 三种方式对比（最终版本）</h2>
+<div class="card"><table><tr><th>方式</th><th>4 字段全对</th><th>字段准确率</th><th>编造</th><th>填错</th><th>漏填</th></tr>
+<tr><td>规则整理（断网兜底）</td><td class="num">76 / 120（63.3%）</td><td class="num">90.2%</td><td class="num hl">17 / 191（8.9%）</td><td class="num">7</td><td class="num">23</td></tr><tr><td>DeepSeek 原始输出</td><td class="num">118 / 120（98.3%）</td><td class="num">99.6%</td><td class="num hl">0 / 191（0.0%）</td><td class="num">0</td><td class="num">2</td></tr><tr><td>DeepSeek + 规则核对（产品）</td><td class="num">118 / 120（98.3%）</td><td class="num">99.6%</td><td class="num hl">0 / 191（0.0%）</td><td class="num">0</td><td class="num">2</td></tr></table></div>
+<p>基线时规则核对把编造从 7 个拦到 5 个；最终版本模型本身已不编造，核对的作用是安全网，且<b>没有误删任何正确字段</b>。</p>
+
+<h2>5. 按陷阱类型：基线 → 最终</h2>
+<div class="card"><table><tr><th>陷阱</th><th>条数</th><th>基线全对</th><th>最终全对</th></tr><tr class="up"><td>只有频次</td><td class="num">24</td><td class="num">22/24（编造 1）</td><td class="num">24/24</td></tr><tr><td>剂量单位</td><td class="num">20</td><td class="num">20/20</td><td class="num">20/20</td></tr><tr><td>中文时刻</td><td class="num">15</td><td class="num">15/15</td><td class="num">15/15</td></tr><tr class="up"><td>时段不是吃法</td><td class="num">10</td><td class="num">7/10（编造 3）</td><td class="num">10/10</td></tr><tr><td>说不清</td><td class="num">9</td><td class="num">9/9</td><td class="num">9/9</td></tr><tr class="up"><td>多个时刻</td><td class="num">8</td><td class="num">6/8（编造 1）</td><td class="num">8/8</td></tr><tr><td>常规</td><td class="num">5</td><td class="num">5/5</td><td class="num">5/5</td></tr><tr class="up"><td>拉丁缩写</td><td class="num">5</td><td class="num">3/5（编造 1）</td><td class="num">5/5</td></tr><tr><td>按需</td><td class="num">5</td><td class="num">5/5</td><td class="num">5/5</td></tr><tr><td>半片</td><td class="num">5</td><td class="num">5/5</td><td class="num">5/5</td></tr><tr><td>口语药名</td><td class="num">5</td><td class="num">5/5</td><td class="num">5/5</td></tr><tr class="up"><td>没有药名</td><td class="num">5</td><td class="num">4/5（编造 1）</td><td class="num">5/5</td></tr><tr class="up"><td>分时段剂量</td><td class="num">4</td><td class="num">2/4（编造 1）</td><td class="num">3/4</td></tr><tr><td>疗程</td><td class="num">3</td><td class="num">3/3</td><td class="num">3/3</td></tr><tr><td>口语噪声</td><td class="num">3</td><td class="num">3/3</td><td class="num">3/3</td></tr><tr><td>长句</td><td class="num">3</td><td class="num">3/3</td><td class="num">3/3</td></tr><tr><td>时段</td><td class="num">2</td><td class="num">2/2</td><td class="num">2/2</td></tr><tr class="up"><td>模糊时刻</td><td class="num">2</td><td class="num">1/2</td><td class="num">2/2</td></tr><tr><td>否定</td><td class="num">2</td><td class="num">2/2</td><td class="num">2/2</td></tr><tr class="up"><td>剂量范围</td><td class="num">2</td><td class="num">1/2（编造 1）</td><td class="num">2/2</td></tr><tr><td>外用</td><td class="num">2</td><td class="num">2/2</td><td class="num">2/2</td></tr><tr class="down"><td>英文</td><td class="num">2</td><td class="num">2/2</td><td class="num">1/2</td></tr><tr><td>隔日</td><td class="num">1</td><td class="num">1/1</td><td class="num">1/1</td></tr><tr><td>每周</td><td class="num">1</td><td class="num">1/1</td><td class="num">1/1</td></tr><tr><td>间隔推时刻</td><td class="num">1</td><td class="num">1/1</td><td class="num">1/1</td></tr><tr><td>没有剂量</td><td class="num">1</td><td class="num">1/1</td><td class="num">1/1</td></tr><tr><td>多人群</td><td class="num">1</td><td class="num">1/1</td><td class="num">1/1</td></tr><tr><td>停药</td><td class="num">1</td><td class="num">1/1</td><td class="num">1/1</td></tr><tr><td>错别字</td><td class="num">1</td><td class="num">1/1</td><td class="num">1/1</td></tr><tr><td>时间随意</td><td class="num">1</td><td class="num">1/1</td><td class="num">1/1</td></tr><tr><td>条件用药</td><td class="num">1</td><td class="num">1/1</td><td class="num">1/1</td></tr><tr><td>剂量未说</td><td class="num">1</td><td class="num">1/1</td><td class="num">1/1</td></tr><tr><td>剂量递减</td><td class="num">1</td><td class="num">1/1</td><td class="num">1/1</td></tr></table></div>
+<p class="sub">绿色为提升，红色为退步。"英文"从 2/2 降到 1/2，是本轮唯一的退步。</p>
+
+<h2>6. 坏例分析</h2>
+<div class="card"><table><tr><th>问题</th><th>典型用例</th><th>判定</th><th>原因</th><th>处理</th><th>结果</th></tr>
+<tr><td>把时段当吃法</td><td>"降压药两片，早上吃" → 吃法"早上吃"；"每日一次 早晨服用"</td><td>编造</td><td>模型认为"早上吃"是一种吃法</td><td>提示词说明；核对规则去掉只含时段词的吃法</td><td>时段类 7/10 → 10/10</td></tr>
+<tr><td>剂量范围被当成剂量</td><td>"一次1~2片" → "1~2片"</td><td>编造</td><td>用药量需要家人决定，不能替他选</td><td>提示词说明；核对规则去掉范围剂量</td><td>剂量范围 1/2 → 2/2</td></tr>
+<tr><td>处方剂量漏填</td><td>"氨氯地平片 5mg qd"</td><td>漏填</td><td>模型把"5mg"当规格而不是每次剂量</td><td>提示词说明"规格 + qd 即每次剂量"</td><td>拉丁缩写 3/5 → 5/5</td></tr>
+<tr><td>收紧后过度保守</td><td>"早晚各一片"、"成人一次2片" → 剂量留空</td><td>漏填</td><td>第 2 轮"范围留空"写得太宽</td><td>提示词说明"各一片就是 1 片""取成人剂量"</td><td>漏填 10 → 4</td></tr>
+<tr><td>判分过严</td><td>"吃饭的时候吃" → 模型写"随餐"</td><td>填错（误判）</td><td>标注只收"吃饭"一个关键词</td><td>判分加同义词表，并记录在评测集设计里</td><td>这 2 条改判为正确；为保证可比，各轮都按新判分重算</td></tr>
+<tr><td>"睡前"被当成时段</td><td>"瑞舒伐他汀 10mg 睡前服"</td><td>漏填</td><td>"时段不是吃法"被模型过度执行</td><td>提示词说明"睡前是吃法"</td><td>漏填 4 → 2</td></tr>
+</table></div>
+
+<h2>7. 下一步</h2>
+<ol>
+<li>收集 20–30 条真实医嘱、处方照片转文字，单独作为 real 集，与 holdout 一起作为上线门槛。</li>
+<li>补英文处方和"分时段剂量"的 dev 用例，验证剩余 2 个漏填后再改提示词。</li>
+<li>线上把"子女在 AI 整理后又改动的字段"记为坏例候选，每周复盘并入 dev。</li>
+<li>每次改提示词或核对规则，seed + dev + holdout 全量回归，任一项编造率超过 2% 不发布。</li>
+</ol>
+
+<h2>8. 局限</h2>
+<ul>
+<li>用例由开发者按真实写法编写，句式可能比真实情况规整；部分陷阱只有 1–2 条，只能作为方向参考。</li>
+<li>holdout 在第 4 轮结束后才查看具体失败用例，用于本报告的分析，没有据此再修改。</li>
+<li>大模型有运行间波动；第 4 轮重复运行结果一致，但更多次重复才能给出置信区间。</li>
+</ul>
+<p class="sub">原始结果：<a href="results_round1.json">第 1 轮</a> · <a href="results_round2.json">第 2 轮</a> · <a href="results_round3.json">第 3 轮</a> · <a href="results_round4.json">第 4 轮</a> · <a href="results_round4_repeat.json">第 4 轮重复</a></p>
+</div></body></html>

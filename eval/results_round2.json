@@ -1,0 +1,9448 @@
+[
+ {
+  "id": 1,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "这是降脂药，每次一片，晚上九点吃，睡前用温水送服",
+  "mode": "rule",
+  "got": {
+   "name": "降脂药",
+   "dose": "1片",
+   "times": [
+    "21:00"
+   ],
+   "method": "睡前用温水送服"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 1,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "这是降脂药，每次一片，晚上九点吃，睡前用温水送服",
+  "mode": "raw",
+  "got": {
+   "name": "降脂药",
+   "dose": "1片",
+   "method": "睡前用温水送服",
+   "times": [
+    "21:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 1,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "这是降脂药，每次一片，晚上九点吃，睡前用温水送服",
+  "mode": "checked",
+  "got": {
+   "name": "降脂药",
+   "dose": "1片",
+   "times": [
+    "21:00"
+   ],
+   "method": "睡前用温水送服",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 2,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "降压药每天早上八点吃一片，饭后吃",
+  "mode": "rule",
+  "got": {
+   "name": "降压药",
+   "dose": "1片",
+   "times": [
+    "08:00"
+   ],
+   "method": "饭后吃"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 2,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "降压药每天早上八点吃一片，饭后吃",
+  "mode": "raw",
+  "got": {
+   "name": "降压药",
+   "dose": "1片",
+   "method": "饭后",
+   "times": [
+    "08:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 2,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "降压药每天早上八点吃一片，饭后吃",
+  "mode": "checked",
+  "got": {
+   "name": "降压药",
+   "dose": "1片",
+   "times": [
+    "08:00"
+   ],
+   "method": "饭后",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 3,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "阿莫西林胶囊，一次2粒，一日3次",
+  "mode": "rule",
+  "got": {
+   "name": "阿莫西林胶囊",
+   "dose": "2粒",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 3,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "阿莫西林胶囊，一次2粒，一日3次",
+  "mode": "raw",
+  "got": {
+   "name": "阿莫西林胶囊",
+   "dose": "2粒",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 3,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "阿莫西林胶囊，一次2粒，一日3次",
+  "mode": "checked",
+  "got": {
+   "name": "阿莫西林胶囊",
+   "dose": "2粒",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 4,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次",
+   "剂量单位"
+  ],
+  "text": "二甲双胍片 每次0.5g 每日两次 随餐服用",
+  "mode": "rule",
+  "got": {
+   "name": "二甲双胍片",
+   "dose": "",
+   "times": [],
+   "method": "随餐服用"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 4,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次",
+   "剂量单位"
+  ],
+  "text": "二甲双胍片 每次0.5g 每日两次 随餐服用",
+  "mode": "raw",
+  "got": {
+   "name": "二甲双胍片",
+   "dose": "0.5g",
+   "method": "随餐",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 4,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次",
+   "剂量单位"
+  ],
+  "text": "二甲双胍片 每次0.5g 每日两次 随餐服用",
+  "mode": "checked",
+  "got": {
+   "name": "二甲双胍片",
+   "dose": "0.5g",
+   "times": [],
+   "method": "随餐",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 5,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次",
+   "拉丁缩写"
+  ],
+  "text": "苯磺酸氨氯地平片 5mg qd",
+  "mode": "rule",
+  "got": {
+   "name": "苯磺酸氨氯地平片",
+   "dose": "5mg",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 5,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次",
+   "拉丁缩写"
+  ],
+  "text": "苯磺酸氨氯地平片 5mg qd",
+  "mode": "raw",
+  "got": {
+   "name": "苯磺酸氨氯地平片",
+   "dose": "5mg",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 5,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次",
+   "拉丁缩写"
+  ],
+  "text": "苯磺酸氨氯地平片 5mg qd",
+  "mode": "checked",
+  "got": {
+   "name": "苯磺酸氨氯地平片",
+   "dose": "5mg",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 6,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "降压药早晚各一次",
+  "mode": "rule",
+  "got": {
+   "name": "降压药早晚各",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 6,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "降压药早晚各一次",
+  "mode": "raw",
+  "got": {
+   "name": "降压药",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 6,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "降压药早晚各一次",
+  "mode": "checked",
+  "got": {
+   "name": "降压药",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 7,
+  "cat": "说不清",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "这个药按医生说的吃",
+  "mode": "rule",
+  "got": {
+   "name": "这个药按医生说的吃",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "fab",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 7,
+  "cat": "说不清",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "这个药按医生说的吃",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 7,
+  "cat": "说不清",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "这个药按医生说的吃",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 8,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "维生素D，每天中午12点吃一粒",
+  "mode": "rule",
+  "got": {
+   "name": "维生素D",
+   "dose": "1粒",
+   "times": [
+    "12:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 8,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "维生素D，每天中午12点吃一粒",
+  "mode": "raw",
+  "got": {
+   "name": "维生素D",
+   "dose": "1粒",
+   "method": "",
+   "times": [
+    "12:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 8,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "维生素D，每天中午12点吃一粒",
+  "mode": "checked",
+  "got": {
+   "name": "维生素D",
+   "dose": "1粒",
+   "times": [
+    "12:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 9,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "钙片晚饭后吃两片",
+  "mode": "rule",
+  "got": {
+   "name": "钙片晚饭后吃两片",
+   "dose": "2片",
+   "times": [],
+   "method": "饭后吃两片"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 9,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "钙片晚饭后吃两片",
+  "mode": "raw",
+  "got": {
+   "name": "钙片",
+   "dose": "两片",
+   "method": "饭后",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 9,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "钙片晚饭后吃两片",
+  "mode": "checked",
+  "got": {
+   "name": "钙片",
+   "dose": "两片",
+   "times": [],
+   "method": "饭后",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 10,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "时段"
+  ],
+  "text": "阿司匹林肠溶片，每晚睡前一片",
+  "mode": "rule",
+  "got": {
+   "name": "阿司匹林肠溶片",
+   "dose": "1片",
+   "times": [],
+   "method": "睡前一片"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 10,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "时段"
+  ],
+  "text": "阿司匹林肠溶片，每晚睡前一片",
+  "mode": "raw",
+  "got": {
+   "name": "阿司匹林肠溶片",
+   "dose": "一片",
+   "method": "睡前",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 10,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "时段"
+  ],
+  "text": "阿司匹林肠溶片，每晚睡前一片",
+  "mode": "checked",
+  "got": {
+   "name": "阿司匹林肠溶片",
+   "dose": "一片",
+   "times": [],
+   "method": "睡前",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 11,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "奥美拉唑早上空腹吃一粒，7点",
+  "mode": "rule",
+  "got": {
+   "name": "奥美拉唑早上空腹吃一粒",
+   "dose": "1粒",
+   "times": [
+    "07:00"
+   ],
+   "method": "空腹吃一粒"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 11,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "奥美拉唑早上空腹吃一粒，7点",
+  "mode": "raw",
+  "got": {
+   "name": "奥美拉唑",
+   "dose": "一粒",
+   "method": "空腹",
+   "times": [
+    "07:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 11,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "奥美拉唑早上空腹吃一粒，7点",
+  "mode": "checked",
+  "got": {
+   "name": "奥美拉唑",
+   "dose": "一粒",
+   "times": [
+    "07:00"
+   ],
+   "method": "空腹",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 12,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "妈妈的降糖药，早上7点半和晚上6点半各吃一片，吃饭的时候吃",
+  "mode": "rule",
+  "got": {
+   "name": "妈妈的降糖药",
+   "dose": "1片",
+   "times": [
+    "07:30",
+    "18:30"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 12,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "妈妈的降糖药，早上7点半和晚上6点半各吃一片，吃饭的时候吃",
+  "mode": "raw",
+  "got": {
+   "name": "降糖药",
+   "dose": "1片",
+   "method": "随餐",
+   "times": [
+    "07:30",
+    "18:30"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "wrong"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 12,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "妈妈的降糖药，早上7点半和晚上6点半各吃一片，吃饭的时候吃",
+  "mode": "checked",
+  "got": {
+   "name": "降糖药",
+   "dose": "1片",
+   "times": [
+    "07:30",
+    "18:30"
+   ],
+   "method": "随餐",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "wrong"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 13,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "甲钴胺片 一次1片 一日3次 口服",
+  "mode": "rule",
+  "got": {
+   "name": "甲钴胺片",
+   "dose": "1片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 13,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "甲钴胺片 一次1片 一日3次 口服",
+  "mode": "raw",
+  "got": {
+   "name": "甲钴胺片",
+   "dose": "1片",
+   "method": "口服",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 13,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "甲钴胺片 一次1片 一日3次 口服",
+  "mode": "checked",
+  "got": {
+   "name": "甲钴胺片",
+   "dose": "1片",
+   "times": [],
+   "method": "口服",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 14,
+  "cat": "按需服用",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "按需"
+  ],
+  "text": "布洛芬，疼的时候吃一片",
+  "mode": "rule",
+  "got": {
+   "name": "布洛芬",
+   "dose": "1片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 14,
+  "cat": "按需服用",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "按需"
+  ],
+  "text": "布洛芬，疼的时候吃一片",
+  "mode": "raw",
+  "got": {
+   "name": "布洛芬",
+   "dose": "1片",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 14,
+  "cat": "按需服用",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "按需"
+  ],
+  "text": "布洛芬，疼的时候吃一片",
+  "mode": "checked",
+  "got": {
+   "name": "布洛芬",
+   "dose": "1片",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 15,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "硝苯地平缓释片，每次一片，每天早上8点和晚上8点",
+  "mode": "rule",
+  "got": {
+   "name": "硝苯地平缓释片",
+   "dose": "1片",
+   "times": [
+    "08:00",
+    "20:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 15,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "硝苯地平缓释片，每次一片，每天早上8点和晚上8点",
+  "mode": "raw",
+  "got": {
+   "name": "硝苯地平缓释片",
+   "dose": "1片",
+   "method": "",
+   "times": [
+    "08:00",
+    "20:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 15,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "硝苯地平缓释片，每次一片，每天早上8点和晚上8点",
+  "mode": "checked",
+  "got": {
+   "name": "硝苯地平缓释片",
+   "dose": "1片",
+   "times": [
+    "08:00",
+    "20:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 16,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "瑞舒伐他汀钙片 10mg 睡前服",
+  "mode": "rule",
+  "got": {
+   "name": "瑞舒伐他汀钙片",
+   "dose": "10mg",
+   "times": [],
+   "method": "睡前服"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 16,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "瑞舒伐他汀钙片 10mg 睡前服",
+  "mode": "raw",
+  "got": {
+   "name": "瑞舒伐他汀钙片",
+   "dose": "10mg",
+   "method": "睡前",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 16,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "瑞舒伐他汀钙片 10mg 睡前服",
+  "mode": "checked",
+  "got": {
+   "name": "瑞舒伐他汀钙片",
+   "dose": "10mg",
+   "times": [],
+   "method": "睡前",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 17,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "半片"
+  ],
+  "text": "左甲状腺素钠片，早上空腹半片，吃完半小时再吃饭",
+  "mode": "rule",
+  "got": {
+   "name": "左甲状腺素钠片",
+   "dose": "半片",
+   "times": [],
+   "method": "空腹半片"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 17,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "半片"
+  ],
+  "text": "左甲状腺素钠片，早上空腹半片，吃完半小时再吃饭",
+  "mode": "raw",
+  "got": {
+   "name": "左甲状腺素钠片",
+   "dose": "半片",
+   "method": "空腹",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 17,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "半片"
+  ],
+  "text": "左甲状腺素钠片，早上空腹半片，吃完半小时再吃饭",
+  "mode": "checked",
+  "got": {
+   "name": "左甲状腺素钠片",
+   "dose": "半片",
+   "times": [],
+   "method": "空腹",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 18,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "降脂药一天吃一次",
+  "mode": "rule",
+  "got": {
+   "name": "降脂药一天吃",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 18,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "降脂药一天吃一次",
+  "mode": "raw",
+  "got": {
+   "name": "降脂药",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 18,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "降脂药一天吃一次",
+  "mode": "checked",
+  "got": {
+   "name": "降脂药",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 19,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "口语药名"
+  ],
+  "text": "这个是治胃病的，饭前半小时吃",
+  "mode": "rule",
+  "got": {
+   "name": "治胃病的",
+   "dose": "",
+   "times": [],
+   "method": "饭前半小时吃"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 19,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "口语药名"
+  ],
+  "text": "这个是治胃病的，饭前半小时吃",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "",
+   "method": "饭前",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 19,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "口语药名"
+  ],
+  "text": "这个是治胃病的，饭前半小时吃",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "",
+   "times": [],
+   "method": "饭前",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 20,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "爸爸的心脏药，一次两粒，下午三点吃",
+  "mode": "rule",
+  "got": {
+   "name": "爸爸的心脏药",
+   "dose": "2粒",
+   "times": [
+    "15:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 20,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "爸爸的心脏药，一次两粒，下午三点吃",
+  "mode": "raw",
+  "got": {
+   "name": "心脏药",
+   "dose": "2粒",
+   "method": "",
+   "times": [
+    "15:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 20,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "爸爸的心脏药，一次两粒，下午三点吃",
+  "mode": "checked",
+  "got": {
+   "name": "心脏药",
+   "dose": "2粒",
+   "times": [
+    "15:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 21,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "复方丹参滴丸 一次10丸 一日3次 舌下含服",
+  "mode": "rule",
+  "got": {
+   "name": "复方丹参滴丸",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 21,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "复方丹参滴丸 一次10丸 一日3次 舌下含服",
+  "mode": "raw",
+  "got": {
+   "name": "复方丹参滴丸",
+   "dose": "10丸",
+   "method": "舌下含服",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 21,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "复方丹参滴丸 一次10丸 一日3次 舌下含服",
+  "mode": "checked",
+  "got": {
+   "name": "复方丹参滴丸",
+   "dose": "10丸",
+   "times": [],
+   "method": "舌下含服",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 22,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "剂量单位",
+   "中文时刻"
+  ],
+  "text": "胰岛素晚上十点打12个单位",
+  "mode": "rule",
+  "got": {
+   "name": "胰岛素晚上十点打12个单位",
+   "dose": "",
+   "times": [
+    "22:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 22,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "剂量单位",
+   "中文时刻"
+  ],
+  "text": "胰岛素晚上十点打12个单位",
+  "mode": "raw",
+  "got": {
+   "name": "胰岛素",
+   "dose": "12个单位",
+   "method": "",
+   "times": [
+    "22:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 22,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "剂量单位",
+   "中文时刻"
+  ],
+  "text": "胰岛素晚上十点打12个单位",
+  "mode": "checked",
+  "got": {
+   "name": "胰岛素",
+   "dose": "12个单位",
+   "times": [
+    "22:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 23,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "叶酸片每天一片",
+  "mode": "rule",
+  "got": {
+   "name": "叶酸片",
+   "dose": "1片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 23,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "叶酸片每天一片",
+  "mode": "raw",
+  "got": {
+   "name": "叶酸片",
+   "dose": "1片",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 23,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "叶酸片每天一片",
+  "mode": "checked",
+  "got": {
+   "name": "叶酸片",
+   "dose": "1片",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 24,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "降压药两片，早上吃",
+  "mode": "rule",
+  "got": {
+   "name": "降压药两片",
+   "dose": "2片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 24,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "降压药两片，早上吃",
+  "mode": "raw",
+  "got": {
+   "name": "降压药",
+   "dose": "两片",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 24,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "降压药两片，早上吃",
+  "mode": "checked",
+  "got": {
+   "name": "降压药",
+   "dose": "两片",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 25,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "拉丁缩写",
+   "剂量单位"
+  ],
+  "text": "头孢克肟 0.1g bid 饭后",
+  "mode": "rule",
+  "got": {
+   "name": "头孢克肟",
+   "dose": "",
+   "times": [],
+   "method": "饭后"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 25,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "拉丁缩写",
+   "剂量单位"
+  ],
+  "text": "头孢克肟 0.1g bid 饭后",
+  "mode": "raw",
+  "got": {
+   "name": "头孢克肟",
+   "dose": "0.1g",
+   "method": "饭后",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 25,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "拉丁缩写",
+   "剂量单位"
+  ],
+  "text": "头孢克肟 0.1g bid 饭后",
+  "mode": "checked",
+  "got": {
+   "name": "头孢克肟",
+   "dose": "0.1g",
+   "times": [],
+   "method": "饭后",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 26,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "蒙脱石散 一次1袋 一日3次 冲服",
+  "mode": "rule",
+  "got": {
+   "name": "蒙脱石散",
+   "dose": "1袋",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 26,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "蒙脱石散 一次1袋 一日3次 冲服",
+  "mode": "raw",
+  "got": {
+   "name": "蒙脱石散",
+   "dose": "1袋",
+   "method": "冲服",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 26,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "蒙脱石散 一次1袋 一日3次 冲服",
+  "mode": "checked",
+  "got": {
+   "name": "蒙脱石散",
+   "dose": "1袋",
+   "times": [],
+   "method": "冲服",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 27,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "半片"
+  ],
+  "text": "安眠药睡前半小时吃半片",
+  "mode": "rule",
+  "got": {
+   "name": "安眠药睡前半小时吃半片",
+   "dose": "半片",
+   "times": [],
+   "method": "睡前半小时吃半片"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 27,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "半片"
+  ],
+  "text": "安眠药睡前半小时吃半片",
+  "mode": "raw",
+  "got": {
+   "name": "安眠药",
+   "dose": "半片",
+   "method": "睡前",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 27,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "半片"
+  ],
+  "text": "安眠药睡前半小时吃半片",
+  "mode": "checked",
+  "got": {
+   "name": "安眠药",
+   "dose": "半片",
+   "times": [],
+   "method": "睡前",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 28,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "口语药名"
+  ],
+  "text": "早上九点吃那个白色的药",
+  "mode": "rule",
+  "got": {
+   "name": "早上九点吃那个白色的药",
+   "dose": "",
+   "times": [
+    "09:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 28,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "口语药名"
+  ],
+  "text": "早上九点吃那个白色的药",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "",
+   "method": "",
+   "times": [
+    "09:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 28,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "口语药名"
+  ],
+  "text": "早上九点吃那个白色的药",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "",
+   "times": [
+    "09:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 29,
+  "cat": "说不清",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "我妈每天吃的钙片，你帮我设一下",
+  "mode": "rule",
+  "got": {
+   "name": "我妈",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "wrong",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 29,
+  "cat": "说不清",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "我妈每天吃的钙片，你帮我设一下",
+  "mode": "raw",
+  "got": {
+   "name": "钙片",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 29,
+  "cat": "说不清",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "我妈每天吃的钙片，你帮我设一下",
+  "mode": "checked",
+  "got": {
+   "name": "钙片",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 30,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "模糊时刻"
+  ],
+  "text": "降糖药 晚饭时吃一片 大概六点",
+  "mode": "rule",
+  "got": {
+   "name": "降糖药",
+   "dose": "1片",
+   "times": [
+    "06:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "wrong",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 30,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "模糊时刻"
+  ],
+  "text": "降糖药 晚饭时吃一片 大概六点",
+  "mode": "raw",
+  "got": {
+   "name": "降糖药",
+   "dose": "1片",
+   "method": "随餐",
+   "times": [
+    "18:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "wrong"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 30,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "模糊时刻"
+  ],
+  "text": "降糖药 晚饭时吃一片 大概六点",
+  "mode": "checked",
+  "got": {
+   "name": "降糖药",
+   "dose": "1片",
+   "times": [
+    "18:00"
+   ],
+   "method": "随餐",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "wrong"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 31,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "维生素C一次100mg",
+  "mode": "rule",
+  "got": {
+   "name": "维生素C",
+   "dose": "100mg",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 31,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "维生素C一次100mg",
+  "mode": "raw",
+  "got": {
+   "name": "维生素C",
+   "dose": "100mg",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 31,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "维生素C一次100mg",
+  "mode": "checked",
+  "got": {
+   "name": "维生素C",
+   "dose": "100mg",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 32,
+  "cat": "说不清",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "按时吃药",
+  "mode": "rule",
+  "got": {
+   "name": "按时吃药",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "fab",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 32,
+  "cat": "说不清",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "按时吃药",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 32,
+  "cat": "说不清",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "按时吃药",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 33,
+  "cat": "说不清",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "降压药跟以前一样吃",
+  "mode": "rule",
+  "got": {
+   "name": "降压药跟以前一样吃",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 33,
+  "cat": "说不清",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "降压药跟以前一样吃",
+  "mode": "raw",
+  "got": {
+   "name": "降压药",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 33,
+  "cat": "说不清",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "降压药跟以前一样吃",
+  "mode": "checked",
+  "got": {
+   "name": "降压药",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 34,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "否定"
+  ],
+  "text": "利尿药，早上8点吃，别晚上吃",
+  "mode": "rule",
+  "got": {
+   "name": "利尿药",
+   "dose": "",
+   "times": [
+    "08:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 34,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "否定"
+  ],
+  "text": "利尿药，早上8点吃，别晚上吃",
+  "mode": "raw",
+  "got": {
+   "name": "利尿药",
+   "dose": "",
+   "method": "",
+   "times": [
+    "08:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 34,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "否定"
+  ],
+  "text": "利尿药，早上8点吃，别晚上吃",
+  "mode": "checked",
+  "got": {
+   "name": "利尿药",
+   "dose": "",
+   "times": [
+    "08:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 35,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "鱼油胶囊，每天一粒，随餐",
+  "mode": "rule",
+  "got": {
+   "name": "鱼油胶囊",
+   "dose": "1粒",
+   "times": [],
+   "method": "随餐"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 35,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "鱼油胶囊，每天一粒，随餐",
+  "mode": "raw",
+  "got": {
+   "name": "鱼油胶囊",
+   "dose": "1粒",
+   "method": "随餐",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 35,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "鱼油胶囊，每天一粒，随餐",
+  "mode": "checked",
+  "got": {
+   "name": "鱼油胶囊",
+   "dose": "1粒",
+   "times": [],
+   "method": "随餐",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 36,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "没有药名",
+   "只有频次"
+  ],
+  "text": "早晚各一片，饭后",
+  "mode": "rule",
+  "got": {
+   "name": "早晚各一片",
+   "dose": "1片",
+   "times": [],
+   "method": "饭后"
+  },
+  "fields": {
+   "name": "fab",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 36,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "没有药名",
+   "只有频次"
+  ],
+  "text": "早晚各一片，饭后",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "",
+   "method": "饭后",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 36,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "没有药名",
+   "只有频次"
+  ],
+  "text": "早晚各一片，饭后",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "",
+   "times": [],
+   "method": "饭后",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 37,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "降压药每次一片，每天两次，早上8点、晚上8点",
+  "mode": "rule",
+  "got": {
+   "name": "降压药",
+   "dose": "1片",
+   "times": [
+    "08:00",
+    "20:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 37,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "降压药每次一片，每天两次，早上8点、晚上8点",
+  "mode": "raw",
+  "got": {
+   "name": "降压药",
+   "dose": "1片",
+   "method": "",
+   "times": [
+    "08:00",
+    "20:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 37,
+  "cat": "子女口述",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "降压药每次一片，每天两次，早上8点、晚上8点",
+  "mode": "checked",
+  "got": {
+   "name": "降压药",
+   "dose": "1片",
+   "times": [
+    "08:00",
+    "20:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 38,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "疗程"
+  ],
+  "text": "感冒药一天三次一次两片，饭后吃，吃三天",
+  "mode": "rule",
+  "got": {
+   "name": "感冒药一天三次",
+   "dose": "2片",
+   "times": [],
+   "method": "饭后吃"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 38,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "疗程"
+  ],
+  "text": "感冒药一天三次一次两片，饭后吃，吃三天",
+  "mode": "raw",
+  "got": {
+   "name": "感冒药",
+   "dose": "2片",
+   "method": "饭后",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 38,
+  "cat": "只有频次",
+  "split": "seed",
+  "source": "子女口述",
+  "traps": [
+   "疗程"
+  ],
+  "text": "感冒药一天三次一次两片，饭后吃，吃三天",
+  "mode": "checked",
+  "got": {
+   "name": "感冒药",
+   "dose": "2片",
+   "times": [],
+   "method": "饭后",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 39,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "肠溶阿司匹林100mg，每天一次，早饭前",
+  "mode": "rule",
+  "got": {
+   "name": "肠溶阿司匹林100mg",
+   "dose": "100mg",
+   "times": [],
+   "method": "饭前"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 39,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "肠溶阿司匹林100mg，每天一次，早饭前",
+  "mode": "raw",
+  "got": {
+   "name": "肠溶阿司匹林",
+   "dose": "100mg",
+   "method": "饭前",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 39,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "肠溶阿司匹林100mg，每天一次，早饭前",
+  "mode": "checked",
+  "got": {
+   "name": "肠溶阿司匹林",
+   "dose": "100mg",
+   "times": [],
+   "method": "饭前",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 40,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "这是止咳糖浆，每次10毫升，一天三次",
+  "mode": "rule",
+  "got": {
+   "name": "止咳糖浆",
+   "dose": "10毫升",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 40,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "这是止咳糖浆，每次10毫升，一天三次",
+  "mode": "raw",
+  "got": {
+   "name": "止咳糖浆",
+   "dose": "10毫升",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 40,
+  "cat": "处方/说明书",
+  "split": "seed",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "这是止咳糖浆，每次10毫升，一天三次",
+  "mode": "checked",
+  "got": {
+   "name": "止咳糖浆",
+   "dose": "10毫升",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 41,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次",
+   "时段不是吃法"
+  ],
+  "text": "硝苯地平控释片 30mg 每日一次 早晨服用",
+  "mode": "rule",
+  "got": {
+   "name": "硝苯地平控释片",
+   "dose": "30mg",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 41,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次",
+   "时段不是吃法"
+  ],
+  "text": "硝苯地平控释片 30mg 每日一次 早晨服用",
+  "mode": "raw",
+  "got": {
+   "name": "硝苯地平控释片",
+   "dose": "30mg",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 41,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次",
+   "时段不是吃法"
+  ],
+  "text": "硝苯地平控释片 30mg 每日一次 早晨服用",
+  "mode": "checked",
+  "got": {
+   "name": "硝苯地平控释片",
+   "dose": "30mg",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 42,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "拉丁缩写",
+   "时段不是吃法"
+  ],
+  "text": "阿托伐他汀钙片 20mg qn",
+  "mode": "rule",
+  "got": {
+   "name": "阿托伐他汀钙片",
+   "dose": "20mg",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 42,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "拉丁缩写",
+   "时段不是吃法"
+  ],
+  "text": "阿托伐他汀钙片 20mg qn",
+  "mode": "raw",
+  "got": {
+   "name": "阿托伐他汀钙片",
+   "dose": "20mg",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 42,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "拉丁缩写",
+   "时段不是吃法"
+  ],
+  "text": "阿托伐他汀钙片 20mg qn",
+  "mode": "checked",
+  "got": {
+   "name": "阿托伐他汀钙片",
+   "dose": "20mg",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 43,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "格列美脲片 2mg 早餐前服用 每日1次",
+  "mode": "rule",
+  "got": {
+   "name": "格列美脲片",
+   "dose": "2mg",
+   "times": [],
+   "method": "餐前服用 每日1次"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 43,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "格列美脲片 2mg 早餐前服用 每日1次",
+  "mode": "raw",
+  "got": {
+   "name": "格列美脲片",
+   "dose": "2mg",
+   "method": "早餐前",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 43,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "格列美脲片 2mg 早餐前服用 每日1次",
+  "mode": "checked",
+  "got": {
+   "name": "格列美脲片",
+   "dose": "2mg",
+   "times": [],
+   "method": "早餐前",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 44,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "妈的降压药，早上七点半吃一片",
+  "mode": "rule",
+  "got": {
+   "name": "妈的降压药",
+   "dose": "1片",
+   "times": [
+    "07:30"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 44,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "妈的降压药，早上七点半吃一片",
+  "mode": "raw",
+  "got": {
+   "name": "降压药",
+   "dose": "1片",
+   "method": "",
+   "times": [
+    "07:30"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 44,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "妈的降压药，早上七点半吃一片",
+  "mode": "checked",
+  "got": {
+   "name": "降压药",
+   "dose": "1片",
+   "times": [
+    "07:30"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 45,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "钙片每天晚饭后吃两粒",
+  "mode": "rule",
+  "got": {
+   "name": "钙片",
+   "dose": "2粒",
+   "times": [],
+   "method": "饭后吃两粒"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 45,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "钙片每天晚饭后吃两粒",
+  "mode": "raw",
+  "got": {
+   "name": "钙片",
+   "dose": "2粒",
+   "method": "饭后",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 45,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "钙片每天晚饭后吃两粒",
+  "mode": "checked",
+  "got": {
+   "name": "钙片",
+   "dose": "2粒",
+   "times": [],
+   "method": "饭后",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 46,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "口语药名",
+   "半片"
+  ],
+  "text": "那个护心的药，早上起来空腹吃半片",
+  "mode": "rule",
+  "got": {
+   "name": "那个护心的药",
+   "dose": "半片",
+   "times": [],
+   "method": "空腹吃半片"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 46,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "口语药名",
+   "半片"
+  ],
+  "text": "那个护心的药，早上起来空腹吃半片",
+  "mode": "raw",
+  "got": {
+   "name": "护心的药",
+   "dose": "半片",
+   "method": "空腹",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 46,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "口语药名",
+   "半片"
+  ],
+  "text": "那个护心的药，早上起来空腹吃半片",
+  "mode": "checked",
+  "got": {
+   "name": "护心的药",
+   "dose": "半片",
+   "times": [],
+   "method": "空腹",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 47,
+  "cat": "语音转写",
+  "split": "dev",
+  "source": "语音转写",
+  "traps": [
+   "口语噪声",
+   "中文时刻"
+  ],
+  "text": "嗯就是那个二甲双胍啊一次一片中午十二点吃饭的时候吃",
+  "mode": "rule",
+  "got": {
+   "name": "嗯就是那个二甲双胍啊",
+   "dose": "1片",
+   "times": [
+    "12:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 47,
+  "cat": "语音转写",
+  "split": "dev",
+  "source": "语音转写",
+  "traps": [
+   "口语噪声",
+   "中文时刻"
+  ],
+  "text": "嗯就是那个二甲双胍啊一次一片中午十二点吃饭的时候吃",
+  "mode": "raw",
+  "got": {
+   "name": "二甲双胍",
+   "dose": "1片",
+   "method": "随餐",
+   "times": [
+    "12:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 47,
+  "cat": "语音转写",
+  "split": "dev",
+  "source": "语音转写",
+  "traps": [
+   "口语噪声",
+   "中文时刻"
+  ],
+  "text": "嗯就是那个二甲双胍啊一次一片中午十二点吃饭的时候吃",
+  "mode": "checked",
+  "got": {
+   "name": "二甲双胍",
+   "dose": "1片",
+   "times": [
+    "12:00"
+   ],
+   "method": "随餐",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 48,
+  "cat": "语音转写",
+  "split": "dev",
+  "source": "语音转写",
+  "traps": [
+   "口语噪声",
+   "中文时刻"
+  ],
+  "text": "阿司匹林肠溶片晚上八点吃一片饭后",
+  "mode": "rule",
+  "got": {
+   "name": "阿司匹林肠溶片晚上八点吃一片饭后",
+   "dose": "1片",
+   "times": [
+    "20:00"
+   ],
+   "method": "饭后"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 48,
+  "cat": "语音转写",
+  "split": "dev",
+  "source": "语音转写",
+  "traps": [
+   "口语噪声",
+   "中文时刻"
+  ],
+  "text": "阿司匹林肠溶片晚上八点吃一片饭后",
+  "mode": "raw",
+  "got": {
+   "name": "阿司匹林肠溶片",
+   "dose": "1片",
+   "method": "饭后",
+   "times": [
+    "20:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 48,
+  "cat": "语音转写",
+  "split": "dev",
+  "source": "语音转写",
+  "traps": [
+   "口语噪声",
+   "中文时刻"
+  ],
+  "text": "阿司匹林肠溶片晚上八点吃一片饭后",
+  "mode": "checked",
+  "got": {
+   "name": "阿司匹林肠溶片",
+   "dose": "1片",
+   "times": [
+    "20:00"
+   ],
+   "method": "饭后",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 49,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "分时段剂量"
+  ],
+  "text": "美托洛尔早上一片晚上半片",
+  "mode": "rule",
+  "got": {
+   "name": "美托洛尔早上一片晚上半片",
+   "dose": "1片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "fab",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 49,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "分时段剂量"
+  ],
+  "text": "美托洛尔早上一片晚上半片",
+  "mode": "raw",
+  "got": {
+   "name": "美托洛尔",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 49,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "分时段剂量"
+  ],
+  "text": "美托洛尔早上一片晚上半片",
+  "mode": "checked",
+  "got": {
+   "name": "美托洛尔",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 50,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "分时段剂量",
+   "剂量单位"
+  ],
+  "text": "胰岛素早上12个单位晚上8个单位",
+  "mode": "rule",
+  "got": {
+   "name": "胰岛素早上12个单位晚上8个单位",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 50,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "分时段剂量",
+   "剂量单位"
+  ],
+  "text": "胰岛素早上12个单位晚上8个单位",
+  "mode": "raw",
+  "got": {
+   "name": "胰岛素",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 50,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "分时段剂量",
+   "剂量单位"
+  ],
+  "text": "胰岛素早上12个单位晚上8个单位",
+  "mode": "checked",
+  "got": {
+   "name": "胰岛素",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 51,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "按需",
+   "剂量范围"
+  ],
+  "text": "布洛芬疼得厉害的时候吃一到两粒",
+  "mode": "rule",
+  "got": {
+   "name": "布洛芬疼得厉害的时候吃一到两粒",
+   "dose": "2粒",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "fab",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 51,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "按需",
+   "剂量范围"
+  ],
+  "text": "布洛芬疼得厉害的时候吃一到两粒",
+  "mode": "raw",
+  "got": {
+   "name": "布洛芬",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 51,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "按需",
+   "剂量范围"
+  ],
+  "text": "布洛芬疼得厉害的时候吃一到两粒",
+  "mode": "checked",
+  "got": {
+   "name": "布洛芬",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 52,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "按需"
+  ],
+  "text": "硝酸甘油胸口疼的时候舌下含一片",
+  "mode": "rule",
+  "got": {
+   "name": "硝酸甘油胸口疼的时候舌下含一片",
+   "dose": "1片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 52,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "按需"
+  ],
+  "text": "硝酸甘油胸口疼的时候舌下含一片",
+  "mode": "raw",
+  "got": {
+   "name": "硝酸甘油",
+   "dose": "1片",
+   "method": "舌下含",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 52,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "按需"
+  ],
+  "text": "硝酸甘油胸口疼的时候舌下含一片",
+  "mode": "checked",
+  "got": {
+   "name": "硝酸甘油",
+   "dose": "1片",
+   "times": [],
+   "method": "舌下含",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 53,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "疗程",
+   "只有频次"
+  ],
+  "text": "头孢呋辛一次一粒每天两次吃七天",
+  "mode": "rule",
+  "got": {
+   "name": "头孢呋辛",
+   "dose": "1粒",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 53,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "疗程",
+   "只有频次"
+  ],
+  "text": "头孢呋辛一次一粒每天两次吃七天",
+  "mode": "raw",
+  "got": {
+   "name": "头孢呋辛",
+   "dose": "1粒",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 53,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "疗程",
+   "只有频次"
+  ],
+  "text": "头孢呋辛一次一粒每天两次吃七天",
+  "mode": "checked",
+  "got": {
+   "name": "头孢呋辛",
+   "dose": "1粒",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 54,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "隔日",
+   "中文时刻"
+  ],
+  "text": "叶酸隔一天吃一片早上八点",
+  "mode": "rule",
+  "got": {
+   "name": "叶酸隔一天吃一片早上八点",
+   "dose": "1片",
+   "times": [
+    "08:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 54,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "隔日",
+   "中文时刻"
+  ],
+  "text": "叶酸隔一天吃一片早上八点",
+  "mode": "raw",
+  "got": {
+   "name": "叶酸",
+   "dose": "1片",
+   "method": "",
+   "times": [
+    "08:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 54,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "隔日",
+   "中文时刻"
+  ],
+  "text": "叶酸隔一天吃一片早上八点",
+  "mode": "checked",
+  "got": {
+   "name": "叶酸",
+   "dose": "1片",
+   "times": [
+    "08:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 55,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "每周"
+  ],
+  "text": "阿仑膦酸钠每周一早上空腹吃一片，用一大杯温水送服",
+  "mode": "rule",
+  "got": {
+   "name": "阿仑膦酸钠每周一早上空腹吃一片",
+   "dose": "1片",
+   "times": [],
+   "method": "空腹吃一片"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 55,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "每周"
+  ],
+  "text": "阿仑膦酸钠每周一早上空腹吃一片，用一大杯温水送服",
+  "mode": "raw",
+  "got": {
+   "name": "阿仑膦酸钠",
+   "dose": "1片",
+   "method": "空腹，温水送服",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 55,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "每周"
+  ],
+  "text": "阿仑膦酸钠每周一早上空腹吃一片，用一大杯温水送服",
+  "mode": "checked",
+  "got": {
+   "name": "阿仑膦酸钠",
+   "dose": "1片",
+   "times": [],
+   "method": "",
+   "dropped": [
+    "怎么吃"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": [
+   "怎么吃"
+  ]
+ },
+ {
+  "id": 56,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "间隔推时刻"
+  ],
+  "text": "消炎药每8小时吃一次每次一粒",
+  "mode": "rule",
+  "got": {
+   "name": "消炎药每8小时吃",
+   "dose": "1粒",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 56,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "间隔推时刻"
+  ],
+  "text": "消炎药每8小时吃一次每次一粒",
+  "mode": "raw",
+  "got": {
+   "name": "消炎药",
+   "dose": "1粒",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 56,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "间隔推时刻"
+  ],
+  "text": "消炎药每8小时吃一次每次一粒",
+  "mode": "checked",
+  "got": {
+   "name": "消炎药",
+   "dose": "1粒",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 57,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "降糖药下午三点吃一片",
+  "mode": "rule",
+  "got": {
+   "name": "降糖药下午三点吃一片",
+   "dose": "1片",
+   "times": [
+    "15:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 57,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "降糖药下午三点吃一片",
+  "mode": "raw",
+  "got": {
+   "name": "降糖药",
+   "dose": "1片",
+   "method": "",
+   "times": [
+    "15:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 57,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "降糖药下午三点吃一片",
+  "mode": "checked",
+  "got": {
+   "name": "降糖药",
+   "dose": "1片",
+   "times": [
+    "15:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 58,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻",
+   "半片"
+  ],
+  "text": "安眠药晚上十点半吃半片",
+  "mode": "rule",
+  "got": {
+   "name": "安眠药晚上十点半吃半片",
+   "dose": "半片",
+   "times": [
+    "22:30"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 58,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻",
+   "半片"
+  ],
+  "text": "安眠药晚上十点半吃半片",
+  "mode": "raw",
+  "got": {
+   "name": "安眠药",
+   "dose": "半片",
+   "method": "",
+   "times": [
+    "22:30"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 58,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻",
+   "半片"
+  ],
+  "text": "安眠药晚上十点半吃半片",
+  "mode": "checked",
+  "got": {
+   "name": "安眠药",
+   "dose": "半片",
+   "times": [
+    "22:30"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 59,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "钙尔奇早上八点和晚上八点各吃一片",
+  "mode": "rule",
+  "got": {
+   "name": "钙尔奇早上八点和晚上八点各吃一片",
+   "dose": "1片",
+   "times": [
+    "08:00",
+    "20:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 59,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "钙尔奇早上八点和晚上八点各吃一片",
+  "mode": "raw",
+  "got": {
+   "name": "钙尔奇",
+   "dose": "1片",
+   "method": "",
+   "times": [
+    "08:00",
+    "20:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 59,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "钙尔奇早上八点和晚上八点各吃一片",
+  "mode": "checked",
+  "got": {
+   "name": "钙尔奇",
+   "dose": "1片",
+   "times": [
+    "08:00",
+    "20:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 60,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "二甲双胍早餐和晚餐时各一片，七点和十八点",
+  "mode": "rule",
+  "got": {
+   "name": "二甲双胍早餐和晚餐时各一片",
+   "dose": "1片",
+   "times": [
+    "07:00",
+    "18:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 60,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "二甲双胍早餐和晚餐时各一片，七点和十八点",
+  "mode": "raw",
+  "got": {
+   "name": "二甲双胍",
+   "dose": "",
+   "method": "随餐",
+   "times": [
+    "07:00",
+    "18:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 60,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "二甲双胍早餐和晚餐时各一片，七点和十八点",
+  "mode": "checked",
+  "got": {
+   "name": "二甲双胍",
+   "dose": "",
+   "times": [
+    "07:00",
+    "18:00"
+   ],
+   "method": "随餐",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 61,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "外用",
+   "没有剂量"
+  ],
+  "text": "红霉素软膏每天涂两次",
+  "mode": "rule",
+  "got": {
+   "name": "红霉素软膏",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 61,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "外用",
+   "没有剂量"
+  ],
+  "text": "红霉素软膏每天涂两次",
+  "mode": "raw",
+  "got": {
+   "name": "红霉素软膏",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 61,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "外用",
+   "没有剂量"
+  ],
+  "text": "红霉素软膏每天涂两次",
+  "mode": "checked",
+  "got": {
+   "name": "红霉素软膏",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 62,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位",
+   "只有频次"
+  ],
+  "text": "左氧氟沙星滴眼液每次一滴一天四次",
+  "mode": "rule",
+  "got": {
+   "name": "左氧氟沙星滴眼液",
+   "dose": "1滴",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 62,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位",
+   "只有频次"
+  ],
+  "text": "左氧氟沙星滴眼液每次一滴一天四次",
+  "mode": "raw",
+  "got": {
+   "name": "左氧氟沙星滴眼液",
+   "dose": "一滴",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 62,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位",
+   "只有频次"
+  ],
+  "text": "左氧氟沙星滴眼液每次一滴一天四次",
+  "mode": "checked",
+  "got": {
+   "name": "左氧氟沙星滴眼液",
+   "dose": "一滴",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 63,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "小儿止咳口服液每次10毫升一日三次饭后",
+  "mode": "rule",
+  "got": {
+   "name": "小儿止咳口服液",
+   "dose": "10毫升",
+   "times": [],
+   "method": "饭后"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 63,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "小儿止咳口服液每次10毫升一日三次饭后",
+  "mode": "raw",
+  "got": {
+   "name": "小儿止咳口服液",
+   "dose": "10毫升",
+   "method": "饭后",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 63,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "小儿止咳口服液每次10毫升一日三次饭后",
+  "mode": "checked",
+  "got": {
+   "name": "小儿止咳口服液",
+   "dose": "10毫升",
+   "times": [],
+   "method": "饭后",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 64,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "感冒灵颗粒一次一袋开水冲服",
+  "mode": "rule",
+  "got": {
+   "name": "感冒灵颗粒",
+   "dose": "1袋",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 64,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "感冒灵颗粒一次一袋开水冲服",
+  "mode": "raw",
+  "got": {
+   "name": "感冒灵颗粒",
+   "dose": "一袋",
+   "method": "开水冲服",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 64,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "感冒灵颗粒一次一袋开水冲服",
+  "mode": "checked",
+  "got": {
+   "name": "感冒灵颗粒",
+   "dose": "一袋",
+   "times": [],
+   "method": "开水冲服",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 65,
+  "cat": "药品说明书",
+  "split": "dev",
+  "source": "药品说明书",
+  "traps": [
+   "没有药名",
+   "剂量范围"
+  ],
+  "text": "用法用量：口服，一次1~2片，一日3次",
+  "mode": "rule",
+  "got": {
+   "name": "用法用量",
+   "dose": "2片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "fab",
+   "dose": "fab",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 65,
+  "cat": "药品说明书",
+  "split": "dev",
+  "source": "药品说明书",
+  "traps": [
+   "没有药名",
+   "剂量范围"
+  ],
+  "text": "用法用量：口服，一次1~2片，一日3次",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "",
+   "method": "口服",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 65,
+  "cat": "药品说明书",
+  "split": "dev",
+  "source": "药品说明书",
+  "traps": [
+   "没有药名",
+   "剂量范围"
+  ],
+  "text": "用法用量：口服，一次1~2片，一日3次",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "",
+   "times": [],
+   "method": "口服",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 66,
+  "cat": "药品说明书",
+  "split": "dev",
+  "source": "药品说明书",
+  "traps": [
+   "没有药名",
+   "多人群"
+  ],
+  "text": "成人一次2片，一日2次，饭后服用。儿童酌减。",
+  "mode": "rule",
+  "got": {
+   "name": "成人",
+   "dose": "2片",
+   "times": [],
+   "method": "饭后服用"
+  },
+  "fields": {
+   "name": "fab",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 66,
+  "cat": "药品说明书",
+  "split": "dev",
+  "source": "药品说明书",
+  "traps": [
+   "没有药名",
+   "多人群"
+  ],
+  "text": "成人一次2片，一日2次，饭后服用。儿童酌减。",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "",
+   "method": "饭后",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 66,
+  "cat": "药品说明书",
+  "split": "dev",
+  "source": "药品说明书",
+  "traps": [
+   "没有药名",
+   "多人群"
+  ],
+  "text": "成人一次2片，一日2次，饭后服用。儿童酌减。",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "",
+   "times": [],
+   "method": "饭后",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 67,
+  "cat": "药盒标签",
+  "split": "dev",
+  "source": "药盒标签",
+  "traps": [
+   "没有药名"
+  ],
+  "text": "【用法】每日1次，每次1粒，睡前服",
+  "mode": "rule",
+  "got": {
+   "name": "【用法】",
+   "dose": "1粒",
+   "times": [],
+   "method": "睡前服"
+  },
+  "fields": {
+   "name": "fab",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 67,
+  "cat": "药盒标签",
+  "split": "dev",
+  "source": "药盒标签",
+  "traps": [
+   "没有药名"
+  ],
+  "text": "【用法】每日1次，每次1粒，睡前服",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "1粒",
+   "method": "睡前",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 67,
+  "cat": "药盒标签",
+  "split": "dev",
+  "source": "药盒标签",
+  "traps": [
+   "没有药名"
+  ],
+  "text": "【用法】每日1次，每次1粒，睡前服",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "1粒",
+   "times": [],
+   "method": "睡前",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 68,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "跟上次一样吃就行",
+  "mode": "rule",
+  "got": {
+   "name": "跟上次一样吃就行",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "fab",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 68,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "跟上次一样吃就行",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 68,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "跟上次一样吃就行",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 69,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "医生说少吃点",
+  "mode": "rule",
+  "got": {
+   "name": "医生说少吃点",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "fab",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 69,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "医生说少吃点",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 69,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "医生说少吃点",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 70,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "停药"
+  ],
+  "text": "降压药先停了，不用吃了",
+  "mode": "rule",
+  "got": {
+   "name": "降压药先停了",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 70,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "停药"
+  ],
+  "text": "降压药先停了，不用吃了",
+  "mode": "raw",
+  "got": {
+   "name": "降压药",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 70,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "停药"
+  ],
+  "text": "降压药先停了，不用吃了",
+  "mode": "checked",
+  "got": {
+   "name": "降压药",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 71,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "阿司匹林以后改成晚上吃",
+  "mode": "rule",
+  "got": {
+   "name": "阿司匹林以后改成晚上吃",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 71,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "阿司匹林以后改成晚上吃",
+  "mode": "raw",
+  "got": {
+   "name": "阿司匹林",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 71,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "阿司匹林以后改成晚上吃",
+  "mode": "checked",
+  "got": {
+   "name": "阿司匹林",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 72,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "错别字"
+  ],
+  "text": "厄贝砂坦片每天早上8点吃1片",
+  "mode": "rule",
+  "got": {
+   "name": "厄贝砂坦片",
+   "dose": "1片",
+   "times": [
+    "08:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 72,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "错别字"
+  ],
+  "text": "厄贝砂坦片每天早上8点吃1片",
+  "mode": "raw",
+  "got": {
+   "name": "厄贝砂坦片",
+   "dose": "1片",
+   "method": "",
+   "times": [
+    "08:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 72,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "错别字"
+  ],
+  "text": "厄贝砂坦片每天早上8点吃1片",
+  "mode": "checked",
+  "got": {
+   "name": "厄贝砂坦片",
+   "dose": "1片",
+   "times": [
+    "08:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 73,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "英文"
+  ],
+  "text": "Metformin 500mg bid with meals",
+  "mode": "rule",
+  "got": {
+   "name": "Metformin",
+   "dose": "500mg",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 73,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "英文"
+  ],
+  "text": "Metformin 500mg bid with meals",
+  "mode": "raw",
+  "got": {
+   "name": "Metformin",
+   "dose": "500mg",
+   "method": "随餐",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 73,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "英文"
+  ],
+  "text": "Metformin 500mg bid with meals",
+  "mode": "checked",
+  "got": {
+   "name": "Metformin",
+   "dose": "500mg",
+   "times": [],
+   "method": "随餐",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 74,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "拉丁缩写"
+  ],
+  "text": "氯吡格雷 75mg po qd",
+  "mode": "rule",
+  "got": {
+   "name": "氯吡格雷",
+   "dose": "75mg",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 74,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "拉丁缩写"
+  ],
+  "text": "氯吡格雷 75mg po qd",
+  "mode": "raw",
+  "got": {
+   "name": "氯吡格雷",
+   "dose": "75mg",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 74,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "拉丁缩写"
+  ],
+  "text": "氯吡格雷 75mg po qd",
+  "mode": "checked",
+  "got": {
+   "name": "氯吡格雷",
+   "dose": "75mg",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 75,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "长句",
+   "中文时刻"
+  ],
+  "text": "我妈血压高，医生开了缬沙坦，说是每天早上吃一粒，最好固定时间，比如八点",
+  "mode": "rule",
+  "got": {
+   "name": "我妈血压高",
+   "dose": "1粒",
+   "times": [
+    "08:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "wrong",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 75,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "长句",
+   "中文时刻"
+  ],
+  "text": "我妈血压高，医生开了缬沙坦，说是每天早上吃一粒，最好固定时间，比如八点",
+  "mode": "raw",
+  "got": {
+   "name": "缬沙坦",
+   "dose": "1粒",
+   "method": "",
+   "times": [
+    "08:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 75,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "长句",
+   "中文时刻"
+  ],
+  "text": "我妈血压高，医生开了缬沙坦，说是每天早上吃一粒，最好固定时间，比如八点",
+  "mode": "checked",
+  "got": {
+   "name": "缬沙坦",
+   "dose": "1粒",
+   "times": [
+    "08:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 76,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "长句"
+  ],
+  "text": "她的甲状腺的药优甲乐，早上空腹吃，吃完半小时再吃饭，一片",
+  "mode": "rule",
+  "got": {
+   "name": "她的甲状腺的药优甲乐",
+   "dose": "1片",
+   "times": [],
+   "method": "空腹吃"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 76,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "长句"
+  ],
+  "text": "她的甲状腺的药优甲乐，早上空腹吃，吃完半小时再吃饭，一片",
+  "mode": "raw",
+  "got": {
+   "name": "优甲乐",
+   "dose": "1片",
+   "method": "空腹",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 76,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "长句"
+  ],
+  "text": "她的甲状腺的药优甲乐，早上空腹吃，吃完半小时再吃饭，一片",
+  "mode": "checked",
+  "got": {
+   "name": "优甲乐",
+   "dose": "1片",
+   "times": [],
+   "method": "空腹",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 77,
+  "cat": "语音转写",
+  "split": "dev",
+  "source": "语音转写",
+  "traps": [
+   "口语噪声",
+   "没有药名"
+  ],
+  "text": "那个那个药啊，叫什么来着，反正一次吃两片",
+  "mode": "rule",
+  "got": {
+   "name": "那个那个药啊",
+   "dose": "2片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "fab",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 77,
+  "cat": "语音转写",
+  "split": "dev",
+  "source": "语音转写",
+  "traps": [
+   "口语噪声",
+   "没有药名"
+  ],
+  "text": "那个那个药啊，叫什么来着，反正一次吃两片",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "2片",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 77,
+  "cat": "语音转写",
+  "split": "dev",
+  "source": "语音转写",
+  "traps": [
+   "口语噪声",
+   "没有药名"
+  ],
+  "text": "那个那个药啊，叫什么来着，反正一次吃两片",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "2片",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 78,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "降糖药晚上吃",
+  "mode": "rule",
+  "got": {
+   "name": "降糖药晚上吃",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 78,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "降糖药晚上吃",
+  "mode": "raw",
+  "got": {
+   "name": "降糖药",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 78,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "降糖药晚上吃",
+  "mode": "checked",
+  "got": {
+   "name": "降糖药",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 79,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时段"
+  ],
+  "text": "降脂药晚上睡前吃",
+  "mode": "rule",
+  "got": {
+   "name": "降脂药晚上睡前吃",
+   "dose": "",
+   "times": [],
+   "method": "睡前吃"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 79,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时段"
+  ],
+  "text": "降脂药晚上睡前吃",
+  "mode": "raw",
+  "got": {
+   "name": "降脂药",
+   "dose": "",
+   "method": "睡前",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 79,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时段"
+  ],
+  "text": "降脂药晚上睡前吃",
+  "mode": "checked",
+  "got": {
+   "name": "降脂药",
+   "dose": "",
+   "times": [],
+   "method": "睡前",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 80,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "维生素B1 一次两片 一日三次",
+  "mode": "rule",
+  "got": {
+   "name": "维生素B1",
+   "dose": "2片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 80,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "维生素B1 一次两片 一日三次",
+  "mode": "raw",
+  "got": {
+   "name": "维生素B1",
+   "dose": "2片",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 80,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "维生素B1 一次两片 一日三次",
+  "mode": "checked",
+  "got": {
+   "name": "维生素B1",
+   "dose": "2片",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 81,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "辛伐他汀每晚睡前20毫克",
+  "mode": "rule",
+  "got": {
+   "name": "辛伐他汀每晚睡前20毫克",
+   "dose": "20毫克",
+   "times": [],
+   "method": "睡前20毫克"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 81,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "辛伐他汀每晚睡前20毫克",
+  "mode": "raw",
+  "got": {
+   "name": "辛伐他汀",
+   "dose": "20毫克",
+   "method": "睡前",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 81,
+  "cat": "处方/说明书",
+  "split": "dev",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "辛伐他汀每晚睡前20毫克",
+  "mode": "checked",
+  "got": {
+   "name": "辛伐他汀",
+   "dose": "20毫克",
+   "times": [],
+   "method": "睡前",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 82,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "早上六点半起床后先吃左甲状腺素一片",
+  "mode": "rule",
+  "got": {
+   "name": "早上六点半起床后先吃左甲状腺素一片",
+   "dose": "1片",
+   "times": [
+    "06:30"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 82,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "早上六点半起床后先吃左甲状腺素一片",
+  "mode": "raw",
+  "got": {
+   "name": "左甲状腺素",
+   "dose": "1片",
+   "method": "",
+   "times": [
+    "06:30"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 82,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "早上六点半起床后先吃左甲状腺素一片",
+  "mode": "checked",
+  "got": {
+   "name": "左甲状腺素",
+   "dose": "1片",
+   "times": [
+    "06:30"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 83,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "剂量单位",
+   "中文时刻"
+  ],
+  "text": "晚上九点钟胰岛素打8个单位",
+  "mode": "rule",
+  "got": {
+   "name": "晚上九点钟胰岛素打8个单位",
+   "dose": "",
+   "times": [
+    "21:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 83,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "剂量单位",
+   "中文时刻"
+  ],
+  "text": "晚上九点钟胰岛素打8个单位",
+  "mode": "raw",
+  "got": {
+   "name": "胰岛素",
+   "dose": "8个单位",
+   "method": "",
+   "times": [
+    "21:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 83,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "剂量单位",
+   "中文时刻"
+  ],
+  "text": "晚上九点钟胰岛素打8个单位",
+  "mode": "checked",
+  "got": {
+   "name": "胰岛素",
+   "dose": "8个单位",
+   "times": [
+    "21:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 84,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "剂量单位",
+   "只有频次"
+  ],
+  "text": "妈妈的眼药水每天滴三次每次两滴",
+  "mode": "rule",
+  "got": {
+   "name": "妈妈的眼药水",
+   "dose": "2滴",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 84,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "剂量单位",
+   "只有频次"
+  ],
+  "text": "妈妈的眼药水每天滴三次每次两滴",
+  "mode": "raw",
+  "got": {
+   "name": "眼药水",
+   "dose": "2滴",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 84,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "剂量单位",
+   "只有频次"
+  ],
+  "text": "妈妈的眼药水每天滴三次每次两滴",
+  "mode": "checked",
+  "got": {
+   "name": "眼药水",
+   "dose": "2滴",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 85,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时间随意"
+  ],
+  "text": "鱼油一天一粒随便什么时候吃",
+  "mode": "rule",
+  "got": {
+   "name": "鱼油一天一粒随便什么时候吃",
+   "dose": "1粒",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 85,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时间随意"
+  ],
+  "text": "鱼油一天一粒随便什么时候吃",
+  "mode": "raw",
+  "got": {
+   "name": "鱼油",
+   "dose": "1粒",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 85,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时间随意"
+  ],
+  "text": "鱼油一天一粒随便什么时候吃",
+  "mode": "checked",
+  "got": {
+   "name": "鱼油",
+   "dose": "1粒",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 86,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "条件用药",
+   "剂量单位"
+  ],
+  "text": "地高辛0.125mg每日一次，心率低于60不要吃",
+  "mode": "rule",
+  "got": {
+   "name": "地高辛0.125mg",
+   "dose": "125mg",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "wrong",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 86,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "条件用药",
+   "剂量单位"
+  ],
+  "text": "地高辛0.125mg每日一次，心率低于60不要吃",
+  "mode": "raw",
+  "got": {
+   "name": "地高辛",
+   "dose": "0.125mg",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 86,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "条件用药",
+   "剂量单位"
+  ],
+  "text": "地高辛0.125mg每日一次，心率低于60不要吃",
+  "mode": "checked",
+  "got": {
+   "name": "地高辛",
+   "dose": "0.125mg",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 87,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "剂量未说"
+  ],
+  "text": "华法林每天晚上八点吃，剂量按医生最新单子来",
+  "mode": "rule",
+  "got": {
+   "name": "华法林",
+   "dose": "",
+   "times": [
+    "20:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 87,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "剂量未说"
+  ],
+  "text": "华法林每天晚上八点吃，剂量按医生最新单子来",
+  "mode": "raw",
+  "got": {
+   "name": "华法林",
+   "dose": "",
+   "method": "",
+   "times": [
+    "20:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 87,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "剂量未说"
+  ],
+  "text": "华法林每天晚上八点吃，剂量按医生最新单子来",
+  "mode": "checked",
+  "got": {
+   "name": "华法林",
+   "dose": "",
+   "times": [
+    "20:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 88,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "剂量递减"
+  ],
+  "text": "泼尼松第一周每天两片，第二周每天一片",
+  "mode": "rule",
+  "got": {
+   "name": "泼尼松第一周",
+   "dose": "2片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "fab",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 88,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "剂量递减"
+  ],
+  "text": "泼尼松第一周每天两片，第二周每天一片",
+  "mode": "raw",
+  "got": {
+   "name": "泼尼松",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 88,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "剂量递减"
+  ],
+  "text": "泼尼松第一周每天两片，第二周每天一片",
+  "mode": "checked",
+  "got": {
+   "name": "泼尼松",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 89,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "泮托拉唑早饭前半小时吃一粒",
+  "mode": "rule",
+  "got": {
+   "name": "泮托拉唑早饭前半小时吃一粒",
+   "dose": "1粒",
+   "times": [],
+   "method": "饭前半小时吃一粒"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 89,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "泮托拉唑早饭前半小时吃一粒",
+  "mode": "raw",
+  "got": {
+   "name": "泮托拉唑",
+   "dose": "一粒",
+   "method": "饭前",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 89,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "常规"
+  ],
+  "text": "泮托拉唑早饭前半小时吃一粒",
+  "mode": "checked",
+  "got": {
+   "name": "泮托拉唑",
+   "dose": "一粒",
+   "times": [],
+   "method": "饭前",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 90,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "这是新开的药，叫瑞舒伐他汀，晚上吃，一次一片",
+  "mode": "rule",
+  "got": {
+   "name": "新开的药",
+   "dose": "1片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "wrong",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 90,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "这是新开的药，叫瑞舒伐他汀，晚上吃，一次一片",
+  "mode": "raw",
+  "got": {
+   "name": "瑞舒伐他汀",
+   "dose": "1片",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 90,
+  "cat": "子女口述",
+  "split": "dev",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "这是新开的药，叫瑞舒伐他汀，晚上吃，一次一片",
+  "mode": "checked",
+  "got": {
+   "name": "瑞舒伐他汀",
+   "dose": "1片",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 91,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "坎地沙坦酯片 8mg 每日一次",
+  "mode": "rule",
+  "got": {
+   "name": "坎地沙坦酯片",
+   "dose": "8mg",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 91,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "坎地沙坦酯片 8mg 每日一次",
+  "mode": "raw",
+  "got": {
+   "name": "坎地沙坦酯片",
+   "dose": "8mg",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 91,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "坎地沙坦酯片 8mg 每日一次",
+  "mode": "checked",
+  "got": {
+   "name": "坎地沙坦酯片",
+   "dose": "8mg",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 92,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "模糊时刻"
+  ],
+  "text": "降糖药中午吃饭的时候吃一片，大概十二点半",
+  "mode": "rule",
+  "got": {
+   "name": "降糖药中午吃饭的时候吃一片",
+   "dose": "1片",
+   "times": [
+    "12:30"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 92,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "模糊时刻"
+  ],
+  "text": "降糖药中午吃饭的时候吃一片，大概十二点半",
+  "mode": "raw",
+  "got": {
+   "name": "降糖药",
+   "dose": "1片",
+   "method": "随餐",
+   "times": [
+    "12:30"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 92,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "模糊时刻"
+  ],
+  "text": "降糖药中午吃饭的时候吃一片，大概十二点半",
+  "mode": "checked",
+  "got": {
+   "name": "降糖药",
+   "dose": "1片",
+   "times": [
+    "12:30"
+   ],
+   "method": "随餐",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 93,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "钙片晚上吃",
+  "mode": "rule",
+  "got": {
+   "name": "钙片晚上吃",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 93,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "钙片晚上吃",
+  "mode": "raw",
+  "got": {
+   "name": "钙片",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 93,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "钙片晚上吃",
+  "mode": "checked",
+  "got": {
+   "name": "钙片",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 94,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "格列齐德缓释片 30mg 早餐时服",
+  "mode": "rule",
+  "got": {
+   "name": "格列齐德缓释片",
+   "dose": "30mg",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 94,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "格列齐德缓释片 30mg 早餐时服",
+  "mode": "raw",
+  "got": {
+   "name": "格列齐德缓释片",
+   "dose": "30mg",
+   "method": "随餐",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 94,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "格列齐德缓释片 30mg 早餐时服",
+  "mode": "checked",
+  "got": {
+   "name": "格列齐德缓释片",
+   "dose": "30mg",
+   "times": [],
+   "method": "随餐",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 95,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "按需"
+  ],
+  "text": "抗过敏的氯雷他定，痒的时候吃一片",
+  "mode": "rule",
+  "got": {
+   "name": "抗过敏的氯雷他定",
+   "dose": "1片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 95,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "按需"
+  ],
+  "text": "抗过敏的氯雷他定，痒的时候吃一片",
+  "mode": "raw",
+  "got": {
+   "name": "氯雷他定",
+   "dose": "1片",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 95,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "按需"
+  ],
+  "text": "抗过敏的氯雷他定，痒的时候吃一片",
+  "mode": "checked",
+  "got": {
+   "name": "氯雷他定",
+   "dose": "1片",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 96,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻",
+   "否定"
+  ],
+  "text": "利尿的呋塞米早上八点吃一片，下午别吃",
+  "mode": "rule",
+  "got": {
+   "name": "利尿的呋塞米早上八点吃一片",
+   "dose": "1片",
+   "times": [
+    "08:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 96,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻",
+   "否定"
+  ],
+  "text": "利尿的呋塞米早上八点吃一片，下午别吃",
+  "mode": "raw",
+  "got": {
+   "name": "呋塞米",
+   "dose": "1片",
+   "method": "",
+   "times": [
+    "08:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 96,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻",
+   "否定"
+  ],
+  "text": "利尿的呋塞米早上八点吃一片，下午别吃",
+  "mode": "checked",
+  "got": {
+   "name": "呋塞米",
+   "dose": "1片",
+   "times": [
+    "08:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 97,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "分时段剂量"
+  ],
+  "text": "胰岛素早餐前打10个单位、晚餐前打6个单位",
+  "mode": "rule",
+  "got": {
+   "name": "胰岛素早餐前打10个单位、晚餐前打6个单位",
+   "dose": "",
+   "times": [],
+   "method": "餐前打10个单位、晚餐前打6个单位"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 97,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "分时段剂量"
+  ],
+  "text": "胰岛素早餐前打10个单位、晚餐前打6个单位",
+  "mode": "raw",
+  "got": {
+   "name": "胰岛素",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 97,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "分时段剂量"
+  ],
+  "text": "胰岛素早餐前打10个单位、晚餐前打6个单位",
+  "mode": "checked",
+  "got": {
+   "name": "胰岛素",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 98,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "螺内酯一次20mg一日两次",
+  "mode": "rule",
+  "got": {
+   "name": "螺内酯",
+   "dose": "20mg",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 98,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "螺内酯一次20mg一日两次",
+  "mode": "raw",
+  "got": {
+   "name": "螺内酯",
+   "dose": "20mg",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 98,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "螺内酯一次20mg一日两次",
+  "mode": "checked",
+  "got": {
+   "name": "螺内酯",
+   "dose": "20mg",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 99,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "按老规矩吃",
+  "mode": "rule",
+  "got": {
+   "name": "按老规矩吃",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "fab",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 99,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "按老规矩吃",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 99,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "按老规矩吃",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 100,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "速效救心丸一次4粒，急性发作时舌下含服",
+  "mode": "rule",
+  "got": {
+   "name": "速效救心丸",
+   "dose": "4粒",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 100,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "速效救心丸一次4粒，急性发作时舌下含服",
+  "mode": "raw",
+  "got": {
+   "name": "速效救心丸",
+   "dose": "4粒",
+   "method": "舌下含服",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 100,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "速效救心丸一次4粒，急性发作时舌下含服",
+  "mode": "checked",
+  "got": {
+   "name": "速效救心丸",
+   "dose": "4粒",
+   "times": [],
+   "method": "舌下含服",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 101,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "分时段剂量",
+   "多个时刻"
+  ],
+  "text": "早上七点吃降压药两片，晚上七点吃一片",
+  "mode": "rule",
+  "got": {
+   "name": "早上七点吃降压药两片",
+   "dose": "2片",
+   "times": [
+    "07:00",
+    "19:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "fab",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 101,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "分时段剂量",
+   "多个时刻"
+  ],
+  "text": "早上七点吃降压药两片，晚上七点吃一片",
+  "mode": "raw",
+  "got": {
+   "name": "降压药",
+   "dose": "",
+   "method": "",
+   "times": [
+    "07:00",
+    "19:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 101,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "分时段剂量",
+   "多个时刻"
+  ],
+  "text": "早上七点吃降压药两片，晚上七点吃一片",
+  "mode": "checked",
+  "got": {
+   "name": "降压药",
+   "dose": "",
+   "times": [
+    "07:00",
+    "19:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 102,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "阿司匹林每天一片，饭后",
+  "mode": "rule",
+  "got": {
+   "name": "阿司匹林",
+   "dose": "1片",
+   "times": [],
+   "method": "饭后"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 102,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "阿司匹林每天一片，饭后",
+  "mode": "raw",
+  "got": {
+   "name": "阿司匹林",
+   "dose": "1片",
+   "method": "饭后",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 102,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "阿司匹林每天一片，饭后",
+  "mode": "checked",
+  "got": {
+   "name": "阿司匹林",
+   "dose": "1片",
+   "times": [],
+   "method": "饭后",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 103,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位",
+   "外用"
+  ],
+  "text": "布地奈德吸入剂一天两次每次一吸",
+  "mode": "rule",
+  "got": {
+   "name": "布地奈德吸入剂一天两次",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 103,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位",
+   "外用"
+  ],
+  "text": "布地奈德吸入剂一天两次每次一吸",
+  "mode": "raw",
+  "got": {
+   "name": "布地奈德吸入剂",
+   "dose": "一吸",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 103,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "剂量单位",
+   "外用"
+  ],
+  "text": "布地奈德吸入剂一天两次每次一吸",
+  "mode": "checked",
+  "got": {
+   "name": "布地奈德吸入剂",
+   "dose": "一吸",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 104,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "左氨氯地平 2.5mg 早上",
+  "mode": "rule",
+  "got": {
+   "name": "左氨氯地平",
+   "dose": "5mg",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "wrong",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 104,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "左氨氯地平 2.5mg 早上",
+  "mode": "raw",
+  "got": {
+   "name": "左氨氯地平",
+   "dose": "2.5mg",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 104,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "时段不是吃法"
+  ],
+  "text": "左氨氯地平 2.5mg 早上",
+  "mode": "checked",
+  "got": {
+   "name": "左氨氯地平",
+   "dose": "2.5mg",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 105,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "口语药名"
+  ],
+  "text": "那个治前列腺的药，晚上睡觉前吃一粒",
+  "mode": "rule",
+  "got": {
+   "name": "那个治前列腺的药",
+   "dose": "1粒",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 105,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "口语药名"
+  ],
+  "text": "那个治前列腺的药，晚上睡觉前吃一粒",
+  "mode": "raw",
+  "got": {
+   "name": "治前列腺的药",
+   "dose": "一粒",
+   "method": "睡前",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 105,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "口语药名"
+  ],
+  "text": "那个治前列腺的药，晚上睡觉前吃一粒",
+  "mode": "checked",
+  "got": {
+   "name": "治前列腺的药",
+   "dose": "一粒",
+   "times": [],
+   "method": "",
+   "dropped": [
+    "怎么吃"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": [
+   "怎么吃"
+  ]
+ },
+ {
+  "id": 106,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "英文"
+  ],
+  "text": "Atorvastatin 20 mg at bedtime",
+  "mode": "rule",
+  "got": {
+   "name": "Atorvastatin",
+   "dose": "20mg",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 106,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "英文"
+  ],
+  "text": "Atorvastatin 20 mg at bedtime",
+  "mode": "raw",
+  "got": {
+   "name": "Atorvastatin",
+   "dose": "20 mg",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 106,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "英文"
+  ],
+  "text": "Atorvastatin 20 mg at bedtime",
+  "mode": "checked",
+  "got": {
+   "name": "Atorvastatin",
+   "dose": "20 mg",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 107,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "一天三顿饭后各吃一片胃药",
+  "mode": "rule",
+  "got": {
+   "name": "一天三顿饭后各吃一片胃药",
+   "dose": "1片",
+   "times": [],
+   "method": "饭后各吃一片胃药"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 107,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "一天三顿饭后各吃一片胃药",
+  "mode": "raw",
+  "got": {
+   "name": "胃药",
+   "dose": "1片",
+   "method": "饭后",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 107,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "一天三顿饭后各吃一片胃药",
+  "mode": "checked",
+  "got": {
+   "name": "胃药",
+   "dose": "1片",
+   "times": [],
+   "method": "饭后",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 108,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "降脂药 每晚 九点",
+  "mode": "rule",
+  "got": {
+   "name": "降脂药",
+   "dose": "",
+   "times": [
+    "09:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "wrong",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 108,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "降脂药 每晚 九点",
+  "mode": "raw",
+  "got": {
+   "name": "降脂药",
+   "dose": "",
+   "method": "",
+   "times": [
+    "21:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 108,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "降脂药 每晚 九点",
+  "mode": "checked",
+  "got": {
+   "name": "降脂药",
+   "dose": "",
+   "times": [
+    "21:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 109,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "说不清",
+   "疗程"
+  ],
+  "text": "医生说这个药吃到月底就停",
+  "mode": "rule",
+  "got": {
+   "name": "医生说这个药吃到月底就停",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "fab",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 109,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "说不清",
+   "疗程"
+  ],
+  "text": "医生说这个药吃到月底就停",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 109,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "说不清",
+   "疗程"
+  ],
+  "text": "医生说这个药吃到月底就停",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 110,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "甲钴胺片一次一片一天三次",
+  "mode": "rule",
+  "got": {
+   "name": "甲钴胺片",
+   "dose": "1片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 110,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "甲钴胺片一次一片一天三次",
+  "mode": "raw",
+  "got": {
+   "name": "甲钴胺片",
+   "dose": "1片",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 110,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "甲钴胺片一次一片一天三次",
+  "mode": "checked",
+  "got": {
+   "name": "甲钴胺片",
+   "dose": "1片",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 111,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻",
+   "剂量单位"
+  ],
+  "text": "下午四点吃一包蒙脱石散，用温水冲开",
+  "mode": "rule",
+  "got": {
+   "name": "下午四点吃一包蒙脱石散",
+   "dose": "",
+   "times": [
+    "16:00"
+   ],
+   "method": "用温水冲开"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 111,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻",
+   "剂量单位"
+  ],
+  "text": "下午四点吃一包蒙脱石散，用温水冲开",
+  "mode": "raw",
+  "got": {
+   "name": "蒙脱石散",
+   "dose": "一包",
+   "method": "温水冲开",
+   "times": [
+    "16:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 111,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻",
+   "剂量单位"
+  ],
+  "text": "下午四点吃一包蒙脱石散，用温水冲开",
+  "mode": "checked",
+  "got": {
+   "name": "蒙脱石散",
+   "dose": "一包",
+   "times": [
+    "16:00"
+   ],
+   "method": "温水冲开",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 112,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "早晚各一片的那个降糖药",
+  "mode": "rule",
+  "got": {
+   "name": "早晚各一片的那个降糖药",
+   "dose": "1片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 112,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "早晚各一片的那个降糖药",
+  "mode": "raw",
+  "got": {
+   "name": "降糖药",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 112,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "只有频次"
+  ],
+  "text": "早晚各一片的那个降糖药",
+  "mode": "checked",
+  "got": {
+   "name": "降糖药",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 113,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "每天早上空腹喝一支口服液",
+  "mode": "rule",
+  "got": {
+   "name": "每天早上空腹喝一支口服液",
+   "dose": "",
+   "times": [],
+   "method": "空腹喝一支口服液"
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 113,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "每天早上空腹喝一支口服液",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "",
+   "method": "空腹",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 113,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "剂量单位"
+  ],
+  "text": "每天早上空腹喝一支口服液",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "",
+   "times": [],
+   "method": "空腹",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 114,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "拉丁缩写",
+   "时段不是吃法"
+  ],
+  "text": "氢氯噻嗪 25mg qd 晨服",
+  "mode": "rule",
+  "got": {
+   "name": "氢氯噻嗪",
+   "dose": "25mg",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 114,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "拉丁缩写",
+   "时段不是吃法"
+  ],
+  "text": "氢氯噻嗪 25mg qd 晨服",
+  "mode": "raw",
+  "got": {
+   "name": "氢氯噻嗪",
+   "dose": "25mg",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 114,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "拉丁缩写",
+   "时段不是吃法"
+  ],
+  "text": "氢氯噻嗪 25mg qd 晨服",
+  "mode": "checked",
+  "got": {
+   "name": "氢氯噻嗪",
+   "dose": "25mg",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 115,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻",
+   "半片",
+   "口语药名"
+  ],
+  "text": "这个降压的早上八点和下午两点各吃半片",
+  "mode": "rule",
+  "got": {
+   "name": "这个降压的早上八点和下午两点各吃半片",
+   "dose": "半片",
+   "times": [
+    "08:00",
+    "14:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 115,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻",
+   "半片",
+   "口语药名"
+  ],
+  "text": "这个降压的早上八点和下午两点各吃半片",
+  "mode": "raw",
+  "got": {
+   "name": "降压的",
+   "dose": "半片",
+   "method": "",
+   "times": [
+    "08:00",
+    "14:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 115,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "多个时刻",
+   "半片",
+   "口语药名"
+  ],
+  "text": "这个降压的早上八点和下午两点各吃半片",
+  "mode": "checked",
+  "got": {
+   "name": "降压的",
+   "dose": "半片",
+   "times": [
+    "08:00",
+    "14:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 116,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "长句"
+  ],
+  "text": "单硝酸异山梨酯缓释片 一次一片 每天早上 整片吞服 不能嚼",
+  "mode": "rule",
+  "got": {
+   "name": "单硝酸异山梨酯缓释片",
+   "dose": "1片",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 116,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "长句"
+  ],
+  "text": "单硝酸异山梨酯缓释片 一次一片 每天早上 整片吞服 不能嚼",
+  "mode": "raw",
+  "got": {
+   "name": "单硝酸异山梨酯缓释片",
+   "dose": "1片",
+   "method": "整片吞服",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 116,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "长句"
+  ],
+  "text": "单硝酸异山梨酯缓释片 一次一片 每天早上 整片吞服 不能嚼",
+  "mode": "checked",
+  "got": {
+   "name": "单硝酸异山梨酯缓释片",
+   "dose": "1片",
+   "times": [],
+   "method": "整片吞服",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 117,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "按需"
+  ],
+  "text": "让她感冒了就吃两粒感冒药",
+  "mode": "rule",
+  "got": {
+   "name": "让她感冒了就吃两粒感冒药",
+   "dose": "2粒",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 117,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "按需"
+  ],
+  "text": "让她感冒了就吃两粒感冒药",
+  "mode": "raw",
+  "got": {
+   "name": "感冒药",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 117,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "按需"
+  ],
+  "text": "让她感冒了就吃两粒感冒药",
+  "mode": "checked",
+  "got": {
+   "name": "感冒药",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "miss",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 118,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "依那普利一次10毫克，一天两次，八点和二十点",
+  "mode": "rule",
+  "got": {
+   "name": "依那普利",
+   "dose": "10毫克",
+   "times": [
+    "08:00",
+    "20:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 118,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "依那普利一次10毫克，一天两次，八点和二十点",
+  "mode": "raw",
+  "got": {
+   "name": "依那普利",
+   "dose": "10毫克",
+   "method": "",
+   "times": [
+    "08:00",
+    "20:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 118,
+  "cat": "处方/说明书",
+  "split": "holdout",
+  "source": "处方/说明书",
+  "traps": [
+   "多个时刻"
+  ],
+  "text": "依那普利一次10毫克，一天两次，八点和二十点",
+  "mode": "checked",
+  "got": {
+   "name": "依那普利",
+   "dose": "10毫克",
+   "times": [
+    "08:00",
+    "20:00"
+   ],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 119,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "她说药吃完了，还没去开",
+  "mode": "rule",
+  "got": {
+   "name": "她说药吃完了",
+   "dose": "",
+   "times": [],
+   "method": ""
+  },
+  "fields": {
+   "name": "fab",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 119,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "她说药吃完了，还没去开",
+  "mode": "raw",
+  "got": {
+   "name": "",
+   "dose": "",
+   "method": "",
+   "times": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 119,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "说不清"
+  ],
+  "text": "她说药吃完了，还没去开",
+  "mode": "checked",
+  "got": {
+   "name": "",
+   "dose": "",
+   "times": [],
+   "method": "",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 120,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "降糖药，一次吃两片，跟饭一起吃，中午十二点",
+  "mode": "rule",
+  "got": {
+   "name": "降糖药",
+   "dose": "2片",
+   "times": [
+    "12:00"
+   ],
+   "method": ""
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "miss"
+  },
+  "allOk": false,
+  "dropped": []
+ },
+ {
+  "id": 120,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "降糖药，一次吃两片，跟饭一起吃，中午十二点",
+  "mode": "raw",
+  "got": {
+   "name": "降糖药",
+   "dose": "两片",
+   "method": "随餐",
+   "times": [
+    "12:00"
+   ]
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ },
+ {
+  "id": 120,
+  "cat": "子女口述",
+  "split": "holdout",
+  "source": "子女口述",
+  "traps": [
+   "中文时刻"
+  ],
+  "text": "降糖药，一次吃两片，跟饭一起吃，中午十二点",
+  "mode": "checked",
+  "got": {
+   "name": "降糖药",
+   "dose": "两片",
+   "times": [
+    "12:00"
+   ],
+   "method": "随餐",
+   "dropped": []
+  },
+  "fields": {
+   "name": "ok",
+   "dose": "ok",
+   "times": "ok",
+   "method": "ok"
+  },
+  "allOk": true,
+  "dropped": []
+ }
+]

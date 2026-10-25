@@ -93,6 +93,19 @@ test('剂量写成中文数字（一片、半片）时同样能核对通过', ()
   assert.deepEqual([r.dose, r.times, r.dropped], ['一片', ['08:00'], []]);
   assert.equal(D.groundCheck('安眠药睡前吃半片', { dose: '0.5片', evidence: { dose: '半片' } }).dose, '0.5片');
 });
+test('只说时段的"吃法"（早上吃、早晨服用、晨服）被去掉，真正的吃法保留', () => {
+  const g = (t, m) => D.groundCheck(t, { method: m, evidence: { method: m } }).method;
+  assert.equal(g('降压药两片，早上吃', '早上吃'), '');
+  assert.equal(g('硝苯地平 30mg 每日一次 早晨服用', '早晨服用'), '');
+  assert.equal(g('氢氯噻嗪 25mg qd 晨服', '晨服'), '');
+  assert.equal(g('降糖药晚饭时吃一片', '晚饭时吃'), '晚饭时吃');
+  assert.equal(g('降脂药晚上睡前吃', '睡前'), '睡前');
+});
+test('剂量给的是范围（1~2片、一到两粒）时去掉，留给子女决定', () => {
+  assert.equal(D.groundCheck('一次1~2片，一日3次', { dose: '1~2片', evidence: { dose: '一次1~2片' } }).dose, '');
+  assert.equal(D.groundCheck('布洛芬吃一到两粒', { dose: '1-2粒', evidence: { dose: '一到两粒' } }).dose, '');
+  assert.equal(D.groundCheck('阿莫西林一次2粒', { dose: '2粒', evidence: { dose: '一次2粒' } }).dose, '2粒');
+});
 test('依据不是原文里的话（模型自己编的）时，规则层去掉', () => {
   const r = D.groundCheck('降压药早晚各一次', { name: '降压药', dose: '1片', times: ['08:00', '20:00'], method: '',
     evidence: { name: '降压药', dose: '每次1片', times: ['早上8点', '晚上8点'] } });

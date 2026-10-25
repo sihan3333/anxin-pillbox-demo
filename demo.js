@@ -275,9 +275,9 @@ function rxPrompt(text) {
   return '你在帮子女把医嘱、药盒说明或口头交代整理成用药表单。只抽取原话里明确写了的内容，没写的字段一律留空，不要根据常识或药名推测。\n\n' +
     '字段：\n' +
     '- name：药名（原话里的叫法）\n' +
-    '- dose：每次吃多少，数字+单位，如 "1片" "2粒" "半片" "5mg"；只写了一天总量、没写每次多少时留空\n' +
+    '- dose：每次吃多少，数字+单位，如 "1片" "2粒" "半片" "5mg"；处方里"规格 + qd/bid/tid"的写法，这个规格就是每次剂量；"早晚各一片" "每次一片"就是 1 片；说明书写"成人一次2片"取成人剂量；只写了一天总量、给的是范围（一次1~2片、一到两粒）、不同时段剂量不同（早上一片晚上半片）时才留空\n' +
     '- times：具体几点吃，24 小时制 "HH:MM" 数组；只说了"一日三次""早晚各一次""饭后"而没说几点时，留空数组，不要自己定时间\n' +
-    '- method：怎么吃，如 "饭后" "睡前用温水送服" "空腹"；没写就留空\n' +
+    '- method：怎么吃，如 "饭前" "饭后" "随餐" "睡前" "空腹" "温水送服" "舌下含服"；"吃饭时" "餐时" "跟饭一起"算随餐，要填；"睡前" "睡前服"是吃法，要填；"早上吃" "晚上吃" "早晨服用" "晨服" "qn" 这类只说时段的不是吃法，留空；没写就留空\n' +
     '- evidence：每个非空字段对应的原文片段，必须一字不差地从原话里复制，如 {"name":"降脂药","dose":"每次一片","times":["晚上九点"],"method":"睡前用温水送服"}\n\n' +
     '只输出 JSON：{"name":"","dose":"","times":[],"method":"","evidence":{}}\n\n原话：' + text;
 }
@@ -306,7 +306,9 @@ function groundCheck(text, raw) {
   if (dose) {
     // the model may write the dose as "1片" or "一片" — read the number either way, then it must match the quoted text
     const said = nums(ev.dose), mine = [...nums(dose)];
-    if (inText(ev.dose) && mine.length && mine.every(v => said.has(v))) out.dose = dose; else dropped.push('每次吃多少');
+    // a range ("1~2片""一到两粒") is not a single dose — leave it for the family to decide
+    const range = /\d\s*[~～\-－至到或]\s*\d|[一二两三四五六七八九十]\s*[到至或]\s*[一二两三四五六七八九十]/.test(dose + ' ' + (ev.dose || ''));
+    if (inText(ev.dose) && mine.length && mine.every(v => said.has(v)) && !range) out.dose = dose; else dropped.push('每次吃多少');
   }
   const times = Array.isArray(raw && raw.times) ? raw.times.filter(t => /^([01]?\d|2[0-3]):[0-5]\d$/.test(t)) : [];
   if (times.length) {
@@ -317,7 +319,9 @@ function groundCheck(text, raw) {
     out.times = [...new Set(ok.map(t => t.padStart(5, '0')))].sort();
     if (ok.length < times.length) dropped.push('具体几点');
   }
-  if (method) { if (inText(ev.method)) out.method = method; else dropped.push('怎么吃'); }
+  // "早上吃""早晨服用""晨服"只是时段，不是吃法
+  const timeOnly = s => norm(s).replace(/每天|每日|每晚|每早|早上|早晨|晨|上午|中午|下午|晚上|晚间|夜里|夜间|服用|吃|服|用/g, '') === '';
+  if (method) { if (inText(ev.method) && !timeOnly(method)) out.method = method; else dropped.push('怎么吃'); }
   return { ...out, dropped };
 }
 function voiceInput() {

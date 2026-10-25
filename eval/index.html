@@ -48,7 +48,7 @@ iframe{position:absolute;width:1px;height:1px;left:-9999px;border:0;}
     <button id="download" disabled>下载结果 JSON</button>
     <span class="status" id="status">准备中…</span>
   </div>
-  <div class="notice">这 40 条是开发者编写的种子用例，对外引用前应补充真实的医嘱或药盒说明。同一次 DeepSeek 返回的结果，分别按「原始输出」和「经过规则核对」两种方式计分。</div>
+  <div class="notice">评测集 v2 共 120 条：seed 40、dev 50、holdout 30，均为开发者按真实处方、说明书和子女口述写法编写，对外引用前应补充真实医嘱。同一次 DeepSeek 返回的结果，分别按「原始输出」和「经过规则核对」两种方式计分。完整分析见 <a href="report.html">数据分析报告</a>。</div>
 
   <h2>总体</h2>
   <div class="card"><table><thead><tr><th>方式</th><th>4 个字段全对</th><th>字段准确率</th><th>编造</th><th>填错</th><th>漏填</th></tr></thead><tbody id="summary"></tbody></table></div>
@@ -84,7 +84,13 @@ iframe{position:absolute;width:1px;height:1px;left:-9999px;border:0;}
     var mustEmpty = f==='times' ? !exp.length : !exp;
     if(mustEmpty) return empty ? 'ok' : 'fab';
     if(empty) return optional ? 'ok' : 'miss';
-    if(f==='name' || f==='method') return exp.some(function(k){ return String(got).indexOf(k) >= 0; }) ? 'ok' : 'wrong';
+    if(f==='method'){
+      // 同义的吃法算对：吃饭时 / 餐时 / 跟饭一起 都是"随餐"
+      var MEAL = ['随餐','吃饭','饭时','餐时','跟饭','和饭','餐中','进餐'], g = String(got);
+      var meal = function(s){ return MEAL.some(function(k){ return String(s).indexOf(k) >= 0; }); };
+      return exp.some(function(k){ return g.indexOf(k) >= 0; }) || (exp.some(meal) && meal(g)) ? 'ok' : 'wrong';
+    }
+    if(f==='name') return exp.some(function(k){ return String(got).indexOf(k) >= 0; }) ? 'ok' : 'wrong';
     if(f==='dose') return normDose(got)===normDose(exp) ? 'ok' : 'wrong';
     return got.slice().sort().join(',')===exp.slice().sort().join(',') ? 'ok' : 'wrong';
   }
@@ -97,7 +103,7 @@ iframe{position:absolute;width:1px;height:1px;left:-9999px;border:0;}
   function score(c, mode, got){
     var fields = {}, ok = 0;
     FIELDS.forEach(function(f){ var r = judgeField(c, f[0], got[f[0]]); fields[f[0]] = r; if(r==='ok') ok++; });
-    return {id:c.id, cat:c.cat, text:c.text, mode:mode, got:got, fields:fields, allOk: ok===FIELDS.length, dropped:got.dropped||[]};
+    return {id:c.id, cat:c.cat, split:c.split||'seed', source:c.source||c.cat, traps:c.traps||[], text:c.text, mode:mode, got:got, fields:fields, allOk: ok===FIELDS.length, dropped:got.dropped||[]};
   }
 
   function run(){
@@ -110,7 +116,7 @@ iframe{position:absolute;width:1px;height:1px;left:-9999px;border:0;}
       rows.push(score(c, 'rule', W.aiParse(c.text)));
       W.llmParse(c.text).then(function(raw){
         rows.push(score(c, 'raw', fromRaw(raw)));
-        rows.push(score(c, 'checked', W.groundCheck(c.text, raw)));
+        var ck = score(c, 'checked', W.groundCheck(c.text, raw)); ck.raw = raw; rows.push(ck);
       }).catch(function(e){
         var none = {name:'', dose:'', times:[], method:'', error:String(e)};
         rows.push(score(c, 'raw', none)); rows.push(score(c, 'checked', none));
@@ -164,7 +170,7 @@ iframe{position:absolute;width:1px;height:1px;left:-9999px;border:0;}
     var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'rx-eval-'+new Date().toISOString().slice(0,10)+'.json'; a.click();
   });
   Promise.all([
-    fetch('rx_cases.json?v='+Date.now()).then(function(r){ return r.json(); }),
+    fetch((/[?&]set=v1/.test(location.search) ? 'rx_cases.json' : 'rx_cases_v2.json')+'?v='+Date.now()).then(function(r){ return r.json(); }),
     new Promise(function(resolve){
       var t = setInterval(function(){ var w = $('app').contentWindow; if(w && w.groundCheck && w.llmParse){ clearInterval(t); resolve(w); } }, 100);
     })
