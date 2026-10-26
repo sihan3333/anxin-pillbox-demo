@@ -27,6 +27,7 @@ export default {
       status, headers: { ...cors, 'Content-Type': 'application/json; charset=utf-8' },
     });
     if (request.method === 'OPTIONS') return new Response(null, { headers: cors });
+    if (request.method === 'GET') return statusPage(env);
     if (request.method !== 'POST') return reply(405, { error: 'method_not_allowed' });
     if (!allowed.includes(origin)) return reply(403, { error: 'origin_not_allowed' });
     let body;
@@ -91,3 +92,25 @@ export default {
     }
   },
 };
+
+// 在浏览器里直接打开时显示的状态页：只说明服务在线、各通道是否配置好，不显示任何密钥
+function statusPage(env) {
+  const row = (name, use, ok) => `<tr><td>${name}</td><td>${use}</td><td class="${ok ? 'ok' : 'no'}">${ok ? '● 正常' : '○ 未配置'}</td></tr>`;
+  const html = `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 中转服务</title><style>
+:root{--bg:#f7f5ef;--card:#fff;--ink:#1f2a24;--sub:#66706a;--line:#e3e0d6;--ok:#2f7d4f;--no:#a05a2c}
+@media (prefers-color-scheme:dark){:root{--bg:#161a17;--card:#1f2420;--ink:#e8ece9;--sub:#9aa39d;--line:#2e3530;--ok:#6cc58f;--no:#e0a070}}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+main{max-width:640px;margin:48px auto;padding:0 16px}h1{font-size:22px;margin:0 0 6px}p{color:var(--sub);margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 16px;overflow-x:auto}
+table{width:100%;border-collapse:collapse}td,th{padding:10px 6px;text-align:left;border-bottom:1px solid var(--line)}tr:last-child td{border-bottom:0}
+th{font-size:13px;color:var(--sub);font-weight:500}.ok{color:var(--ok);white-space:nowrap}.no{color:var(--no);white-space:nowrap}code{font-size:13px}
+</style></head><body><main>
+<h1>AI 中转服务 · 在线</h1>
+<p>给安心药箱和三三作息簿调用大模型用。网页把请求发到这里，由这里带上存在 Cloudflare 后台的密钥转给模型；照片和文字只用于这一次识别，不保存。浏览器直接打开只能看到这个状态页，功能只接受这两个网页发来的请求。</p>
+<div class="card"><table><tr><th>地址</th><th>用途</th><th>状态</th></tr>
+${row('<code>POST /</code>', '三三作息簿一句话改日程、安心药箱整理医嘱（DeepSeek）', !!env.DEEPSEEK_API_KEY)}
+${row('<code>POST /vision</code>', '安心药箱拍一拍核对，读药盒上的字（通义千问 VL）', !!env.DASHSCOPE_API_KEY)}
+</table></div></main></body></html>`;
+  return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
+}
