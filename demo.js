@@ -33,8 +33,8 @@ function fresh() {
   S = {
     min: 7 * 60 + 58, waitMin: 30, repeatMin: 15, refillDays: 7, restock: null,
     meds: [
-      { id: 'm1', name: '降压药（示例）', dose: '1片', slot: 1, box: 'blue', pill: 'white', shape: 'round', method: '早饭后，用一杯温水送服', times: ['08:00'], stock: 30 },
-      { id: 'm2', name: '降糖药（示例）', dose: '1片', slot: 2, box: 'orange', pill: 'yellow', shape: 'oval', method: '和饭一起吃，用温水送服', times: ['08:00', '20:00'], stock: 16 }
+      { id: 'm1', name: '降压药（示例）', dose: '1片', slot: 1, box: 'blue', pill: 'white', shape: 'round', method: '早饭后，用一杯温水送服', times: ['08:00'], stock: 30, boxName: '苯磺酸氨氯地平片', boxSpec: '5mg' },
+      { id: 'm2', name: '降糖药（示例）', dose: '1片', slot: 2, box: 'orange', pill: 'yellow', shape: 'oval', method: '和饭一起吃，用温水送服', times: ['08:00', '20:00'], stock: 16, boxName: '盐酸二甲双胍片', boxSpec: '0.5g' }
     ],
     doses: [], parent: 'home', active: null, ringType: null, psms: null, lastSpeech: '',
     tab: 'home', view: null, call: null, msgs: [], banner: null, showAI: false, weekend: false, weekendSkip: false, draft: null, note: '', listening: false, medIdx: 0,
@@ -324,6 +324,102 @@ function groundCheck(text, raw) {
   if (method) { if (inText(ev.method) && !timeOnly(method)) out.method = method; else dropped.push('怎么吃'); }
   return { ...out, dropped };
 }
+// ---------- 拍一拍核对（通义千问 VL 读药盒上的字，规则判断对不对）----------
+// 分工：模型只把药盒上印的药名、规格抄下来，不知道这一顿该吃什么；对不对由下面的规则决定。
+// 宁严勿松：名字要完全相等，剂型、修饰词不能忽略；拿不准一律说“看不清”，绝不说“对了”。
+const BOX_MIN = 300; // 药盒最长边至少占照片的 30%（0–1000 坐标）
+const boxNorm = s => String(s ?? '').normalize('NFKC').replace(/（.*?）|\(.*?\)|【.*?】|\[.*?\]/g, '').replace(/[\s·・.,，。、:：;；'"“”‘’\-—_/®™]/g, '').toLowerCase();
+const SPEC_UNIT = { mg: 1, 毫克: 1, g: 1000, 克: 1000, μg: 0.001, ug: 0.001, mcg: 0.001, 微克: 0.001 };
+function specVal(s) {
+  const t = String(s ?? '').normalize('NFKC').toLowerCase().replace(/\s/g, '');
+  const r = t.match(/(\d+(?:\.\d+)?)(mg|毫克|g|克|μg|ug|mcg|微克|ml|毫升|iu|单位|万单位)/);
+  if (!r) return t || null;
+  return SPEC_UNIT[r[2]] ? `${+(r[1] * SPEC_UNIT[r[2]]).toFixed(4)}mg` : `${+r[1]}${r[2]}`;
+}
+// read：模型输出 {readable, names, specs}；m：这一顿当前这一种；dm：这一顿的全部药；all：全部清单
+function photoCheck(read, m, dm, all) {
+  const names = [...new Set((read && read.readable !== false && Array.isArray(read.names) ? read.names : []).map(boxNorm).filter(Boolean))];
+  if (!m || !m.boxName) return { kind: 'unclear', why: '这种药没登记药盒名' };
+  if (!names.length) return { kind: 'unclear', why: '没读到药名' };
+  // 模型自己说拿不准，或者有字被挡住（□），一律不下结论
+  if (read.sure !== true) return { kind: 'unclear', why: '模型拿不准' };
+  // 药盒在照片里太小，字只有几个像素，模型会凭常识补规格；不看它读到了什么，直接请父母拿近再拍
+  const bx = Array.isArray(read.box) && read.box.length === 4 ? read.box.map(Number) : null;
+  if (bx && bx.every(isFinite) && Math.max(bx[2] - bx[0], bx[3] - bx[1]) < BOX_MIN) return { kind: 'unclear', why: '离得太远' };
+  if ([...names, ...(Array.isArray(read.specs) ? read.specs : [])].some(x => /□|\?|？/.test(String(x)))) return { kind: 'unclear', why: '有字被挡住' };
+  if (names.length > 1) return { kind: 'unclear', why: '照片里有不止一盒药' };
+  const specs = new Set((Array.isArray(read.specs) ? read.specs : []).map(specVal).filter(Boolean));
+  // 每种药：名字对上、规格也对上才算匹配；名字对上但登记了规格而照片没读到，算“拿不准”
+  const judge = x => {
+    if (!x.boxName || boxNorm(x.boxName) !== names[0]) return 'no';
+    if (!x.boxSpec) return 'yes';
+    if (!specs.size) return 'unsure';
+    return specs.has(specVal(x.boxSpec)) ? 'yes' : 'no';
+  };
+  const mine = judge(m);
+  if (mine === 'yes') return { kind: 'ok', med: m };
+  if (mine === 'unsure') return { kind: 'unclear', why: '规格没看清' };
+  const others = all.filter(x => x.id !== m.id), hit = others.filter(x => judge(x) === 'yes');
+  const same = hit.find(x => dm.some(y => y.id === x.id));
+  if (same) return { kind: 'sameDose', med: same };
+  if (hit.length) return { kind: 'wrong', med: hit[0] };
+  if (others.some(x => judge(x) === 'unsure')) return { kind: 'unclear', why: '规格没看清' };
+  if (all.some(x => !x.boxName)) return { kind: 'unclear', why: '清单里有药没登记药盒名' };
+  return { kind: 'notInList' };
+}
+// 父母看到并听到的话；连续第 2 次看不清就不再让重拍
+function photoReply(res, m, misses = 0) {
+  switch (res.kind) {
+    case 'ok': return `对了，这是${short(m.name)}，吃${m.dose}。`;
+    case 'sameDose': return `这也是这一顿要吃的${short(res.med.name)}，可以吃，吃${res.med.dose}。吃完别忘了第${m.slot}格的${short(m.name)}。`;
+    case 'wrong': return `不对，这是${short(res.med.name)}，先别吃。现在该吃的是第${m.slot}格、${BOX[m.box][0]}盒子的${short(m.name)}。`;
+    case 'notInList': return '这盒药不在清单里，先别吃。可以问一下女儿。';
+    case 'fail': return '现在核对不了，按照片和格子号吃就行。';
+    default: if (res.why === '离得太远' && misses < 2) return '离得有点远，请把药盒拿近一点，让字占满大半个屏幕，再拍一次。';
+      return misses >= 2 ? '还是看不清，没关系，按照片和格子号吃就行。拿不准就按“我需要帮忙”。' : '看不清，请把药盒正面对着手机，再拍一次。';
+  }
+}
+function visionPrompt() {
+  return '这是一张照片，可能拍的是药盒。请只把药盒上印的药品通用名称和规格原样抄下来，一字不改。\n' +
+    '- names：每盒药的通用名称（化学药名，如 "苯磺酸氨氯地平片"，不要商品名、不要厂家名），照片里有几盒药就写几个\n' +
+    '- specs：规格，如 "5mg" "0.5g"，不要写"28片/盒"这类包装数量\n' +
+    '被挡住、看不清、只露出一半的字，用 □ 代替，一个字一个 □；不要跳过这些字，也不要根据常识把药名补完整，例如盖住了两个字就写 "盐酸二甲双胍□□片"，规格看不清就写 "□mg"。\n' +
+    '- sure：药名和规格的每一个字都清清楚楚、没有被挡住时才填 true；字很小、模糊、反光、有遮挡、拿不准时都填 false\n' +
+    '- box：药盒正面在照片里的位置 [左, 上, 右, 下]，按照片宽高折算成 0–1000 的数；有几盒写第一盒\n' +
+    '不要根据颜色、图案或常识推测药名和规格。照片里不是药盒、或者完全看不清药名时，readable 填 false。\n' +
+    '只输出 JSON：{"readable":true,"sure":true,"names":[],"specs":[],"box":[0,0,1000,1000],"note":""}';
+}
+async function visionRead(image) {
+  const r = await fetch(AI_ENDPOINT + '/vision', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: visionPrompt(), image }), signal: AbortSignal.timeout(15000) });
+  if (!r.ok) throw new Error('http_' + r.status);
+  const j = await r.json();
+  return j.result || {};
+}
+// Demo 示例药盒（程序画的仿真图）；接口没连上时，按图上印的字给出预设读数，并明确告诉看 Demo 的人
+const SAMPLES = [
+  { key: 'amlodipine', label: '降压药盒', src: 'img/samples/amlodipine.jpg', read: { readable: true, sure: true, names: ['苯磺酸氨氯地平片'], specs: ['5mg'] } },
+  { key: 'metformin', label: '降糖药盒', src: 'img/samples/metformin.jpg', read: { readable: true, sure: true, names: ['盐酸二甲双胍片'], specs: ['0.5g'] } },
+  { key: 'atorvastatin', label: '别的药盒', src: 'img/samples/atorvastatin.jpg', read: { readable: true, sure: true, names: ['阿托伐他汀钙片'], specs: ['20mg'] } },
+  { key: 'blurry', label: '拍糊了', src: 'img/samples/blurry.jpg', read: { readable: false, names: [], specs: [] } }
+];
+const CHECK_LABEL = { ok: '对了', sameDose: '同一顿的另一种', wrong: '拿错了', notInList: '不在清单', unclear: '看不清', fail: '没连上' };
+function urlToData(src) { return fetch(src).then(r => r.blob()).then(b => new Promise((res, rej) => { const f = new FileReader(); f.onload = () => res(f.result); f.onerror = rej; f.readAsDataURL(b); })); }
+function runCheck(d, m, image, sample) {
+  S.check = { dose: d.id, med: m.id, img: image, state: 'loading' }; render();
+  visionRead(image).then(read => ({ res: photoCheck(read, m, medsOf(d), S.meds), note: '' }))
+    .catch(() => sample ? { res: photoCheck(sample.read, m, medsOf(d), S.meds), note: '识图接口没连上，示例图按图上印的字演示' } : { res: { kind: 'fail' }, note: '' })
+    .then(({ res, note }) => {
+      if (S.check?.dose !== d.id || S.check?.med !== m.id) return;
+      d.checkMiss = d.checkMiss || {};
+      d.checkMiss[m.id] = res.kind === 'unclear' ? (d.checkMiss[m.id] || 0) + 1 : 0;
+      const text = photoReply(res, m, d.checkMiss[m.id]);
+      S.check = { dose: d.id, med: m.id, img: image, state: 'done', res, text, note };
+      (d.checks = d.checks || []).push({ at: S.min, med: m.id, kind: res.kind, got: res.med?.id });
+      if (res.kind === 'wrong' || res.kind === 'notInList')
+        notify({ type: 'alert', dose: d.id, title: '⚠️ 妈妈可能拿错药了', text: `${fmt(S.min)} 妈妈拍照核对${period(d.time)}的药：${res.kind === 'wrong' ? `拿到的是${short(res.med.name)}` : '拿到的药盒不在清单里'}，该吃的是第 ${m.slot} 格的${short(m.name)}。已提醒妈妈先别吃，建议打个电话。` });
+      say(text); emit('check:' + res.kind); render();
+    });
+}
 function voiceInput() {
   const f = S.draft, R = window.SpeechRecognition || window.webkitSpeechRecognition;
   const fallback = why => { f.text = SAMPLE_VOICE; f.aiNote = `（${why}，已用一段示例语音代替）`; S.listening = false; emit('voice'); render(); };
@@ -337,10 +433,10 @@ function voiceInput() {
     S.listening = true; render(); r.start();
   } catch { fallback('语音识别启动失败'); }
 }
-function readPhoto(file) {
+function readPhoto(file, max = 360) {
   return new Promise((res, rej) => {
     const r = new FileReader();
-    r.onload = () => { const img = new Image(); img.onload = () => { const k = Math.min(1, 360 / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = img.width * k; c.height = img.height * k; c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', 0.8)); }; img.onerror = rej; img.src = r.result; };
+    r.onload = () => { const img = new Image(); img.onload = () => { const k = Math.min(1, max / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = img.width * k; c.height = img.height * k; c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', 0.8)); }; img.onerror = rej; img.src = r.result; };
     r.onerror = rej; r.readAsDataURL(file);
   });
 }
@@ -385,6 +481,15 @@ const SC = {
     { text: '假设妈妈看完指引去吃饭了，<b>忘了按“我吃好了”</b>。点【快进到 08:30】。', ff: '08:30', target: '#g-ff', wait: 'ask' },
     { text: '看完指引 10 分钟还没确认，手机<b>主动问一句</b>“吃好了吗”，说一声或按按钮都行。点绿色的【吃好了】。', target: '[data-act=askyes]', wait: 'confirmed' },
     { text: '🎉 完成！延后吃药不算没确认；忘了按确认时，手机会追问一句，减少误报。', end: true }
+  ] },
+  photo: { title: '⑤ 拍照发现拿错药', steps: [
+    { text: '现在是早上 7:58。点【快进到 08:00】。', ff: '08:00', target: '#g-ff', wait: 'ring' },
+    { text: '妈妈的手机响了，点绿色的【接听】。', target: '[data-act=answer]', wait: 'answer' },
+    { text: '先吃<b>降糖药</b>。吃之前可以点【拍一下，看拿对没有】，把药盒对着手机拍一下。这次假设妈妈顺手拿了<b>别的药</b>：点示例里的【别的药盒】。', target: '[data-k=atorvastatin]', wait: 'check:notInList' },
+    { text: 'AI 只负责<b>读药盒上的字</b>，对不对由规则和清单比对：这盒不在清单里，手机提醒妈妈<b>先别吃</b>，你的手机也收到提醒。现在换成对的，点【降糖药盒】。', target: '[data-k=metformin]', wait: 'check:ok' },
+    { text: '名字和规格都对上了，才会说“对了”。拿不准时只会说“看不清”，绝不猜。点【我吃好了】。', target: '[data-act=done]', wait: 'doneClick' },
+    { text: '点【都吃好了】。', target: '[data-act=yes]', wait: 'confirmed' },
+    { text: '🎉 完成！看右边今日安排：每一顿下面记着<b>拍照核对</b>的结果。拍照不是必须的，不拍也能照常确认。', end: true }
   ] },
   free: { title: '自由体验（录入新药等）', steps: [] }
 };
@@ -433,6 +538,17 @@ const firstSentence = t => { const s = (String(t || '').match(/[^。！？]+[。
 const voiceBox = t => `<button class="voice" data-act="replay">${IC.speaker}<span>正在朗读：“${esc(firstSentence(t))}”</span></button>`;
 const btn = (label, act, cls, extra = '') => `<button class="btn ${cls}" data-act="${act}" ${extra}>${label}</button>`;
 
+// 吃药指引页的拍照核对：没登记药盒名的药不显示
+function checkHTML(d, m) {
+  if (!m.boxName) return '';
+  const c = S.check && S.check.dose === d.id && S.check.med === m.id ? S.check : null;
+  const tone = c?.res ? ({ ok: 'ok', sameDose: 'ok', wrong: 'bad', notInList: 'bad' }[c.res.kind] || 'gray') : '';
+  const result = !c ? '' : c.state === 'loading' ? `<div class="pc-res gray"><img src="${esc(c.img)}" alt="刚拍的照片"><b>正在看…</b></div>`
+    : `<div class="pc-res ${tone}"><img src="${esc(c.img)}" alt="刚拍的照片"><div><b>${esc(c.text)}</b>${c.note ? `<small>${esc(c.note)}</small>` : ''}</div></div>`;
+  return `<div class="card pcheck">${result}
+    <label class="btn light pc-btn">${IC.camera}${c ? '再拍一次' : '拍一下，看拿对没有'}<input type="file" accept="image/*" capture="environment" data-check hidden></label>
+    <div class="pc-samples"><small>没有药盒？用示例药盒试一试：</small><div>${SAMPLES.map(x => `<button data-act="checkSample" data-k="${x.key}"><img src="${x.src}" alt=""><span>${x.label}</span></button>`).join('')}</div></div></div>`;
+}
 function parentHTML() {
   const d = dose(S.active);
   if (S.call) return sbar('dark') + `<div class="incall"><div class="avatar">女</div><div class="who">女儿</div><div class="cst">${S.call.stage === 'calling' ? '来电中…' : '通话中'}</div></div>`;
@@ -455,6 +571,7 @@ function parentHTML() {
           <div class="kv"><span>在哪</span><b>药盒第 ${m.slot} 格（贴着 ${m.slot} 号）</b></div>
           <div class="kv"><span>吃几片</span><b>${esc(m.dose)}</b></div>
           <div class="kv"><span>怎么吃</span><b>${esc(m.method)}</b></div></div>
+        ${checkHTML(d, m)}
         ${next ? `<div class="card nextmed"><span class="num gray">${i + 2}</span><div><b>${esc(mealStep(next).label ? mealStep(next).label + '吃 · ' : '')}第 ${next.slot} 格</b><small>${esc(next.dose)} · ${esc(short(next.name))}</small></div><button class="mini" data-act="nextmed">下一种</button></div>` : (seq ? `<button class="link center" data-act="prevmed">← 回到第一种</button>` : '')}
         </div><div class="p-foot">${btn(IC.check + '我吃好了', 'done', 'green')}<button class="link center" data-act="done">${IC.mic}也可以直接说“吃好了”</button>${btn('我需要帮忙', 'help', 'orange-line')}</div>`;
     }
@@ -598,6 +715,8 @@ function childView() {
         <label class="row"><span>每次</span><input data-f="dose" value="${esc(f.dose)}" placeholder="例如 1片"></label>
         <label class="row"><span>时间</span><input data-f="times" value="${esc(f.times)}" placeholder="08:00, 20:00"></label>
         <label class="row"><span>吃法</span><input data-f="method" value="${esc(f.method)}" placeholder="例如 饭后，温水送服"></label>
+        <label class="row"><span>药盒名</span><input data-f="boxName" value="${esc(f.boxName)}" placeholder="药盒上印的药名，拍照可自动读"></label>
+        <label class="row"><span>规格</span><input data-f="boxSpec" value="${esc(f.boxSpec)}" placeholder="选填，例如 5mg"></label>
         <label class="row"><span>放在</span><select data-f="slot">${[1, 2, 3, 4, 5, 6].map(i => `<option value="${i}" ${+f.slot === i ? 'selected' : ''}>第 ${i} 格</option>`).join('')}</select></label>
         <label class="row"><span>还剩</span><input data-f="stock" type="number" min="0" value="${esc(f.stock)}" placeholder="选填，快吃完时提醒你"></label></div>
       <div class="two"><label class="dash">${IC.camera}<span>${f.photo ? '换一张照片' : '拍药盒照片'}</span><input type="file" accept="image/*" capture="environment" data-photo hidden></label>
@@ -633,7 +752,7 @@ function childHTML() {
         : `<div class="card warm"><span class="warn-ic">${IC.alert}</span><div><b>${d.time} 的药妈妈还没确认</b><p>提醒了 2 次，${S.waitMin} 分钟没确认${d.follow != null ? `；${fmt(d.follow)} 会再响铃` : ''}</p>${contactBtns(d)}<button class="link" data-act="detail" data-dose="${d.id}">查看详情${IC.chev}</button></div></div>`).join('')}
       ${last ? `<div class="card okcard"><span class="okdot">${IC.check}</span><div><b>妈妈 ${fmt(last.at)} ${last.by === 'call' ? '电话确认' : '自己确认'}吃好了</b><small>${esc(names(last))}</small></div></div>` : ''}
       <div class="sec-h"><b>今日安排</b><small>共 ${S.doses.length} 次</small></div>
-      <div class="card list">${S.doses.map(d => `<div class="row dose"><div class="t"><b>${d.time}</b><small>${period(d.time)}</small></div><span class="dm">${esc(medsOf(d).map(m => short(m.name)).join('、'))}</span>${doseTag(d)}</div>`).join('')}</div>
+      <div class="card list">${S.doses.map(d => `<div class="row dose"><div class="t"><b>${d.time}</b><small>${period(d.time)}</small></div><span class="dm">${esc(medsOf(d).map(m => short(m.name)).join('、'))}${d.checks?.length ? `<small class="ck ${['wrong', 'notInList'].includes(d.checks.at(-1).kind) ? 'bad' : ''}">拍照核对：${CHECK_LABEL[d.checks.at(-1).kind]} ${fmt(d.checks.at(-1).at)}</small>` : ''}</span>${doseTag(d)}</div>`).join('')}</div>
       ${lowStock().map(m => `<button class="card refill" data-tab="meds">${IC.pill}<div><b>${esc(short(m.name))}还剩 ${daysLeft(m)} 天</b><small>还剩 ${m.stock} ${unit(m)} · 记得帮妈妈买药</small></div>${IC.chev}</button>`).join('')}</div>`;
   } else if (S.tab === 'week') {
     body = navbar('这一周') + `<div class="c-body">${weekHTML()}${findings()}<p class="muted">这里是规则统计，不是大模型：从最近 7 天的确认记录（过去 6 天为示例数据）算出规律，再按规则给建议；什么时候提醒、什么时候通知你仍由固定规则决定。</p></div>`;
@@ -670,11 +789,11 @@ function render() {
   const st = SC[S.sc]?.steps[S.step];
   if (st?.target) { const el = document.querySelector(st.target); if (el) { el.classList.add('pulse'); el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } }
 }
-if (!BROWSER) module.exports = { fresh, start, tick, check, confirm, ring, nextEvent, medsOf, instruction, aiParse, groundCheck, rxPrompt, weekStats, askHelp, dose, perDose, daysLeft, restock, WEEK, get S() { return S; } };
+if (!BROWSER) module.exports = { fresh, start, tick, check, confirm, ring, nextEvent, medsOf, instruction, aiParse, groundCheck, rxPrompt, photoCheck, photoReply, boxNorm, specVal, weekStats, askHelp, dose, perDose, daysLeft, restock, WEEK, get S() { return S; } };
 else {
 
 // ---------- 交互 ----------
-function toGuide(d) { S.parent = 'guide'; S.active = d.id; S.medIdx = 0; if (d.guideAt == null) d.guideAt = S.min; say(instruction(d)); }
+function toGuide(d) { S.check = null; S.parent = 'guide'; S.active = d.id; S.medIdx = 0; if (d.guideAt == null) d.guideAt = S.min; say(instruction(d)); }
 const callDose = el => dose(S.call?.dose || el.dataset.dose);
 function sayDone() { const nx = S.doses.find(x => x.status === 'pending' && !x.skip && toMin(x.time) > S.min); say(`好的，吃好了，已经告诉女儿了。${nx ? `下一次是${spokenTime(nx.time)}。` : '今天的药都吃完了。'}`); }
 
@@ -702,8 +821,9 @@ document.addEventListener('click', e => {
     }
     case 'eatnow': toGuide(d); break;
     case 'replay': speak(S.lastSpeech); break;
-    case 'nextmed': S.medIdx++; { const m = medsOf(d)[S.medIdx]; if (m) say(`${stepName(m, S.medIdx)}：打开药盒第${m.slot}格，拿${BOX[m.box][0]}盒子的${short(m.name)}，吃${m.dose}。${m.method}。`); } break;
-    case 'prevmed': S.medIdx = 0; break;
+    case 'checkSample': { const x = SAMPLES.find(y => y.key === el.dataset.k), m = medsOf(d)[Math.min(S.medIdx, d.medIds.length - 1)]; urlToData(x.src).then(img => runCheck(d, m, img, x)); return; }
+    case 'nextmed': S.check = null; S.medIdx++; { const m = medsOf(d)[S.medIdx]; if (m) say(`${stepName(m, S.medIdx)}：打开药盒第${m.slot}格，拿${BOX[m.box][0]}盒子的${short(m.name)}，吃${m.dose}。${m.method}。`); } break;
+    case 'prevmed': S.check = null; S.medIdx = 0; break;
     case 'done': S.parent = 'confirm'; say(VOICE.confirm); emit('doneClick'); break;
     case 'no': toGuide(d); break;
     case 'yes': confirm(d, 'self'); S.parent = 'done'; sayDone(); emit('confirmed'); break;
@@ -733,7 +853,7 @@ document.addEventListener('click', e => {
       emit('later'); break;
     }
     case 'add':
-      S.note = ''; S.view = 'add'; S.draft = { text: '', name: '', dose: '', times: '', method: '', stock: '', slot: '3', box: 'green', pill: 'white', shape: 'capsule', photo: '' };
+      S.note = ''; S.view = 'add'; S.draft = { text: '', name: '', dose: '', times: '', method: '', stock: '', slot: '3', box: 'green', pill: 'white', shape: 'capsule', photo: '', boxName: '', boxSpec: '' };
       emit('add'); break;
     case 'voice': if (!S.listening) voiceInput(); return;
     case 'ai': {
@@ -765,7 +885,7 @@ document.addEventListener('click', e => {
       if (!times.length || times.some(t => !/^([01]\d|2[0-3]):[0-5]\d$/.test(t))) { f.err = '吃药时间请写成 08:00 这样的格式。'; break; }
       const stock = String(f.stock ?? '').trim();
       if (stock && !/^\d{1,3}$/.test(stock)) { f.err = '剩余药量请填 0–999 的整数，不知道可以空着。'; break; }
-      S.meds.push({ id: 'm' + Date.now(), name: f.name.trim(), dose: f.dose.trim(), method: f.method.trim(), slot: +f.slot, box: f.box, pill: f.pill, shape: f.shape, photo: f.photo, times: [...new Set(times)], stock: stock ? +stock : null });
+      S.meds.push({ id: 'm' + Date.now(), name: f.name.trim(), dose: f.dose.trim(), method: f.method.trim(), slot: +f.slot, box: f.box, pill: f.pill, shape: f.shape, photo: f.photo, boxName: f.boxName.trim(), boxSpec: f.boxSpec.trim(), times: [...new Set(times)], stock: stock ? +stock : null });
       buildDoses(); S.draft = null; S.view = null; S.tab = 'meds'; S.note = `✅ 已保存「${short(f.name)}」，到点会提醒妈妈。`; emit('setup'); break;
     }
     default: return;
@@ -779,11 +899,27 @@ document.addEventListener('input', e => {
   if (k && S.draft) { S.draft[k] = e.target.value; if (['box', 'pill', 'shape', 'name'].includes(k)) refreshPreview(); }
 });
 document.addEventListener('change', async e => {
+  if (e.target.dataset.check !== undefined) {
+    const d = dose(S.active), file = e.target.files[0]; if (!d || !file) return;
+    const m = medsOf(d)[Math.min(S.medIdx, d.medIds.length - 1)];
+    try { runCheck(d, m, await readPhoto(file, 1024)); } catch { S.check = null; render(); }
+    return;
+  }
   if (e.target.dataset.photo === undefined || !S.draft) return;
   const file = e.target.files[0]; if (!file) return;
   if (!file.type.startsWith('image/') || file.size > 10 * 1024 * 1024) { S.draft.err = '请选择 10MB 以内的图片。'; return render(); }
-  try { S.draft.photo = await readPhoto(file); S.draft.err = ''; } catch { S.draft.err = '图片读取失败，请换一张。'; }
+  try { S.draft.photo = await readPhoto(file); S.draft.err = ''; } catch { S.draft.err = '图片读取失败，请换一张。'; return render(); }
   render();
+  // 同一个识图接口顺便读出药盒名和规格，只预填空着的格子，子女可以改
+  const f = S.draft;
+  try {
+    const r = await visionRead(await readPhoto(file, 1024)), n = Array.isArray(r.names) ? r.names : [];
+    if (S.draft !== f) return;
+    if (r.readable === false || n.length !== 1) { f.aiNote = '没从照片里读清药盒名，请手动填写。'; return render(); }
+    if (!f.boxName) f.boxName = n[0];
+    if (!f.boxSpec && Array.isArray(r.specs) && r.specs.length === 1) f.boxSpec = r.specs[0];
+    f.aiNote = `已从药盒照片读出“${n[0]}”，请核对。`; render();
+  } catch { if (S.draft === f) { f.aiNote = '识图接口暂时没连上，药盒名请手动填写。'; render(); } }
 });
 
 start('normal');

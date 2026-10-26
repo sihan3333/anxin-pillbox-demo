@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>拍照核对评测</title>
+<style>
+:root{ --bg:#F6F8FB; --surface:#FFFFFF; --surface-2:#EEF2F7; --ink:#1F2937; --ink-soft:#4B5563; --ink-faint:#8A94A6; --line:#E2E8F0;
+  --accent:#2563EB; --ok:#15803D; --danger:#B42318; --danger-soft:#FDECEA; --warn:#B45309; --warn-soft:#FEF3E2; }
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --bg:#0F141B; --surface:#161D27; --surface-2:#1E2734; --ink:#E5E9F0; --ink-soft:#B6BFCC; --ink-faint:#7D8797; --line:#2A3443;
+  --accent:#7AA7FF; --ok:#5BD08A; --danger:#FF8A80; --danger-soft:#3A1F1E; --warn:#F2B66B; --warn-soft:#3A2C1A; } }
+:root[data-theme="dark"]{ --bg:#0F141B; --surface:#161D27; --surface-2:#1E2734; --ink:#E5E9F0; --ink-soft:#B6BFCC; --ink-faint:#7D8797; --line:#2A3443;
+  --accent:#7AA7FF; --ok:#5BD08A; --danger:#FF8A80; --danger-soft:#3A1F1E; --warn:#F2B66B; --warn-soft:#3A2C1A; }
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;font-size:14px;}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 16px 64px;}
+h1{font-size:24px;margin:0;}
+.sub{color:var(--ink-soft);font-size:13px;margin-top:6px;line-height:1.7;}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0 4px;}
+button,select{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 12px;font-size:13px;cursor:pointer;}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+button:disabled{opacity:.55;cursor:default;}
+.status{font-family:ui-monospace,monospace;font-size:12px;color:var(--ink-faint);}
+.notice{margin:12px 0 0;padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.6;background:var(--warn-soft);}
+h2{font-size:16px;margin:26px 0 10px;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 10px;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+th{text-align:left;font-weight:500;color:var(--ink-soft);border-bottom:1px solid var(--line);padding:8px;white-space:nowrap;}
+td{border-bottom:1px solid var(--line);padding:8px;vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+td.num{font-family:ui-monospace,monospace;white-space:nowrap;}
+.bad{color:var(--danger);font-weight:700;}
+.good{color:var(--ok);font-weight:700;}
+.mono{font-family:ui-monospace,monospace;font-size:11.5px;color:var(--ink-soft);line-height:1.6;word-break:break-all;}
+td img{width:120px;border-radius:6px;display:block;}
+iframe{position:absolute;width:1px;height:1px;left:-9999px;border:0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>安心药箱 · 拍照核对评测</h1>
+  <div class="sub">父母吃药前拍一下药盒：通义千问 VL 只把药盒上的通用名和规格抄下来，规则拿它和药品清单比对，答「对了 / 也是这一顿的 / 不对 / 不在清单 / 看不清」。<br>
+    最重要的指标是<b>误判「对了」</b>：照片里不是该吃的药，却答了「对了」。必须为 0。其次是清晰的正确药盒能不能认出来，以及清晰照片被说成「看不清」的比例。</div>
+  <div class="controls">
+    <button class="primary" id="run">开始评测</button>
+    <select id="split"><option value="">全部</option><option value="seed">seed</option><option value="dev">dev</option><option value="holdout">holdout</option></select>
+    <button id="download" disabled>下载结果 JSON</button>
+    <span class="status" id="status">准备中…</span>
+  </div>
+  <div class="notice">评测集 photo-v1 共 158 张，全部为程序生成的仿真药盒图（真实通用名和规格、自拟品牌和配色），覆盖 9 类常规情况和 5 类难例，按 seed / dev / holdout 分层划分。生成脚本见 <code>make_boxes.py</code>，各轮结果和坏例分析见 <code>REPORT.md</code>。家里真药盒的实拍会单独标注、分开统计。</div>
+
+  <h2>总体</h2>
+  <div class="card"><table><thead><tr><th>范围</th><th>张数</th><th>答对</th><th>误判「对了」</th><th>清晰正确药盒认对率</th><th>清晰正确药盒「看不清」率</th><th>接口失败</th></tr></thead><tbody id="summary"></tbody></table></div>
+  <h2>按情况</h2>
+  <div class="card"><table><thead><tr><th>情况</th><th>张数</th><th>答对</th><th>误判「对了」</th><th>结果分布</th></tr></thead><tbody id="byCat"></tbody></table></div>
+  <h2>答错的用例</h2>
+  <div class="card"><table><thead><tr><th>照片</th><th>情况</th><th>该吃的药</th><th>可接受</th><th>实际</th><th>模型读到</th></tr></thead><tbody id="fails"></tbody></table></div>
+</div>
+<iframe id="app" src="../../index.html?eval=1"></iframe>
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var W = null, data = null, rows = [];
+  var LABEL = { ok:'对了', sameDose:'也是这一顿的', wrong:'不对', notInList:'不在清单', unclear:'看不清', fail:'接口失败' };
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function pct(a, b){ return b ? (Math.round(a/b*1000)/10)+'%' : '—'; }
+  function toData(src){ return fetch(src).then(function(r){ return r.blob(); }).then(function(b){ return new Promise(function(res, rej){ var f = new FileReader(); f.onload = function(){ res(f.result); }; f.onerror = rej; f.readAsDataURL(b); }); }); }
+  var byId = function(id){ return data.list.filter(function(x){ return x.id === id; })[0]; };
+
+  // 同一份模型读数，按当前规则重新判断；读数保存在结果里，改规则后可以离线重算
+  function judge(c, raw){
+    if (raw === null) return 'fail';
+    var m = byId(c.plan.current), dm = c.plan.dose.map(byId);
+    return W.photoCheck(raw, m, dm, data.list).kind;
+  }
+  function score(c, raw){
+    var kind = judge(c, raw);
+    return { id:c.id, category:c.category, split:c.split, file:c.file, plan:c.plan, accept:c.accept, raw:raw, kind:kind,
+      correct: c.accept.indexOf(kind) >= 0, falseOk: kind === 'ok' && c.accept.indexOf('ok') < 0 };
+  }
+  function run(){
+    var sp = $('split').value, cases = data.cases.filter(function(c){ return !sp || c.split === sp; });
+    rows = []; $('run').disabled = true; $('download').disabled = true;
+    var i = 0, active = 0, done = 0;
+    function pump(){
+      while (active < 3 && i < cases.length) {
+        var c = cases[i++]; active++;
+        (function(c){
+          // 网络或接口偶发失败时重试一次，并记下失败原因；两次都失败才算「接口失败」
+          var err = null;
+          toData(c.file).then(function(img){ return W.visionRead(img).catch(function(e){ err = String(e); return W.visionRead(img); }); })
+            .then(function(raw){ return raw; }, function(e){ err = (err ? err + ' / ' : '') + String(e); return null; })
+            .then(function(raw){ var row = score(c, raw); if (err) row.error = err; rows.push(row); active--; done++; $('status').textContent = '进行中 ' + done + ' / ' + cases.length; render(); if (done === cases.length) finish(); else pump(); });
+        })(c);
+      }
+    }
+    pump();
+  }
+  function finish(){ rows.sort(function(a, b){ return a.id < b.id ? -1 : 1; }); window.__photoResults = rows; $('status').textContent = '完成：' + rows.length + ' 张'; $('run').disabled = false; $('download').disabled = false; render(); }
+  function stats(rs){
+    var neg = rs.filter(function(r){ return r.accept.indexOf('ok') < 0; }), clear = rs.filter(function(r){ return r.category.indexOf('1 ') === 0; });
+    return { n: rs.length, correct: rs.filter(function(r){ return r.correct; }).length, falseOk: rs.filter(function(r){ return r.falseOk; }).length, neg: neg.length,
+      clear: clear.length, clearOk: clear.filter(function(r){ return r.kind === 'ok'; }).length, clearUnclear: clear.filter(function(r){ return r.kind === 'unclear'; }).length,
+      fail: rs.filter(function(r){ return r.kind === 'fail'; }).length };
+  }
+  function render(){
+    var groups = [['全部', rows]].concat(['seed', 'dev', 'holdout'].map(function(s){ return [s, rows.filter(function(r){ return r.split === s; })]; })).filter(function(g){ return g[1].length; });
+    $('summary').innerHTML = groups.map(function(g){ var s = stats(g[1]);
+      return '<tr><td>' + g[0] + '</td><td class="num">' + s.n + '</td><td class="num">' + s.correct + ' · ' + pct(s.correct, s.n) + '</td><td class="num ' + (s.falseOk ? 'bad' : 'good') + '">' + s.falseOk + ' / ' + s.neg + '</td><td class="num">' + s.clearOk + ' / ' + s.clear + ' · ' + pct(s.clearOk, s.clear) + '</td><td class="num">' + pct(s.clearUnclear, s.clear) + '</td><td class="num">' + s.fail + '</td></tr>'; }).join('');
+    var cats = []; rows.forEach(function(r){ if (cats.indexOf(r.category) < 0) cats.push(r.category); }); cats.sort();
+    $('byCat').innerHTML = cats.map(function(cat){ var rs = rows.filter(function(r){ return r.category === cat; }), s = stats(rs), dist = {};
+      rs.forEach(function(r){ dist[r.kind] = (dist[r.kind] || 0) + 1; });
+      return '<tr><td>' + esc(cat) + '</td><td class="num">' + s.n + '</td><td class="num">' + pct(s.correct, s.n) + '</td><td class="num ' + (s.falseOk ? 'bad' : '') + '">' + s.falseOk + '</td><td>' + Object.keys(dist).map(function(k){ return LABEL[k] + ' ' + dist[k]; }).join('，') + '</td></tr>'; }).join('');
+    $('fails').innerHTML = rows.filter(function(r){ return !r.correct; }).map(function(r){
+      return '<tr><td><img src="' + esc(r.file) + '" alt=""><div class="mono">' + r.id + ' · ' + r.split + '</div></td><td>' + esc(r.category) + '</td><td>' + esc(byId(r.plan.current).boxName + ' ' + byId(r.plan.current).boxSpec) + '</td><td>' + r.accept.map(function(k){ return LABEL[k]; }).join(' / ') + '</td><td class="' + (r.falseOk ? 'bad' : '') + '">' + LABEL[r.kind] + '</td><td class="mono">' + esc(JSON.stringify(r.raw)) + '</td></tr>'; }).join('') || '<tr><td colspan="6">没有</td></tr>';
+  }
+  $('run').addEventListener('click', run);
+  $('download').addEventListener('click', function(){
+    var blob = new Blob([JSON.stringify(rows, null, 1)], { type: 'application/json' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'photo-eval-' + new Date().toISOString().slice(0, 10) + '.json'; a.click();
+  });
+  Promise.all([
+    fetch('photo_cases.json?v=' + Date.now()).then(function(r){ return r.json(); }),
+    new Promise(function(res){ var f = $('app'); var ok = function(){ W = f.contentWindow; res(); }; if (f.contentWindow && f.contentWindow.photoCheck) ok(); else f.addEventListener('load', ok); })
+  ]).then(function(v){ data = v[0]; $('status').textContent = '已载入 ' + data.cases.length + ' 张'; });
+})();
+</script>
+</body>
+</html>

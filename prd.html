@@ -11,7 +11,7 @@ td img.thumb{width:120px;border:1px solid var(--line);border-radius:8px;display:
 </style></head><body class="document"><main>
 <a href="index.html">← 返回 Demo</a> · <a href="product.html">产品说明</a> · <a href="strategy.html">竞品与商业模式</a> · <a href="research.html">用户验证计划</a> · <a href="review.html">验证与复盘</a>
 <h1>安心药箱 V1.0 产品需求文档</h1>
-<p class="muted">负责人：郑思涵 · 更新：2026-10-25 · 状态：评审中 · 原型图取自 Figma 高保真原型 v3，<a href="index.html">可交互 Demo</a> 与原型一致</p>
+<p class="muted">负责人：郑思涵 · 更新：2026-10-26 · 状态：评审中 · 原型图取自 Figma 高保真原型 v3，<a href="index.html">可交互 Demo</a> 与原型一致</p>
 
 <h2>1. 需求背景</h2>
 <h3>1.1 业务背景与数据现状</h3>
@@ -28,7 +28,7 @@ td img.thumb{width:120px;border:1px solid var(--line);border-radius:8px;display:
 <h4>内部现状</h4>
 <ul>
 <li>已上线<a href="mvp/">人工模拟版 MVP</a>：手机闹钟提醒，父母打开专属链接确认，确认结果短信发给子女，超时由子女人工打电话。</li>
-<li>已完成可交互 Demo（双端）、Figma 高保真原型 v3（18 屏 + 2 张规范板）、医嘱整理评测集 v2（120 条，含 holdout）与<a href="eval/report.html">数据分析报告</a>、26 项自动测试。</li>
+<li>已完成可交互 Demo（双端）、Figma 高保真原型 v3（21 屏 + 2 张规范板）、医嘱整理评测集 v2（120 条，含 holdout）与<a href="eval/report.html">数据分析报告</a>、拍照核对评测集（158 张仿真药盒图，14 类情况）与<a href="eval/photo/REPORT.md">评测报告</a>、45 项自动测试。</li>
 </ul>
 <h4>外部竞品</h4>
 <table>
@@ -42,9 +42,9 @@ td img.thumb{width:120px;border:1px solid var(--line);border-radius:8px;display:
 
 <h2>2. 需求概述</h2>
 <table>
-<tr><th>用什么方式</th><td>一款吃药提醒 App，父母端像来电一样提醒并朗读吃药指引，子女端实时看到确认结果；配合家里已有的普通分格药盒使用。提醒、升级、状态由规则决定；大模型只负责把医嘱整理成用药方案，并标出原文依据。</td></tr>
+<tr><th>用什么方式</th><td>一款吃药提醒 App，父母端像来电一样提醒并朗读吃药指引，子女端实时看到确认结果；配合家里已有的普通分格药盒使用。提醒、升级、状态由规则决定。大模型负责两件事：把医嘱整理成用药方案并标出原文依据；父母吃药前拍一下药盒，读出盒上的药名和规格，由规则判断拿没拿对。</td></tr>
 <tr><th>解决什么问题</th><td>父母忘吃、记不清吃没吃导致漏服或重复服药；子女只能靠每天打电话确认，累且不可持续。</td></tr>
-<tr><th>达到什么目标</th><td>试用 2 周内：子女每周只为确认吃药打的电话下降一半；父母本人确认率 ≥ 80%；误报率 &lt; 20%；重复服药 0 次；医嘱整理编造率 ≤ 2%。目标值均为假设，待试用校准。</td></tr>
+<tr><th>达到什么目标</th><td>试用 2 周内：子女每周只为确认吃药打的电话下降一半；父母本人确认率 ≥ 80%；误报率 &lt; 20%；重复服药 0 次；医嘱整理编造率 ≤ 2%；拍照核对把错药说成「对了」0 次。目标值均为假设，待试用校准。</td></tr>
 </table>
 
 <h2>3. 功能清单</h2>
@@ -60,14 +60,17 @@ flowchart LR
   P --> P3[确认与二次确认]:::keep
   P --> P4[求助与防重复服药]:::keep
   P --> P5[手机追问确认]:::mod
+  P --> P6[拍一拍核对]:::new
   C --> C1[今日状态与一周情况]:::mod
   C --> C2[消息与异常处理]:::keep
   C --> C3[AI 整理医嘱]:::new
   C --> C4[补药提醒]:::new
   C --> C5[提醒设置]:::keep
+  C --> C6[拿错药提醒与核对记录]:::new
   S --> S1[提醒调度与逐级升级]:::keep
   S --> S2[服药状态体系]:::mod
   S --> S3[大模型中转与原文核对]:::new
+  S --> S4[看图模型中转与核对规则]:::new
   classDef new fill:#dcf0e2,stroke:#216543
   classDef mod fill:#fff0d4,stroke:#825814
   classDef keep fill:#eef2ef,stroke:#9baaa2
@@ -76,21 +79,24 @@ flowchart LR
 <h3>3.2 功能列表</h3>
 <table>
 <tr><th>模块</th><th>功能</th><th>优先级</th><th>变更</th><th>版本</th></tr>
-<tr><td rowspan="6">父母端</td><td>来电式提醒：到点响铃 + 语音，15 分钟第 2 次响铃</td><td>P0</td><td>沿用</td><td>V1.0</td></tr>
+<tr><td rowspan="7">父母端</td><td>来电式提醒：到点响铃 + 语音，15 分钟第 2 次响铃</td><td>P0</td><td>沿用</td><td>V1.0</td></tr>
 <tr><td>吃药指引：格子、外观、片数、吃法，多种药按饭前 → 随餐 → 饭后 → 睡前排序朗读</td><td>P0</td><td>沿用</td><td>V1.0</td></tr>
 <tr><td>确认：我吃好了 + 语音二次确认</td><td>P0</td><td>沿用</td><td>V1.0</td></tr>
 <tr><td>求助：4 个带序号的选项；记不清吃没吃时提示先别再吃</td><td>P0</td><td>沿用</td><td>V1.0</td></tr>
 <tr><td>手机追问：看完指引 10 分钟未确认，手机主动问"吃好了吗"，可说话确认</td><td>P1</td><td>修改</td><td>V1.1</td></tr>
 <tr><td>现在不方便吃：还没开饭 20 分钟后、不在家 30 分钟 / 1 小时 / 2 小时后再提醒，不算没确认</td><td>P1</td><td>沿用</td><td>V1.1</td></tr>
-<tr><td rowspan="6">子女端</td><td>今日状态、最近 7 天记录、这一周的规律与建议</td><td>P0</td><td>修改：周分析改为规则统计</td><td>V1.0</td></tr>
+<tr><td>拍一拍核对：吃前拍药盒，答对了 / 也是这一顿的 / 不对 / 不在清单 / 看不清；拿不准绝不说对了</td><td>P1</td><td>新增</td><td>V1.0</td></tr>
+<tr><td rowspan="7">子女端</td><td>今日状态、最近 7 天记录、这一周的规律与建议</td><td>P0</td><td>修改：周分析改为规则统计</td><td>V1.0</td></tr>
 <tr><td>异常处理：打电话、发短信、记为电话确认、15 分钟后再响铃</td><td>P0</td><td>沿用</td><td>V1.0</td></tr>
 <tr><td>AI 整理医嘱：文字或语音输入，大模型整理 + 原文核对，保存前子女核对</td><td>P0</td><td>新增</td><td>V1.0</td></tr>
 <tr><td>补药提醒：按确认扣减药量，推算够吃天数，低于设定天数提醒</td><td>P0</td><td>新增</td><td>V1.0</td></tr>
+<tr><td>拿错药提醒与核对记录：拍照发现拿错或清单外的药时推送；每一顿记下核对结果；登记药品时拍药盒预填药盒名和规格</td><td>P1</td><td>新增</td><td>V1.0</td></tr>
 <tr><td>首次授权：绑定父母手机 → 邀请家人 → 父母本人同意</td><td>P0</td><td>沿用</td><td>V1.0</td></tr>
 <tr><td>多家人顺序升级、每晚汇总、夜间免打扰</td><td>P1</td><td>沿用</td><td>V1.1</td></tr>
-<tr><td rowspan="3">服务端</td><td>提醒调度与逐级升级规则</td><td>P0</td><td>沿用</td><td>V1.0</td></tr>
+<tr><td rowspan="4">服务端</td><td>提醒调度与逐级升级规则</td><td>P0</td><td>沿用</td><td>V1.0</td></tr>
 <tr><td>服药状态体系：6 种状态，写明确认来源</td><td>P0</td><td>修改</td><td>V1.0</td></tr>
 <tr><td>大模型中转：保管密钥、限制来源与长度、结果核对</td><td>P0</td><td>新增</td><td>V1.0</td></tr>
+<tr><td>看图模型中转：照片只用于这一次识别不保存；限制图片大小；修复已知的输出格式错误</td><td>P1</td><td>新增</td><td>V1.0</td></tr>
 </table>
 
 <h2>4. 需求详情</h2>
@@ -120,6 +126,8 @@ stateDiagram-v2
 <p class="muted">原型图均取自 Figma 高保真原型 v3；可交互 Demo 的界面与原型一致。</p>
 <p class="state">已提醒：来电式提醒 → 吃药指引</p>
 <div class="shots"><figure><img src="prd-img/figma/p1.png" alt="原型图 1 · 父母① 到点提醒"><figcaption>原型图 1 · 父母① 到点提醒</figcaption></figure><figure><img src="prd-img/figma/p2.png" alt="原型图 2 · 父母② 吃药指引"><figcaption>原型图 2 · 父母② 吃药指引</figcaption></figure></div>
+<p class="state">已提醒 · 拍一拍核对（只给提示，不改变状态）</p>
+<div class="shots"><figure><img src="prd-img/figma/p10.png" alt="原型图 19 · 父母⑩ 拍照核对：对了"><figcaption>原型图 19 · 父母⑩ 拍照核对：对了</figcaption></figure><figure><img src="prd-img/figma/p11.png" alt="原型图 20 · 父母⑪ 拍照核对：拿错了"><figcaption>原型图 20 · 父母⑪ 拍照核对：拿错了</figcaption></figure><figure><img src="prd-img/figma/c10.png" alt="原型图 21 · 子女⑩ 妈妈可能拿错药了"><figcaption>原型图 21 · 子女⑩ 妈妈可能拿错药了</figcaption></figure></div>
 <p class="state">待会再吃</p>
 <div class="shots"><figure><img src="prd-img/figma/p9.png" alt="原型图 3 · 父母⑨ 现在不方便吃"><figcaption>原型图 3 · 父母⑨ 现在不方便吃</figcaption></figure></div>
 <p class="state">确认中 → 自己确认</p>
@@ -186,12 +194,42 @@ flowchart LR
 <tr><td>填错不易发现</td><td>规则逐项核对</td><td>依据不在原文、剂量数字对不上、时刻由"一日三次"推出的一律去掉</td></tr>
 <tr><td>直接保存</td><td>子女核对补全后保存</td><td>被去掉的字段提示子女补充；子女改动的字段记为坏例候选</td></tr>
 </table>
+<h4>LLM 交互逻辑：拍一拍核对</h4>
+<pre class="mermaid">
+flowchart TB
+  A1[父母：吃药指引页点拍一下] --> B1[前端：压缩照片，长边约 1024]
+  B1 --> D1[服务端中转：校验来源与图片大小，照片不保存]
+  D1 --> E1[通义千问 VL：只抄药名和规格，被挡的字写 □，报告 sure 和药盒位置]
+  E1 --> F0{规则：sure 且无 □ 且药盒够大?}
+  F0 -->|否| F9[看不清，请拿近或重拍]
+  F0 -->|是| F1{规则：名字和规格对上哪一种?}
+  F1 -->|该吃的这一种| F2[对了]
+  F1 -->|同一顿的另一种| F3[也是这一顿的，可以吃]
+  F1 -->|清单里别的药| F4[不对，先别吃，通知子女]
+  F1 -->|都对不上| F5[不在清单，先别吃，通知子女]
+  D1 -.超时或失败.-> G1[现在核对不了，按照片和格子吃]
+  F2 --> B5[前端：大字显示并朗读，记录结果]
+  F3 --> B5
+  F4 --> B5
+  F5 --> B5
+  F9 --> B5
+  G1 --> B5
+</pre>
+<table>
+<tr><th>传统流程</th><th>AI 工作流</th><th>AI 在该节点要做的事</th></tr>
+<tr><td>父母凭格子号和盒子颜色找药，拿错了没人知道</td><td>父母吃前拍一下药盒</td><td>—</td></tr>
+<tr><td>—</td><td>看图模型读药盒</td><td>只抄通用名和规格；看不见的字写 □，不准凭常识补全；报告是否拿得准和药盒位置。模型不知道这一顿该吃什么，避免被计划带偏</td></tr>
+<tr><td>—</td><td>规则比对清单</td><td>名字完全相等、登记了规格时规格也一致才算对上；剂型和修饰词不能忽略；拿不准、有 □、药盒太小一律答看不清</td></tr>
+<tr><td>拿错药后才发现</td><td>当场拦下并通知子女</td><td>拿错或清单外的药，提醒先别吃并推送子女；同一顿的另一种药不算拿错，不推送</td></tr>
+</table>
 <h4>接口字段</h4>
 <table>
 <tr><th>接口</th><th>请求字段</th><th>返回字段</th></tr>
 <tr><td>医嘱整理</td><td>text 原话（≤ 8000 字）</td><td>name 药名；dose 每次多少；times 具体几点数组；method 怎么吃；evidence 每个字段的原文片段；dropped 被核对去掉的字段</td></tr>
+<tr><td>拍照识别</td><td>prompt 提示词；image 照片（JPEG，data URL ≤ 2MB）</td><td>readable 是否看得到药名；sure 是否拿得准；names 通用名数组；specs 规格数组；box 药盒位置 [左, 上, 右, 下]（0–1000）</td></tr>
+<tr><td>上报核对结果</td><td>dose_id，med_id，kind（对了 / 同一顿 / 不对 / 不在清单 / 看不清 / 失败），why，at</td><td>是否已通知子女</td></tr>
 <tr><td>上报服药状态</td><td>dose_id，status，by（self / call），at，reason</td><td>status 当前状态</td></tr>
-<tr><td>药品保存</td><td>name，dose，times，method，slot，photo，stock</td><td>med_id，days_left 够吃天数</td></tr>
+<tr><td>药品保存</td><td>name，dose，times，method，slot，photo，stock，box_name 药盒上的药名，box_spec 规格</td><td>med_id，days_left 够吃天数</td></tr>
 </table>
 
 <h3>4.2 功能详述</h3>
@@ -217,6 +255,8 @@ flowchart LR
 <tr><th>功能点</th><th>运行逻辑</th><th>关键技术 / 运用模型能力</th></tr>
 <tr><td>AI 整理医嘱</td><td>子女在录入页输入原话后触发；大模型抽取四个字段和原文依据，经规则核对后填入表单，没核对上的字段留空提示补充；保存前必须子女确认</td><td>DeepSeek 结构化抽取，温度 0，JSON 输出；提示词限定"只抽取原文明确写了的内容"</td></tr>
 <tr><td>原文核对</td><td>逐字段检查依据是否在原文、剂量数字是否一致、具体时刻是否在原文出现；不通过即去掉</td><td>规则引擎，不依赖模型；中文数字和半片等写法统一换算后比对</td></tr>
+<tr><td>拍一拍核对</td><td>父母在吃药指引页拍药盒；看图模型只抄药名、规格，并报告拿不准和药盒位置；规则比对清单后给出五种答复之一，大字显示并朗读；拿错或清单外的药推送子女；连续 2 次看不清不再要求重拍；接口失败时答"现在核对不了"，不影响确认吃药</td><td>通义千问 qwen3-vl-plus，温度 0，JSON 输出；规则引擎判断对错，模型不参与判断</td></tr>
+<tr><td>药盒名预填</td><td>子女登记药品时拍药盒，同一个识图接口读出药盒名和规格，只预填空着的格子，子女核对后保存</td><td>同上；读到不止一个药名或看不清时不预填</td></tr>
 <tr><td>语音输入</td><td>子女点"语音说"，识别为文字后再触发整理；识别失败时提示改用文字</td><td>系统语音识别</td></tr>
 <tr><td>吃药指引朗读</td><td>把用药方案按固定模板转成口语并朗读，长句拆成短句排队播放</td><td>系统语音合成；模板生成，不用大模型，保证不改变吃法</td></tr>
 <tr><td>这一周的情况</td><td>按 7 天确认记录统计规律，例如周末早上常要第 2 次提醒，给出改提醒时间的建议</td><td>规则统计；规划中由大模型把结论写成更好懂的话，但不参与判断</td></tr>
@@ -233,6 +273,8 @@ flowchart LR
 <tr><td>child_action</td><td>子女处理异常</td><td>action（打电话 / 发短信 / 电话确认 / 再提醒），距通知分钟数</td><td>误报率、处理时效</td></tr>
 <tr><td>med_ai_parse</td><td>点"AI 帮我填"</td><td>来源（大模型 / 规则兜底），耗时，填入字段数，被去掉字段数</td><td>AI 可用性</td></tr>
 <tr><td>med_save</td><td>保存药品</td><td>AI 填入后被修改的字段，是否填了剩余药量</td><td>AI 整理采纳率、坏例收集</td></tr>
+<tr><td>photo_check</td><td>父母拍照核对出结果</td><td>dose_id，med_id，kind，why（拿不准 / 有字被挡 / 离得太远等），耗时，来源（真实照片 / 示例图）</td><td>核对使用率、看不清比例、拿错药拦截次数</td></tr>
+<tr><td>photo_check_after</td><td>核对后父母的下一步</td><td>kind，下一步（确认吃药 / 重拍 / 求助）</td><td>答复是否被听懂，看不清是否劝退</td></tr>
 <tr><td>refill_alert / restock</td><td>补药提醒 / 补药量</td><td>med_id，够吃天数，补充数量</td><td>补药提醒是否被响应</td></tr>
 </table>
 
@@ -240,6 +282,7 @@ flowchart LR
 <table>
 <tr><th>数据类型</th><th>描述</th><th>数据规模要求</th></tr>
 <tr><td>医嘱整理评测集</td><td>测试 AI 整理医嘱在子女口述、处方或说明书、语音转写 3 类来源、33 类陷阱下是否准确、是否编造（<a href="eval/DATASET.md">评测集设计</a>）</td><td>当前 v2 共 120 条：seed 40、dev 50、holdout 30，holdout 迭代时不看具体用例；上线前补充真实医嘱，每类来源 ≥ 200 条，合计 ≥ 1000 条；逐条标注四个字段的标准答案、应留空的字段和陷阱类型</td></tr>
+<tr><td>拍照核对评测集</td><td>测试药盒识别和核对规则会不会把错药说成「对了」，覆盖正确、拿错、名字相近、清单外、只有药板、模糊、两盒、非药盒，以及商品名干扰、关键字被挡、规格被挡、远拍、晃动 14 类（<a href="eval/photo/REPORT.md">评测报告</a>）</td><td>当前 158 张，全部为程序生成的仿真图，seed / dev / holdout 分层划分；上线前补充真实药盒实拍 ≥ 500 张，覆盖弧面药瓶、反光、分装药盒，单独统计；逐张标注真实药品、可接受的答复</td></tr>
 <tr><td>坏例回归集</td><td>线上子女在 AI 整理后改动的字段，以及评测中失败的用例</td><td>每周复盘并入回归集；每次改提示词或核对规则须全量回归</td></tr>
 <tr><td>语音输入测试集</td><td>子女用语音说出医嘱的识别准确性，覆盖普通话和常见方言口音</td><td>≥ 300 条录音，标注转写原文</td></tr>
 </table>
@@ -254,6 +297,7 @@ flowchart LR
 <tr><td>求助</td><td>提交后子女立即收到；"记不清吃没吃"时父母端提示先别再吃，该次不扣药量</td></tr>
 <tr><td>电话后再提醒</td><td>子女设 15 分钟后再响铃，到时父母手机响；再过 15 分钟仍未确认再通知子女</td></tr>
 <tr><td>补药提醒</td><td>确认后扣减药量；够吃天数 ≤ 设定值时提醒一次，不覆盖"已吃"通知；补药后重算</td></tr>
+<tr><td>拿错药提醒</td><td>拍照结果为不对或不在清单时，父母端提示先别吃，子女 1 分钟内收到提醒；同一顿的另一种药不推送</td></tr>
 <tr><td>服药顺序</td><td>同一时刻多种药按饭前 → 随餐 → 饭后 → 睡前朗读；没写饭点的保持录入顺序</td></tr>
 </table>
 <h4>AI 相关功能</h4>
@@ -262,6 +306,8 @@ flowchart LR
 <tr><td>AI 整理医嘱</td><td>在第 6 节评测集上跑完整流程（大模型抽取 + 规则核对），逐字段与标准答案比对</td><td>4 字段全对率 ≥ 95%；字段准确率 ≥ 98%；应留空字段编造率 ≤ 2%。当前 v2 经 4 轮坏例迭代：全对 98.3%、字段准确率 99.6%、编造 0/191，holdout 28/30（<a href="eval/report.html">数据分析报告</a>）</td></tr>
 <tr><td>原文核对</td><td>构造"把一日三次编成具体时刻""剂量写错""依据不是原文"三类用例</td><td>三类全部拦截；正确字段误删率为 0</td></tr>
 <tr><td>大模型降级</td><td>模拟大模型超时和返回错误</td><td>100% 回退到规则整理，并在页面说明</td></tr>
+<tr><td>拍一拍核对</td><td>在第 6 节拍照核对评测集上跑完整流程（看图模型读数 + 规则核对），与可接受的答复比对</td><td>误判「对了」必须为 0；清晰正确药盒认对率 ≥ 90%；清晰照片看不清率 ≤ 10%。当前经 5 轮坏例迭代：误判「对了」由 5/107 降到 0/107，158 张全部答对，清晰认对 16/16（<a href="eval/photo/REPORT.md">评测报告</a>）；均为仿真图，须用真实实拍复测</td></tr>
+<tr><td>看图模型降级</td><td>模拟接口超时、返回错误、输出格式错误</td><td>100% 答「现在核对不了」，不出现「对了」，不影响确认吃药</td></tr>
 <tr><td>语音输入</td><td>在语音测试集上识别后再整理</td><td>转写后四个字段全对率与文字输入相差 ≤ 5 个百分点</td></tr>
 </table>
 

@@ -1,0 +1,8 @@
+# 用 wrangler 部署这个 Worker：npx wrangler deploy
+# keep_vars：保留在 Cloudflare 后台设置的变量（ALLOWED_ORIGINS 等），不被部署覆盖；Secret 本来就不受部署影响
+name = "sansan-ai"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+account_id = "2a5c6676b9e5ce5525df6a5de01ae72f"
+workers_dev = true
+keep_vars = true

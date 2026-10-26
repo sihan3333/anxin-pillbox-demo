@@ -1,0 +1,4242 @@
+{
+ "version": "photo-v1",
+ "list": [
+  {
+   "id": "a",
+   "name": "降压药",
+   "boxName": "苯磺酸氨氯地平片",
+   "boxSpec": "5mg",
+   "times": [
+    "08:00"
+   ]
+  },
+  {
+   "id": "b",
+   "name": "降糖药",
+   "boxName": "盐酸二甲双胍片",
+   "boxSpec": "0.5g",
+   "times": [
+    "08:00",
+    "20:00"
+   ]
+  },
+  {
+   "id": "c",
+   "name": "降脂药",
+   "boxName": "阿托伐他汀钙片",
+   "boxSpec": "20mg",
+   "times": [
+    "21:00"
+   ]
+  },
+  {
+   "id": "d",
+   "name": "阿司匹林",
+   "boxName": "阿司匹林肠溶片",
+   "boxSpec": "100mg",
+   "times": [
+    "08:00"
+   ]
+  },
+  {
+   "id": "e",
+   "name": "硝苯地平",
+   "boxName": "硝苯地平控释片",
+   "boxSpec": "30mg",
+   "times": [
+    "20:00"
+   ]
+  }
+ ],
+ "cases": [
+  {
+   "id": "p001",
+   "category": "1 正确清晰",
+   "file": "img/p001.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "holdout"
+  },
+  {
+   "id": "p002",
+   "category": "1 正确清晰",
+   "file": "img/p002.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "dev"
+  },
+  {
+   "id": "p003",
+   "category": "1 正确清晰",
+   "file": "img/p003.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "holdout"
+  },
+  {
+   "id": "p004",
+   "category": "1 正确清晰",
+   "file": "img/p004.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "seed"
+  },
+  {
+   "id": "p005",
+   "category": "1 正确清晰",
+   "file": "img/p005.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平控释片"
+    ],
+    "specs": [
+     "30mg"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "dev"
+  },
+  {
+   "id": "p006",
+   "category": "1 正确清晰",
+   "file": "img/p006.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "dev"
+  },
+  {
+   "id": "p007",
+   "category": "1 正确清晰",
+   "file": "img/p007.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "holdout"
+  },
+  {
+   "id": "p008",
+   "category": "1 正确清晰",
+   "file": "img/p008.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "seed"
+  },
+  {
+   "id": "p009",
+   "category": "1 正确清晰",
+   "file": "img/p009.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "dev"
+  },
+  {
+   "id": "p010",
+   "category": "1 正确清晰",
+   "file": "img/p010.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平控释片"
+    ],
+    "specs": [
+     "30mg"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "seed"
+  },
+  {
+   "id": "p011",
+   "category": "1 正确清晰",
+   "file": "img/p011.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "holdout"
+  },
+  {
+   "id": "p012",
+   "category": "1 正确清晰",
+   "file": "img/p012.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "dev"
+  },
+  {
+   "id": "p013",
+   "category": "1 正确清晰",
+   "file": "img/p013.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "dev"
+  },
+  {
+   "id": "p014",
+   "category": "1 正确清晰",
+   "file": "img/p014.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "dev"
+  },
+  {
+   "id": "p015",
+   "category": "1 正确清晰",
+   "file": "img/p015.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平控释片"
+    ],
+    "specs": [
+     "30mg"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "seed"
+  },
+  {
+   "id": "p016",
+   "category": "1 正确清晰",
+   "file": "img/p016.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "ok"
+   ],
+   "note": "正面清晰",
+   "split": "holdout"
+  },
+  {
+   "id": "p017",
+   "category": "2 正确有干扰",
+   "file": "img/p017.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "倾斜",
+   "split": "dev"
+  },
+  {
+   "id": "p018",
+   "category": "2 正确有干扰",
+   "file": "img/p018.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "反光",
+   "split": "holdout"
+  },
+  {
+   "id": "p019",
+   "category": "2 正确有干扰",
+   "file": "img/p019.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "遮挡角落",
+   "split": "seed"
+  },
+  {
+   "id": "p020",
+   "category": "2 正确有干扰",
+   "file": "img/p020.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "侧拍",
+   "split": "holdout"
+  },
+  {
+   "id": "p021",
+   "category": "2 正确有干扰",
+   "file": "img/p021.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平控释片"
+    ],
+    "specs": [
+     "30mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "竖放",
+   "split": "dev"
+  },
+  {
+   "id": "p022",
+   "category": "2 正确有干扰",
+   "file": "img/p022.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "倾斜",
+   "split": "dev"
+  },
+  {
+   "id": "p023",
+   "category": "2 正确有干扰",
+   "file": "img/p023.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "反光",
+   "split": "holdout"
+  },
+  {
+   "id": "p024",
+   "category": "2 正确有干扰",
+   "file": "img/p024.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "遮挡角落",
+   "split": "dev"
+  },
+  {
+   "id": "p025",
+   "category": "2 正确有干扰",
+   "file": "img/p025.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "侧拍",
+   "split": "dev"
+  },
+  {
+   "id": "p026",
+   "category": "2 正确有干扰",
+   "file": "img/p026.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平控释片"
+    ],
+    "specs": [
+     "30mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "竖放",
+   "split": "seed"
+  },
+  {
+   "id": "p027",
+   "category": "2 正确有干扰",
+   "file": "img/p027.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "倾斜",
+   "split": "seed"
+  },
+  {
+   "id": "p028",
+   "category": "2 正确有干扰",
+   "file": "img/p028.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "反光",
+   "split": "dev"
+  },
+  {
+   "id": "p029",
+   "category": "2 正确有干扰",
+   "file": "img/p029.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "遮挡角落",
+   "split": "seed"
+  },
+  {
+   "id": "p030",
+   "category": "2 正确有干扰",
+   "file": "img/p030.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "侧拍",
+   "split": "holdout"
+  },
+  {
+   "id": "p031",
+   "category": "2 正确有干扰",
+   "file": "img/p031.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平控释片"
+    ],
+    "specs": [
+     "30mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "竖放",
+   "split": "dev"
+  },
+  {
+   "id": "p032",
+   "category": "2 正确有干扰",
+   "file": "img/p032.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "倾斜",
+   "split": "holdout"
+  },
+  {
+   "id": "p033",
+   "category": "3 清单内另一种",
+   "file": "img/p033.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "wrong",
+    "unclear"
+   ],
+   "note": "拍到降脂药",
+   "split": "holdout"
+  },
+  {
+   "id": "p034",
+   "category": "3 清单内另一种",
+   "file": "img/p034.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平控释片"
+    ],
+    "specs": [
+     "30mg"
+    ]
+   },
+   "accept": [
+    "wrong",
+    "unclear"
+   ],
+   "note": "拍到硝苯地平",
+   "split": "dev"
+  },
+  {
+   "id": "p035",
+   "category": "3 清单内另一种",
+   "file": "img/p035.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平控释片"
+    ],
+    "specs": [
+     "30mg"
+    ]
+   },
+   "accept": [
+    "wrong",
+    "unclear"
+   ],
+   "note": "拍到硝苯地平",
+   "split": "dev"
+  },
+  {
+   "id": "p036",
+   "category": "3 清单内另一种",
+   "file": "img/p036.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "wrong",
+    "unclear"
+   ],
+   "note": "拍到阿司匹林",
+   "split": "holdout"
+  },
+  {
+   "id": "p037",
+   "category": "3 清单内另一种",
+   "file": "img/p037.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "sameDose",
+    "unclear"
+   ],
+   "note": "拍到阿司匹林",
+   "split": "dev"
+  },
+  {
+   "id": "p038",
+   "category": "3 清单内另一种",
+   "file": "img/p038.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "wrong",
+    "unclear"
+   ],
+   "note": "拍到阿司匹林",
+   "split": "seed"
+  },
+  {
+   "id": "p039",
+   "category": "3 清单内另一种",
+   "file": "img/p039.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "sameDose",
+    "unclear"
+   ],
+   "note": "拍到阿司匹林",
+   "split": "dev"
+  },
+  {
+   "id": "p040",
+   "category": "3 清单内另一种",
+   "file": "img/p040.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "sameDose",
+    "unclear"
+   ],
+   "note": "拍到阿司匹林",
+   "split": "seed"
+  },
+  {
+   "id": "p041",
+   "category": "3 清单内另一种",
+   "file": "img/p041.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "sameDose",
+    "unclear"
+   ],
+   "note": "拍到降糖药",
+   "split": "holdout"
+  },
+  {
+   "id": "p042",
+   "category": "3 清单内另一种",
+   "file": "img/p042.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "sameDose",
+    "unclear"
+   ],
+   "note": "拍到降糖药",
+   "split": "seed"
+  },
+  {
+   "id": "p043",
+   "category": "3 清单内另一种",
+   "file": "img/p043.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "sameDose",
+    "unclear"
+   ],
+   "note": "拍到降糖药",
+   "split": "dev"
+  },
+  {
+   "id": "p044",
+   "category": "3 清单内另一种",
+   "file": "img/p044.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "wrong",
+    "unclear"
+   ],
+   "note": "拍到降脂药",
+   "split": "dev"
+  },
+  {
+   "id": "p045",
+   "category": "3 清单内另一种",
+   "file": "img/p045.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "wrong",
+    "unclear"
+   ],
+   "note": "拍到降脂药",
+   "split": "seed"
+  },
+  {
+   "id": "p046",
+   "category": "3 清单内另一种",
+   "file": "img/p046.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "sameDose",
+    "unclear"
+   ],
+   "note": "拍到降压药",
+   "split": "holdout"
+  },
+  {
+   "id": "p047",
+   "category": "4 名字相近",
+   "file": "img/p047.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸左旋氨氯地平片"
+    ],
+    "specs": [
+     "2.5mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像苯磺酸氨氯地平片5mg",
+   "split": "dev"
+  },
+  {
+   "id": "p048",
+   "category": "4 名字相近",
+   "file": "img/p048.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "10mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像苯磺酸氨氯地平片5mg",
+   "split": "holdout"
+  },
+  {
+   "id": "p049",
+   "category": "4 名字相近",
+   "file": "img/p049.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "马来酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像苯磺酸氨氯地平片5mg",
+   "split": "seed"
+  },
+  {
+   "id": "p050",
+   "category": "4 名字相近",
+   "file": "img/p050.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍缓释片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像盐酸二甲双胍片0.5g",
+   "split": "holdout"
+  },
+  {
+   "id": "p051",
+   "category": "4 名字相近",
+   "file": "img/p051.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍肠溶片"
+    ],
+    "specs": [
+     "0.25g"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像盐酸二甲双胍片0.5g",
+   "split": "dev"
+  },
+  {
+   "id": "p052",
+   "category": "4 名字相近",
+   "file": "img/p052.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.85g"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像盐酸二甲双胍片0.5g",
+   "split": "dev"
+  },
+  {
+   "id": "p053",
+   "category": "4 名字相近",
+   "file": "img/p053.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "10mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像阿托伐他汀钙片20mg",
+   "split": "holdout"
+  },
+  {
+   "id": "p054",
+   "category": "4 名字相近",
+   "file": "img/p054.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙胶囊"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像阿托伐他汀钙片20mg",
+   "split": "dev"
+  },
+  {
+   "id": "p055",
+   "category": "4 名字相近",
+   "file": "img/p055.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "瑞舒伐他汀钙片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像阿托伐他汀钙片20mg",
+   "split": "holdout"
+  },
+  {
+   "id": "p056",
+   "category": "4 名字相近",
+   "file": "img/p056.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林泡腾片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像阿司匹林肠溶片100mg",
+   "split": "dev"
+  },
+  {
+   "id": "p057",
+   "category": "4 名字相近",
+   "file": "img/p057.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": [
+     "25mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像阿司匹林肠溶片100mg",
+   "split": "seed"
+  },
+  {
+   "id": "p058",
+   "category": "4 名字相近",
+   "file": "img/p058.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平片"
+    ],
+    "specs": [
+     "10mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像硝苯地平控释片30mg",
+   "split": "holdout"
+  },
+  {
+   "id": "p059",
+   "category": "4 名字相近",
+   "file": "img/p059.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平缓释片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像硝苯地平控释片30mg",
+   "split": "seed"
+  },
+  {
+   "id": "p060",
+   "category": "4 名字相近",
+   "file": "img/p060.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平控释片"
+    ],
+    "specs": [
+     "60mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像硝苯地平控释片30mg",
+   "split": "dev"
+  },
+  {
+   "id": "p061",
+   "category": "4 名字相近",
+   "file": "img/p061.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸左旋氨氯地平片"
+    ],
+    "specs": [
+     "2.5mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像苯磺酸氨氯地平片5mg",
+   "split": "dev"
+  },
+  {
+   "id": "p062",
+   "category": "4 名字相近",
+   "file": "img/p062.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "10mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像苯磺酸氨氯地平片5mg",
+   "split": "dev"
+  },
+  {
+   "id": "p063",
+   "category": "4 名字相近",
+   "file": "img/p063.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "马来酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像苯磺酸氨氯地平片5mg",
+   "split": "seed"
+  },
+  {
+   "id": "p064",
+   "category": "4 名字相近",
+   "file": "img/p064.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍缓释片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "像盐酸二甲双胍片0.5g",
+   "split": "dev"
+  },
+  {
+   "id": "p065",
+   "category": "5 清单外",
+   "file": "img/p065.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "格列美脲片"
+    ],
+    "specs": [
+     "2mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "清单外",
+   "split": "dev"
+  },
+  {
+   "id": "p066",
+   "category": "5 清单外",
+   "file": "img/p066.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "氯沙坦钾片"
+    ],
+    "specs": [
+     "50mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "清单外",
+   "split": "seed"
+  },
+  {
+   "id": "p067",
+   "category": "5 清单外",
+   "file": "img/p067.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "厄贝沙坦片"
+    ],
+    "specs": [
+     "150mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "清单外",
+   "split": "holdout"
+  },
+  {
+   "id": "p068",
+   "category": "5 清单外",
+   "file": "img/p068.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "辛伐他汀片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "清单外",
+   "split": "holdout"
+  },
+  {
+   "id": "p069",
+   "category": "5 清单外",
+   "file": "img/p069.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "美托洛尔缓释片"
+    ],
+    "specs": [
+     "47.5mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "清单外",
+   "split": "holdout"
+  },
+  {
+   "id": "p070",
+   "category": "5 清单外",
+   "file": "img/p070.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿卡波糖片"
+    ],
+    "specs": [
+     "50mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "清单外",
+   "split": "holdout"
+  },
+  {
+   "id": "p071",
+   "category": "5 清单外",
+   "file": "img/p071.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "氯吡格雷片"
+    ],
+    "specs": [
+     "75mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "清单外",
+   "split": "seed"
+  },
+  {
+   "id": "p072",
+   "category": "5 清单外",
+   "file": "img/p072.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "瑞格列奈片"
+    ],
+    "specs": [
+     "1mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "清单外",
+   "split": "dev"
+  },
+  {
+   "id": "p073",
+   "category": "5 清单外",
+   "file": "img/p073.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "缬沙坦胶囊"
+    ],
+    "specs": [
+     "80mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "清单外",
+   "split": "dev"
+  },
+  {
+   "id": "p074",
+   "category": "5 清单外",
+   "file": "img/p074.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "非洛地平缓释片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "清单外",
+   "split": "dev"
+  },
+  {
+   "id": "p075",
+   "category": "5 清单外",
+   "file": "img/p075.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "吲达帕胺片"
+    ],
+    "specs": [
+     "2.5mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "清单外",
+   "split": "dev"
+  },
+  {
+   "id": "p076",
+   "category": "5 清单外",
+   "file": "img/p076.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "格列齐特缓释片"
+    ],
+    "specs": [
+     "30mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "清单外",
+   "split": "seed"
+  },
+  {
+   "id": "p077",
+   "category": "6 只有药板",
+   "file": "img/p077.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "药板上没有字",
+   "split": "dev"
+  },
+  {
+   "id": "p078",
+   "category": "6 只有药板",
+   "file": "img/p078.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "药板上没有字",
+   "split": "holdout"
+  },
+  {
+   "id": "p079",
+   "category": "6 只有药板",
+   "file": "img/p079.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "药板上没有字",
+   "split": "dev"
+  },
+  {
+   "id": "p080",
+   "category": "6 只有药板",
+   "file": "img/p080.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "药板上没有字",
+   "split": "dev"
+  },
+  {
+   "id": "p081",
+   "category": "6 只有药板",
+   "file": "img/p081.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "药板上没有字",
+   "split": "holdout"
+  },
+  {
+   "id": "p082",
+   "category": "6 只有药板",
+   "file": "img/p082.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "药板上没有字",
+   "split": "seed"
+  },
+  {
+   "id": "p083",
+   "category": "6 只有药板",
+   "file": "img/p083.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "药板上没有字",
+   "split": "seed"
+  },
+  {
+   "id": "p084",
+   "category": "6 只有药板",
+   "file": "img/p084.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "药板上没有字",
+   "split": "dev"
+  },
+  {
+   "id": "p085",
+   "category": "6 只有药板",
+   "file": "img/p085.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "药板上没有字",
+   "split": "holdout"
+  },
+  {
+   "id": "p086",
+   "category": "6 只有药板",
+   "file": "img/p086.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "药板上没有字",
+   "split": "dev"
+  },
+  {
+   "id": "p087",
+   "category": "7 模糊过暗一角",
+   "file": "img/p087.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "ok"
+   ],
+   "note": "模糊，正确的药",
+   "split": "holdout"
+  },
+  {
+   "id": "p088",
+   "category": "7 模糊过暗一角",
+   "file": "img/p088.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList",
+    "wrong",
+    "sameDose"
+   ],
+   "note": "过暗，不是该吃的药",
+   "split": "holdout"
+  },
+  {
+   "id": "p089",
+   "category": "7 模糊过暗一角",
+   "file": "img/p089.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "ok"
+   ],
+   "note": "只拍到一角，正确的药",
+   "split": "dev"
+  },
+  {
+   "id": "p090",
+   "category": "7 模糊过暗一角",
+   "file": "img/p090.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList",
+    "wrong",
+    "sameDose"
+   ],
+   "note": "模糊，不是该吃的药",
+   "split": "seed"
+  },
+  {
+   "id": "p091",
+   "category": "7 模糊过暗一角",
+   "file": "img/p091.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "ok"
+   ],
+   "note": "过暗，正确的药",
+   "split": "dev"
+  },
+  {
+   "id": "p092",
+   "category": "7 模糊过暗一角",
+   "file": "img/p092.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList",
+    "wrong",
+    "sameDose"
+   ],
+   "note": "只拍到一角，不是该吃的药",
+   "split": "dev"
+  },
+  {
+   "id": "p093",
+   "category": "7 模糊过暗一角",
+   "file": "img/p093.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "ok"
+   ],
+   "note": "模糊，正确的药",
+   "split": "holdout"
+  },
+  {
+   "id": "p094",
+   "category": "7 模糊过暗一角",
+   "file": "img/p094.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList",
+    "wrong",
+    "sameDose"
+   ],
+   "note": "过暗，不是该吃的药",
+   "split": "dev"
+  },
+  {
+   "id": "p095",
+   "category": "7 模糊过暗一角",
+   "file": "img/p095.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "ok"
+   ],
+   "note": "只拍到一角，正确的药",
+   "split": "dev"
+  },
+  {
+   "id": "p096",
+   "category": "7 模糊过暗一角",
+   "file": "img/p096.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList",
+    "wrong",
+    "sameDose"
+   ],
+   "note": "模糊，不是该吃的药",
+   "split": "dev"
+  },
+  {
+   "id": "p097",
+   "category": "7 模糊过暗一角",
+   "file": "img/p097.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "ok"
+   ],
+   "note": "过暗，正确的药",
+   "split": "holdout"
+  },
+  {
+   "id": "p098",
+   "category": "7 模糊过暗一角",
+   "file": "img/p098.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList",
+    "wrong",
+    "sameDose"
+   ],
+   "note": "只拍到一角，不是该吃的药",
+   "split": "seed"
+  },
+  {
+   "id": "p099",
+   "category": "7 模糊过暗一角",
+   "file": "img/p099.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "ok"
+   ],
+   "note": "模糊，正确的药",
+   "split": "seed"
+  },
+  {
+   "id": "p100",
+   "category": "7 模糊过暗一角",
+   "file": "img/p100.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList",
+    "wrong",
+    "sameDose"
+   ],
+   "note": "过暗，不是该吃的药",
+   "split": "seed"
+  },
+  {
+   "id": "p101",
+   "category": "8 两盒药",
+   "file": "img/p101.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片",
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "0.5g",
+     "5mg"
+    ]
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "两盒",
+   "split": "dev"
+  },
+  {
+   "id": "p102",
+   "category": "8 两盒药",
+   "file": "img/p102.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片",
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "5mg",
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "两盒",
+   "split": "holdout"
+  },
+  {
+   "id": "p103",
+   "category": "8 两盒药",
+   "file": "img/p103.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片",
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "5mg",
+     "20mg"
+    ]
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "两盒",
+   "split": "dev"
+  },
+  {
+   "id": "p104",
+   "category": "8 两盒药",
+   "file": "img/p104.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片",
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "5mg",
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "两盒",
+   "split": "dev"
+  },
+  {
+   "id": "p105",
+   "category": "8 两盒药",
+   "file": "img/p105.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片",
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "0.5g",
+     "20mg"
+    ]
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "两盒",
+   "split": "holdout"
+  },
+  {
+   "id": "p106",
+   "category": "8 两盒药",
+   "file": "img/p106.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片",
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "0.5g",
+     "5mg"
+    ]
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "两盒",
+   "split": "dev"
+  },
+  {
+   "id": "p107",
+   "category": "8 两盒药",
+   "file": "img/p107.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片",
+     "硝苯地平控释片"
+    ],
+    "specs": [
+     "0.5g",
+     "30mg"
+    ]
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "两盒",
+   "split": "seed"
+  },
+  {
+   "id": "p108",
+   "category": "8 两盒药",
+   "file": "img/p108.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片",
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "100mg",
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "两盒",
+   "split": "dev"
+  },
+  {
+   "id": "p109",
+   "category": "8 两盒药",
+   "file": "img/p109.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片",
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "5mg",
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "两盒",
+   "split": "seed"
+  },
+  {
+   "id": "p110",
+   "category": "8 两盒药",
+   "file": "img/p110.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片",
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "20mg",
+     "5mg"
+    ]
+   },
+   "accept": [
+    "unclear"
+   ],
+   "note": "两盒",
+   "split": "holdout"
+  },
+  {
+   "id": "p111",
+   "category": "9 不是药盒",
+   "file": "img/p111.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "不是药盒",
+   "split": "dev"
+  },
+  {
+   "id": "p112",
+   "category": "9 不是药盒",
+   "file": "img/p112.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "不是药盒",
+   "split": "dev"
+  },
+  {
+   "id": "p113",
+   "category": "9 不是药盒",
+   "file": "img/p113.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "不是药盒",
+   "split": "dev"
+  },
+  {
+   "id": "p114",
+   "category": "9 不是药盒",
+   "file": "img/p114.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "不是药盒",
+   "split": "dev"
+  },
+  {
+   "id": "p115",
+   "category": "9 不是药盒",
+   "file": "img/p115.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "不是药盒",
+   "split": "holdout"
+  },
+  {
+   "id": "p116",
+   "category": "9 不是药盒",
+   "file": "img/p116.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "不是药盒",
+   "split": "dev"
+  },
+  {
+   "id": "p117",
+   "category": "9 不是药盒",
+   "file": "img/p117.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "不是药盒",
+   "split": "seed"
+  },
+  {
+   "id": "p118",
+   "category": "9 不是药盒",
+   "file": "img/p118.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "不是药盒",
+   "split": "holdout"
+  },
+  {
+   "id": "p119",
+   "category": "9 不是药盒",
+   "file": "img/p119.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "不是药盒",
+   "split": "seed"
+  },
+  {
+   "id": "p120",
+   "category": "9 不是药盒",
+   "file": "img/p120.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "b",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "不是药盒",
+   "split": "holdout"
+  },
+  {
+   "id": "p121",
+   "category": "H1 商品名大通用名小",
+   "file": "img/p121.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "商品名安平宁",
+   "split": "dev"
+  },
+  {
+   "id": "p122",
+   "category": "H1 商品名大通用名小",
+   "file": "img/p122.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "商品名舒络欣",
+   "split": "seed"
+  },
+  {
+   "id": "p123",
+   "category": "H1 商品名大通用名小",
+   "file": "img/p123.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "商品名糖立稳",
+   "split": "holdout"
+  },
+  {
+   "id": "p124",
+   "category": "H1 商品名大通用名小",
+   "file": "img/p124.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "商品名脂必清",
+   "split": "dev"
+  },
+  {
+   "id": "p125",
+   "category": "H1 商品名大通用名小",
+   "file": "img/p125.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平控释片"
+    ],
+    "specs": [
+     "30mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "商品名心护宁",
+   "split": "holdout"
+  },
+  {
+   "id": "p126",
+   "category": "H1 商品名大通用名小",
+   "file": "img/p126.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "商品名平压达",
+   "split": "dev"
+  },
+  {
+   "id": "p127",
+   "category": "H1 商品名大通用名小",
+   "file": "img/p127.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "商品名康维诺",
+   "split": "dev"
+  },
+  {
+   "id": "p128",
+   "category": "H1 商品名大通用名小",
+   "file": "img/p128.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "商品名素利安",
+   "split": "seed"
+  },
+  {
+   "id": "p129",
+   "category": "H2 关键字被遮挡",
+   "file": "img/p129.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍缓释片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "盐酸二甲双胍缓释片，盖住「缓释」",
+   "split": "seed"
+  },
+  {
+   "id": "p130",
+   "category": "H2 关键字被遮挡",
+   "file": "img/p130.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸左旋氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "苯磺酸左旋氨氯地平片，盖住「左旋」",
+   "split": "dev"
+  },
+  {
+   "id": "p131",
+   "category": "H2 关键字被遮挡",
+   "file": "img/p131.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙胶囊"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "阿托伐他汀钙胶囊，盖住「胶囊」",
+   "split": "holdout"
+  },
+  {
+   "id": "p132",
+   "category": "H2 关键字被遮挡",
+   "file": "img/p132.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林泡腾片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "阿司匹林泡腾片，盖住「泡腾」",
+   "split": "dev"
+  },
+  {
+   "id": "p133",
+   "category": "H2 关键字被遮挡",
+   "file": "img/p133.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍肠溶片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "盐酸二甲双胍肠溶片，盖住「肠溶」",
+   "split": "dev"
+  },
+  {
+   "id": "p134",
+   "category": "H2 关键字被遮挡",
+   "file": "img/p134.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸左旋氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "苯磺酸左旋氨氯地平片，盖住「左」",
+   "split": "holdout"
+  },
+  {
+   "id": "p135",
+   "category": "H2 关键字被遮挡",
+   "file": "img/p135.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平缓释片"
+    ],
+    "specs": [
+     "30mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "硝苯地平缓释片，盖住「缓释」",
+   "split": "dev"
+  },
+  {
+   "id": "p136",
+   "category": "H2 关键字被遮挡",
+   "file": "img/p136.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍缓释片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "盐酸二甲双胍缓释片，盖住「缓」",
+   "split": "seed"
+  },
+  {
+   "id": "p137",
+   "category": "H3 规格被遮挡",
+   "file": "img/p137.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "苯磺酸氨氯地平片10mg，规格被盖住",
+   "split": "dev"
+  },
+  {
+   "id": "p138",
+   "category": "H3 规格被遮挡",
+   "file": "img/p138.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "盐酸二甲双胍片0.85g，规格被盖住",
+   "split": "holdout"
+  },
+  {
+   "id": "p139",
+   "category": "H3 规格被遮挡",
+   "file": "img/p139.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "阿托伐他汀钙片40mg，规格被盖住",
+   "split": "dev"
+  },
+  {
+   "id": "p140",
+   "category": "H3 规格被遮挡",
+   "file": "img/p140.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林肠溶片"
+    ],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "阿司匹林肠溶片25mg，规格被盖住",
+   "split": "holdout"
+  },
+  {
+   "id": "p141",
+   "category": "H3 规格被遮挡",
+   "file": "img/p141.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平控释片"
+    ],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "硝苯地平控释片60mg，规格被盖住",
+   "split": "seed"
+  },
+  {
+   "id": "p142",
+   "category": "H3 规格被遮挡",
+   "file": "img/p142.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "苯磺酸氨氯地平片2.5mg，规格被盖住",
+   "split": "dev"
+  },
+  {
+   "id": "p143",
+   "category": "H3 规格被遮挡",
+   "file": "img/p143.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": []
+   },
+   "accept": [
+    "unclear",
+    "notInList"
+   ],
+   "note": "阿托伐他汀钙片10mg，规格被盖住",
+   "split": "seed"
+  },
+  {
+   "id": "p144",
+   "category": "H4 远拍小字",
+   "file": "img/p144.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "5mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "苯磺酸氨氯地平片5mg，远拍",
+   "split": "dev"
+  },
+  {
+   "id": "p145",
+   "category": "H4 远拍小字",
+   "file": "img/p145.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸氨氯地平片"
+    ],
+    "specs": [
+     "10mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "苯磺酸氨氯地平片10mg，远拍",
+   "split": "seed"
+  },
+  {
+   "id": "p146",
+   "category": "H4 远拍小字",
+   "file": "img/p146.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "阿托伐他汀钙片20mg，远拍",
+   "split": "dev"
+  },
+  {
+   "id": "p147",
+   "category": "H4 远拍小字",
+   "file": "img/p147.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍缓释片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "盐酸二甲双胍缓释片0.5g，远拍",
+   "split": "dev"
+  },
+  {
+   "id": "p148",
+   "category": "H4 远拍小字",
+   "file": "img/p148.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平控释片"
+    ],
+    "specs": [
+     "30mg"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "硝苯地平控释片30mg，远拍",
+   "split": "holdout"
+  },
+  {
+   "id": "p149",
+   "category": "H4 远拍小字",
+   "file": "img/p149.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.85g"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "盐酸二甲双胍片0.85g，远拍",
+   "split": "holdout"
+  },
+  {
+   "id": "p150",
+   "category": "H4 远拍小字",
+   "file": "img/p150.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "ok",
+    "unclear"
+   ],
+   "note": "盐酸二甲双胍片0.5g，远拍",
+   "split": "dev"
+  },
+  {
+   "id": "p151",
+   "category": "H4 远拍小字",
+   "file": "img/p151.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙胶囊"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "阿托伐他汀钙胶囊20mg，远拍",
+   "split": "seed"
+  },
+  {
+   "id": "p152",
+   "category": "H5 晃动模糊",
+   "file": "img/p152.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "a",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "苯磺酸左旋氨氯地平片"
+    ],
+    "specs": [
+     "2.5mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "苯磺酸左旋氨氯地平片2.5mg，晃动",
+   "split": "holdout"
+  },
+  {
+   "id": "p153",
+   "category": "H5 晃动模糊",
+   "file": "img/p153.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍缓释片"
+    ],
+    "specs": [
+     "0.5g"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "盐酸二甲双胍缓释片0.5g，晃动",
+   "split": "holdout"
+  },
+  {
+   "id": "p154",
+   "category": "H5 晃动模糊",
+   "file": "img/p154.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "b",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "盐酸二甲双胍肠溶片"
+    ],
+    "specs": [
+     "0.25g"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "盐酸二甲双胍肠溶片0.25g，晃动",
+   "split": "dev"
+  },
+  {
+   "id": "p155",
+   "category": "H5 晃动模糊",
+   "file": "img/p155.jpg",
+   "plan": {
+    "time": "08:00",
+    "current": "d",
+    "dose": [
+     "a",
+     "b",
+     "d"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿司匹林泡腾片"
+    ],
+    "specs": [
+     "100mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "阿司匹林泡腾片100mg，晃动",
+   "split": "seed"
+  },
+  {
+   "id": "p156",
+   "category": "H5 晃动模糊",
+   "file": "img/p156.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平片"
+    ],
+    "specs": [
+     "10mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "硝苯地平片10mg，晃动",
+   "split": "dev"
+  },
+  {
+   "id": "p157",
+   "category": "H5 晃动模糊",
+   "file": "img/p157.jpg",
+   "plan": {
+    "time": "20:00",
+    "current": "e",
+    "dose": [
+     "b",
+     "e"
+    ]
+   },
+   "truth": {
+    "names": [
+     "硝苯地平缓释片"
+    ],
+    "specs": [
+     "20mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "硝苯地平缓释片20mg，晃动",
+   "split": "dev"
+  },
+  {
+   "id": "p158",
+   "category": "H5 晃动模糊",
+   "file": "img/p158.jpg",
+   "plan": {
+    "time": "21:00",
+    "current": "c",
+    "dose": [
+     "c"
+    ]
+   },
+   "truth": {
+    "names": [
+     "阿托伐他汀钙片"
+    ],
+    "specs": [
+     "10mg"
+    ]
+   },
+   "accept": [
+    "notInList",
+    "unclear"
+   ],
+   "note": "阿托伐他汀钙片10mg，晃动",
+   "split": "seed"
+  }
+ ]
+}

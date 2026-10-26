@@ -144,5 +144,63 @@ test('补药：半片能算，单位不是片/粒或没填药量时不推算', (
   assert.equal(D.daysLeft({ ...base, dose: '1片', stock: null }), null);
 });
 
+// ---------- 拍一拍核对 ----------
+const pc = (read, mi = 'm1') => { const ms = D.S.meds, m = ms.find(x => x.id === mi); return D.photoCheck(read, m, ms.filter(x => x.times.includes('08:00')), ms); };
+const rd = (names, specs = []) => ({ readable: true, sure: true, names, specs });
+test('拍照核对：名字和规格都对上才说对了，空格标点和单位写法不影响', () => {
+  assert.equal(pc(rd(['苯磺酸 氨氯地平片'], ['5 mg'])).kind, 'ok');
+  assert.equal(pc(rd(['盐酸二甲双胍片'], ['500毫克']), 'm2').kind, 'ok');
+});
+test('拍照核对：剂型或修饰词不同不算对，规格不同不算对', () => {
+  D.S.meds.forEach(m => { m.times = ['08:00']; });
+  D.S.meds = [D.S.meds[0]];
+  assert.notEqual(pc(rd(['苯磺酸左旋氨氯地平片'], ['5mg'])).kind, 'ok');
+  assert.notEqual(pc(rd(['苯磺酸氨氯地平缓释片'], ['5mg'])).kind, 'ok');
+  assert.notEqual(pc(rd(['苯磺酸氨氯地平片'], ['10mg'])).kind, 'ok');
+});
+test('拍照核对：登记了规格但照片里没读到，说看不清，不说对了', () => {
+  const r = pc(rd(['苯磺酸氨氯地平片']));
+  assert.equal(r.kind, 'unclear'); assert.equal(r.why, '规格没看清');
+});
+test('拍照核对：看不清、没读到、一张照片两盒药，都说看不清', () => {
+  assert.equal(pc({ readable: false, names: ['苯磺酸氨氯地平片'], specs: ['5mg'] }).kind, 'unclear');
+  assert.equal(pc(rd([])).kind, 'unclear');
+  assert.equal(pc(null).kind, 'unclear');
+  assert.equal(pc(rd(['苯磺酸氨氯地平片', '盐酸二甲双胍片'], ['5mg'])).kind, 'unclear');
+});
+test('拍照核对：拍到同一顿的另一种药，说可以吃，不推送', () => {
+  const r = pc(rd(['盐酸二甲双胍片'], ['0.5g']));
+  assert.equal(r.kind, 'sameDose'); assert.equal(r.med.id, 'm2');
+});
+test('拍照核对：拍到清单里另一顿的药，说不对，并告诉该吃哪一格', () => {
+  D.S.meds[1].times = ['20:00'];
+  const r = pc(rd(['盐酸二甲双胍片'], ['0.5g']));
+  assert.equal(r.kind, 'wrong');
+  const t = D.photoReply(r, D.S.meds[0]);
+  assert.ok(t.startsWith('不对') && t.includes('第1格') && t.includes('蓝色盒子'));
+});
+test('拍照核对：清单外的药说不在清单；清单里有药没登记药盒名时只说看不清', () => {
+  assert.equal(pc(rd(['阿托伐他汀钙片'], ['20mg'])).kind, 'notInList');
+  D.S.meds[1].boxName = '';
+  assert.equal(pc(rd(['阿托伐他汀钙片'], ['20mg'])).kind, 'unclear');
+});
+test('拍照核对：模型说拿不准、或者有字被挡住（□），不说对了', () => {
+  assert.equal(pc({ ...rd(['苯磺酸氨氯地平片'], ['5mg']), sure: false }).kind, 'unclear');
+  assert.equal(pc({ readable: true, names: ['苯磺酸氨氯地平片'], specs: ['5mg'] }).kind, 'unclear');
+  assert.equal(pc(rd(['苯磺酸□□氨氯地平片'], ['5mg'])).kind, 'unclear');
+  assert.equal(pc(rd(['苯磺酸氨氯地平片'], ['□mg'])).kind, 'unclear');
+});
+test('拍照核对：药盒在照片里太小，请父母拿近再拍，不说对了', () => {
+  const r = pc({ ...rd(['苯磺酸氨氯地平片'], ['5mg']), box: [450, 460, 580, 560] });
+  assert.equal(r.kind, 'unclear'); assert.equal(r.why, '离得太远');
+  assert.ok(D.photoReply(r, D.S.meds[0], 1).includes('拿近'));
+  assert.equal(pc({ ...rd(['苯磺酸氨氯地平片'], ['5mg']), box: [100, 150, 900, 800] }).kind, 'ok');
+});
+test('拍照核对：连续第 2 次看不清不再让重拍', () => {
+  const m = D.S.meds[0];
+  assert.ok(D.photoReply({ kind: 'unclear' }, m, 1).includes('再拍一次'));
+  assert.ok(!D.photoReply({ kind: 'unclear' }, m, 2).includes('再拍一次'));
+});
+
 fs.writeFileSync(path.join(__dirname, 'demo-results.json'), JSON.stringify({ testedAt: new Date().toISOString(), scope: '双手机 Demo（demo.js）的提醒、通知、求助、服药顺序与规则统计；不代表实际服药或用户效果', passed: results.length, results }, null, 2));
 console.log(`${results.length}/${results.length} passed`);

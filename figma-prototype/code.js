@@ -1,7 +1,7 @@
 // 安心药箱 · 原型 v3（Figma 开发插件）
 // 视觉参考主流开源移动端设计规范：品牌蓝、浅色标签、白卡片 + 轻阴影、单元格列表、底部标签栏。
 // 运行后新建一页「安心药箱 原型 v3」：
-//   父母端 9 屏（适老化大字）+ 子女端 9 屏 + 状态规范板 + 成功指标板，每屏下方附设计说明；
+//   父母端 11 屏（适老化大字）+ 子女端 10 屏 + 状态规范板 + 成功指标板，每屏下方附设计说明；
 //   颜色变量、文字样式、阴影样式和点击跳转一并建好。
 
 const C = {
@@ -540,7 +540,7 @@ function buildParent() {
     const r = figma.createRectangle(); r.resize(10, 6); r.cornerRadius = 3; r.fills = solid(c);
     seg.appendChild(r); r.layoutSizingHorizontal = 'FILL';
   }
-  const c1 = card('第 1 种药', { pad: 20, gap: 14 });
+  const c1 = card('第 1 种药', { pad: 16, gap: 10 });
   put(body, c1);
   put(c1, tag('吃饭时吃', 'success', true), 'HUG');
   const vis = row(c1, '药的样子', 16);
@@ -557,6 +557,7 @@ function buildParent() {
   fact(c1, '在哪', '药盒第 1 格（贴着 1 号）');
   fact(c1, '吃几片', '1 片');
   fact(c1, '怎么吃', '和早饭一起吃，温水送服');
+  link(put(c1, btn('拍一下，看拿对没有', 'light', 'P_small', 48, 'camera')), 'PhotoOk');
   const c2 = card('第 2 种药', { dir: 'HORIZONTAL', cross: 'CENTER', gap: 12 });
   put(body, c2);
   put(c2, circ('序号', 40, C.gray, txt('2', 'P_bodyB', C.text2, 'CENTER')), null);
@@ -724,6 +725,85 @@ function buildParent() {
   put(body, voice('正在朗读：“还没开饭，按第 1 个；不在家，按第 2 个”'));
   spacer(body);
   link(put(body, btn('现在就吃', 'success', 'P_btn', 64)), 'Guide');
+}
+
+// ---------- 拍一拍核对 3 屏 ----------
+
+// 照片示意：桌面上一盒药，盒上印着通用名和规格
+function photoMock(name, spec, band) {
+  const f = fixed(box('照片/' + name, { fill: '#C9A27A', radius: 12, align: 'CENTER', cross: 'CENTER' }), 310, 120);
+  const b = fixed(box('药盒/' + name, { fill: C.white, radius: 6, gap: 4, pad: [0, 0, 8, 0], cross: 'CENTER' }), 210, 92);
+  shade(b);
+  put(f, b, null);
+  const top = fixed(box('色带', { fill: band, dir: 'HORIZONTAL', pad: [0, 10, 0, 10], cross: 'CENTER' }), 210, 22);
+  put(b, top, 'FILL');
+  put(top, txt('处方药', 'K_small', C.white), 'HUG');
+  put(b, txt(name, 'K_h2', C.text, 'CENTER'), 'HUG');
+  put(b, txt('规格：' + spec, 'K_small', C.text2, 'CENTER'), 'HUG');
+  return f;
+}
+function resultCard(ok, title, sub) {
+  const r = card('核对结果/' + title, { fill: ok ? C.greenLight : C.orangeLight, pad: 16, gap: 8 });
+  put(r, circ('结果图标', 52, C.white, ico(ok ? 'check' : 'alert', ok ? C.green : C.orange, 30, ok ? 2.6 : 2)), null);
+  put(r, txt(title, 'P_h1'));
+  put(r, txt(sub, 'P_body'));
+  return r;
+}
+
+function buildPhoto() {
+  let s, body, nav;
+  // 父母 ⑩ 拍照核对：对了
+  ({ s, body, nav } = screen('PhotoOk', '父母 ⑩ 拍照核对：对了', 9, ROW_P, { parent: true, nav: '拍一拍核对', back: true,
+    note: 'AI 只读药盒上的字，对不对由规则拿清单比对：名字和规格都对上才说“对了”。拿不准、有字被挡住、药盒离得太远，一律说“看不清，请再拍一次”，绝不猜。核对只是提示，不改服药状态。' }));
+  link(nav.left, 'Guide');
+  put(body, photoMock('盐酸二甲双胍片', '0.5g', C.orange));
+  put(body, resultCard(true, '对了', '这是降糖药，吃 1 片。'));
+  put(body, voice('正在朗读：“对了，这是降糖药，吃 1 片”'));
+  put(body, txt('AI 只读药盒上的字，对不对按药品清单比对', 'P_small', C.text2, 'CENTER'));
+  spacer(body);
+  link(put(body, btn('我吃好了', 'success', 'P_btn', 64, 'check')), 'Confirm');
+  link(put(body, btn('再拍一次', 'line', 'P_btn', 60, 'camera')), 'PhotoWrong');
+
+  // 父母 ⑪ 拍照核对：拿错了
+  ({ s, body, nav } = screen('PhotoWrong', '父母 ⑪ 拍照核对：拿错了', 10, ROW_P, { parent: true, nav: '拍一拍核对', back: true,
+    note: '拿错药时当场拦下：先说“先别吃”，再说该吃的是第几格、什么颜色的盒子，并同时通知子女。拍到同一顿的另一种药不算拿错，只提醒别忘了这一种，不通知子女。答复同样大字显示并朗读。' }));
+  link(nav.left, 'Guide');
+  put(body, photoMock('阿托伐他汀钙片', '20mg', C.green));
+  put(body, resultCard(false, '不对，先别吃', '这盒药不在清单里。现在该吃的是第 1 格、蓝色盒子的降糖药。'));
+  put(body, pillbox([1], { tag: '该吃第 1 格' }));
+  spacer(body);
+  link(put(body, btn('换一盒再拍', 'primary', 'P_btn', 64, 'camera')), 'PhotoOk');
+  link(put(body, btn('我需要帮忙', 'warnLine', 'P_btn', 60)), 'Help');
+
+  // 子女 ⑩ 妈妈可能拿错药了
+  ({ s, body, nav } = screen('ChildWrong', '子女 ⑩ 妈妈可能拿错药了', 9, ROW_K, { nav: '提醒详情', back: true,
+    note: '只有拿错药、拿到清单外的药才通知子女；看不清、同一顿的另一种药都不打扰。写清楚 AI 读到了什么，方便电话里核对；判断依据是清单比对，不是模型自己说对错。' }));
+  link(nav.left, 'ChildHome');
+  const al = card('通知：可能拿错药', { fill: C.orangeLight, dir: 'HORIZONTAL', gap: 12, pad: 14 });
+  put(body, al);
+  put(al, ico('alert', C.orange, 22), null);
+  const alt = col(al, '文字', 2);
+  put(alt, txt('08:02 妈妈可能拿错药了', 'K_bodyB'));
+  put(alt, txt('妈妈拍照核对早上的药：拿到的药盒不在清单里。已提醒妈妈先别吃。', 'K_body', C.text2));
+  sectionTitle(body, '妈妈拍到的');
+  const got = card('读到的内容', { gap: 10 });
+  put(body, got);
+  const gr = row(got, '读到', 8);
+  put(gr, txt('读到：阿托伐他汀钙片 20mg', 'K_bodyB'));
+  put(gr, tag('不在清单', 'warning'), 'HUG');
+  put(got, txt('该吃的是：第 1 格 · 降糖药 · 盐酸二甲双胍片 0.5g', 'K_body', C.text2));
+  sectionTitle(body, '建议这样做');
+  const st = card('建议', { gap: 10 });
+  put(body, st);
+  stepRow(st, 1, '打个电话，请妈妈先把这盒药放回去');
+  stepRow(st, 2, '一起确认第 1 格的降糖药');
+  stepRow(st, 3, '如果已经吃了别的药，问医生或药师');
+  put(body, btn('给妈妈打电话', 'primary', 'K_btn', 48, 'phone'));
+  sectionTitle(body, '今天的核对记录');
+  const log = card('核对记录', { gap: 0, pad: 0 });
+  put(body, log);
+  schedCell(log, '08:02', '早上', '降糖药', tag('拿错了', 'warning'));
+  schedCell(log, '08:04', '早上', '降糖药', tag('对了', 'success', false, 'check'), true);
 }
 
 // ---------- 子女端 9 屏 ----------
@@ -1164,10 +1244,11 @@ async function main() {
   setupVars();
   setupStyles();
 
-  rowTitle('父母端 · 9 屏', '适老化：大字、语音、一页只做一个决定。①–⑤ 主流程，⑥ 降低误报，⑦ 首次同意，⑧ 每周装药，⑨ 现在不方便吃', ROW_P - 180);
+  rowTitle('父母端 · 11 屏', '适老化：大字、语音、一页只做一个决定。①–⑤ 主流程，⑥ 降低误报，⑦ 首次同意，⑧ 每周装药，⑨ 现在不方便吃，⑩⑪ 拍一拍核对', ROW_P - 180);
   buildParent();
-  rowTitle('子女端 · 9 屏', '一眼看清吃没吃，只在需要时介入。①–⑤ 主流程，⑥ 手机离线，⑦ 装药核对与余量，⑧ 通知分级，⑨ 第一次使用', ROW_K - 180);
+  rowTitle('子女端 · 10 屏', '一眼看清吃没吃，只在需要时介入。①–⑤ 主流程，⑥ 手机离线，⑦ 装药核对与余量，⑧ 通知分级，⑨ 第一次使用，⑩ 拿错药提醒', ROW_K - 180);
   buildChild();
+  buildPhoto();
   rowTitle('规范与指标', '给研发、设计和测试对齐用', ROW_SPEC - 180);
   buildSpecs();
 
@@ -1188,12 +1269,13 @@ async function main() {
       { nodeId: S.ChildOffline.id, name: '④ 妈妈手机离线' },
       { nodeId: S.RefillParent.id, name: '⑤ 每周装药' },
       { nodeId: S.Onboarding.id, name: '⑥ 第一次使用' },
+      { nodeId: S.Guide.id, name: '⑦ 拍一拍核对' },
       { nodeId: S.ChildHome.id, name: '子女端首页' }
     ];
   } catch (e) { console.warn(e); }
 
   figma.viewport.scrollAndZoomIntoView(page.children);
-  figma.closePlugin('安心药箱原型 ' + V + ' 已生成：18 屏 + 2 张规范板' + (linkFails ? `（${linkFails} 个跳转没设上，可在 Prototype 面板手动连）` : ''));
+  figma.closePlugin('安心药箱原型 ' + V + ' 已生成：21 屏 + 2 张规范板' + (linkFails ? `（${linkFails} 个跳转没设上，可在 Prototype 面板手动连）` : ''));
 }
 
 main().catch(e => figma.closePlugin('生成失败：' + (e && e.message ? e.message : e)));
