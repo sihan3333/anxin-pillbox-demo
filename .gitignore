@@ -1,3 +1,5 @@
 *.zip
 *.jpg
 node_modules/
+!img/samples/*.jpg
+!eval/photo/img/*.jpg
